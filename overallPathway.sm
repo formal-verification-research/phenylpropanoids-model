@@ -63,7 +63,7 @@ const double E_CUS = 1;		//Curcuminoid synthase		2.3.1.211
 const int p_coumaric_acid_max = 10;
 const int p_coumaroyl_CoA_max = 5;
 const int caffeic_acid_max = 10;
-const int ferulic_acid_max = 15;
+const int ferulic_acid_max = 50;
 const int caffeoyl_CoA_max = 5;
 const int feruloyl_CoA_max = 15;
 
