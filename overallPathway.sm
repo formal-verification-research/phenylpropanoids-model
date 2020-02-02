@@ -20,13 +20,21 @@ ctmc
 
 //Enzyme rates
 
-//Km is in M or mol/L
+//Km is in M or umol/L
 //Kcat is in 1/s
-//E is in M or mol/L
+//E is in M or umol/L
+//Substrate is in umol
 
-//Arabidopsis thaliana - Plant: values taken from Arabidopsis thaliana	
-const double Km_4CL = 0.000129764;
-const double Kcat_4CL = 0.013378278;
+//4CL	p-Coumaryl-CoA ligase		6.2.1.12
+//C3H	p-Coumarate 3-hydroxylase	1.14.13.-		
+//COMT	Catechol-O-methyltransferase	2.1.1.68/2.1.1.104	
+//TAL	Tyrosine ammonia-lyase		4.3.1.25	
+//STS	Stilbene synthase		2.3.1.95		
+//CUS	Curcuminoid synthase		2.3.1.211	
+
+
+const double Km_4CL = 432;	//uM
+const double Kcat_4CL = 0.57055;	//1/s
 //Values for C3H are taken from https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4001400/
 //Saccharothrix espanaensis - Bacteria: values taken from Populus trichocarpa
 const double Km_C3H = 0.00022741; //0.000656 from https://www.nature.com/articles/s41467-019-10082-7#Sec2
@@ -34,10 +42,10 @@ const double Kcat_C3H = 1.132; //478 " "
 //Medicago Sativa - Plant: values taken from Ocimum basilicum
 const double Km_COMT = 0.000047;
 const double Kcat_COMT = 0.13;
-//Values for TAL taken from https://xz6kg9rb2j.search.serialssolutions.com/?rft_stitle=J.%20Bacteriol.&rft_aulast=Berner&rft_auinit1=M.&rft_issue=7&rft_epage=2673&rft_atitle=Genes%20and%20Enzymes%20Involved%20in%20Caffeic%20Acid%20Biosynthesis%20in%20the%20Actinomycete%20Saccharothrix%20espanaensis&rft_id=info%3Apmid/16547054&rft_genre=article&rft_val_fmt=info%3Aofi/fmt%3Akev%3Amtx%3Ajournal&ctx_ver=Z39.88-2004&url_ver=Z39.88-2004&url_ctx_fmt=info%3Aofi/fmt%3Akev%3Amtx%3Actx&rft.jtitle=Journal%20of%20Bacteriology&rft.volume=188&rft.spage=2666
-//Saccharothrix espanaensis - Bacteria: values taken from Rhodobacter sphaeroides, Rhodobacter capsulatus, Rhodotorula glutinis
-const double Km_TAL = 0.0000155; //0.0001 from Sabio-RK
-const double Kcat_TAL = 0.015; //0.04 from Sabio-RK
+
+const double Km_TAL = 15.5;	//uM
+const double Kcat_TAL = 0.015;	//1/s
+
 //Values for STS taken from https://www.pnas.org/content/99/5/3335#sec-10
 //Arachis hypogaea - Plant, values taken from Pinus densiflora
 const double Km_STS = 0.0000053; 
@@ -50,12 +58,13 @@ const double Kcat_CUS = 0.0142;
 
 
 //Enzyme concentrations
-const double E_4CL = 1;		//p-Coumaryl-CoA ligase		6.2.1.12
-const double E_C3H = 1;		//p-Coumarate 3-hydroxylase	1.14.13.-
-const double E_COMT = 1;	//Catechol-O-methyltransferase	2.1.1.68/2.1.1.104
-const double E_TAL = 1;		//Tyrosine ammonia-lyase	4.3.1.25
-const double E_STS = 1;		//Stilbene synthase		2.3.1.95
-const double E_CUS = 1;		//Curcuminoid synthase		2.3.1.211
+//10-50mg/L, Calculated as 0.025g/L divided by enzyme mol weight	
+const double E_4CL = 4;		//uM	mw 62.559kDa from Uniprot Q9LU36
+const double E_C3H = 4;		//uM	mw 57.055kDa from Uniprot K0K952
+const double E_COMT = 10;	//uM	mw 24.602kDa from Uniprot J3JRD1
+const double E_TAL = 5;		//uM	mw 53.967kDa from Uniprot K0K4B0
+const double E_STS = 6;		//uM	mw 42.706kDa from Uniprot K7XD27
+const double E_CUS = 6;		//uM	mw 43.212kDa from Uniprot Q8LIL0
 
 
 
@@ -75,7 +84,7 @@ const int bisdemethoxycurcumin_max = 5;
 const int dicaffeoylmethane_max = 5;
 
 //Molecules
-const int L_tyrosine = 29;	//http://book.bionumbers.org/what-are-the-concentrations-of-free-metabolites-in-cells/, in uM
+const int L_tyrosine = 29;	//uM, http://book.bionumbers.org/what-are-the-concentrations-of-free-metabolites-in-cells/
 global p_coumaric_acid: [0..p_coumaric_acid_max] init 0;
 global p_coumaroyl_CoA: [0..p_coumaroyl_CoA_max] init 0;
 global caffeic_acid: [0..caffeic_acid_max] init 0;
