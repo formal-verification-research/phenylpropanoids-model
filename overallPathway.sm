@@ -20,9 +20,9 @@ ctmc
 
 //Enzyme rates
 
-//Km is in M or umol/L
+//Km is in uM or umol/L
 //Kcat is in 1/s
-//E is in M or umol/L
+//E is in uM or umol/L
 //Substrate is in umol
 
 //4CL	p-Coumaryl-CoA ligase		6.2.1.12
@@ -34,25 +34,26 @@ ctmc
 
 
 const double Km_4CL = 432;	//uM
-const double Kcat_4CL = 0.57055;	//1/s
-//Values for C3H are taken from https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4001400/
-//Saccharothrix espanaensis - Bacteria: values taken from Populus trichocarpa
-const double Km_C3H = 0.00022741; //0.000656 from https://www.nature.com/articles/s41467-019-10082-7#Sec2
-const double Kcat_C3H = 1.132; //478 " "
-//Medicago Sativa - Plant: values taken from Ocimum basilicum
-const double Km_COMT = 0.000047;
-const double Kcat_COMT = 0.13;
+const double Kcat_4CL = 0.62559;//1/s
+
+//Needs to be updated
+const double Km_C3H = 227.41;
+const double Kcat_C3H = 1.132;
+
+//Average of values for COMT1 and COMT2
+const double Km_COMT = 56;	//uM
+const double Kcat_COMT = 20.346;//1/s
 
 const double Km_TAL = 15.5;	//uM
 const double Kcat_TAL = 0.015;	//1/s
 
-//Values for STS taken from https://www.pnas.org/content/99/5/3335#sec-10
-//Arachis hypogaea - Plant, values taken from Pinus densiflora
-const double Km_STS = 0.0000053; 
-const double Kcat_STS = 0.0038;
+const double Km_STS = 4.43; 	//uM
+const double Kcat_STS = 0.00167;//1/s
+
 //Values for CUS taken from https://www.ncbi.nlm.nih.gov/pubmed/19258320
 //Oryza sativa - Plant, values taken from Curcuma longa
-const double Km_CUS = 0.000189;
+//Needs to be updated
+const double Km_CUS = 189;
 const double Kcat_CUS = 0.0142;
 
 
