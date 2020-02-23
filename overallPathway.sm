@@ -13,12 +13,70 @@
 //genome.jp/kegg-bin/show_pathway?rn00945
 
 //https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4001400/#!po=93.4211 contains kinetic information from Populus trichocarpa
-
+//https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3442970/
+//https://www.ncbi.nlm.nih.gov/pmc/articles/PMC95169/
+//https://www.cell.com/biophysj/pdf/S0006-3495(61)86914-2.pdf
+//https://www.hal.inserm.fr/inserm-00818506/document
 ctmc
 
 
 
-//Enzyme rates
+
+//Important: The amount of molecules in a cell can be roughly estimated as
+//1 molecule/cell » 1nM
+
+//Enzyme induction:
+
+const int IPTG = 200;	//uM
+const double LacI = 0.01; //uM
+//http://book.bionumbers.org/what-are-the-copy-numbers-of-transcription-factors/
+
+const double kd = 0.0075; //1/s		Degredation rate
+const double Kc = 0.05;   //1/molecule	Complex formation equilibrium
+const double nc = 2;      //molecules	Stoichiometry of binding
+const double Kr = 0.5;    //1/molecule	RNAP Binding equilibrium
+const double Ko = 0.033;  //1/molecule	Open complex production rate
+const double kp = 0.05;   //1/sec	Stoicheometry of production
+const double np = 10;     //none	Stoicheometry of production
+const double RNAP = 30;   //molecules	Number of RNAP molecules
+const double Plac = 2;    //molecules	Number of Plac promoters
+
+formula i_rate = (np*kp*Plac*Ko*RNAP)/(1+(Ko*RNAP)+pow((Kr*(LacI/(1+(Kc*IPTG)))),nc));
+//Formula results in molecules/sec, provided that IPTG concentration is in terms of molecules.
+
+//Enzyme concentrations
+//10-50mg/L, Calculated as 0.025g/L divided by enzyme mol weight	
+const int E_4CL_max = 400;		//nM	mw 62.559kDa from Uniprot Q9LU36
+const int E_C3H_max = 438;		//nM	mw 57.055kDa from Uniprot K0K952
+const int E_COMT_max = 1016;		//nM	mw 24.602kDa from Uniprot J3JRD1
+const int E_TAL_max = 463;		//nM	mw 53.967kDa from Uniprot K0K4B0
+const int E_STS_max = 585;		//nM	mw 42.706kDa from Uniprot K7XD27
+const int E_CUS_max = 578;		//nM	mw 43.212kDa from Uniprot Q8LIL0
+const int ge_max = 25; //mg/L
+
+global E_4CL: [0..E_4CL_max] init 0;
+global E_C3H: [0..E_C3H_max] init 0;
+global E_COMT: [0..E_COMT_max] init 0;
+global E_TAL: [0..E_TAL_max] init 0;
+global E_STS: [0..E_STS_max] init 0;
+global E_CUS: [0..E_CUS_max] init 0;
+
+
+module enzymes
+	[] E_4CL < E_4CL_max -> i_rate : (E_4CL'=E_4CL+1);
+	[] E_C3H < E_C3H_max -> i_rate : (E_C3H'=E_C3H+1);
+	[] E_COMT < E_COMT_max -> i_rate : (E_COMT'=E_COMT+1);
+	[] E_TAL < E_TAL_max -> i_rate : (E_TAL'=E_TAL+1);
+	[] E_STS < E_STS_max -> i_rate : (E_STS'=E_STS+1);
+	[] E_CUS < E_CUS_max -> i_rate : (E_CUS'=E_CUS+1);
+
+endmodule
+
+
+
+
+
+//Enzyme rates:
 
 //Km is in uM or umol/L
 //Kcat is in 1/s
@@ -57,18 +115,6 @@ const double Km_CUS = 189;
 const double Kcat_CUS = 0.0142;
 
 
-
-//Enzyme concentrations
-//10-50mg/L, Calculated as 0.025g/L divided by enzyme mol weight	
-const double E_4CL = 4;		//uM	mw 62.559kDa from Uniprot Q9LU36
-const double E_C3H = 4;		//uM	mw 57.055kDa from Uniprot K0K952
-const double E_COMT = 10;	//uM	mw 24.602kDa from Uniprot J3JRD1
-const double E_TAL = 5;		//uM	mw 53.967kDa from Uniprot K0K4B0
-const double E_STS = 6;		//uM	mw 42.706kDa from Uniprot K7XD27
-const double E_CUS = 6;		//uM	mw 43.212kDa from Uniprot Q8LIL0
-
-
-
 //Maximum molecule concentrations
 const int p_coumaric_acid_max = 10;
 const int p_coumaroyl_CoA_max = 5;
@@ -83,6 +129,7 @@ const int curcumin_max = 100;
 
 const int bisdemethoxycurcumin_max = 5;
 const int dicaffeoylmethane_max = 5;
+
 
 //Molecules
 const int L_tyrosine = 29;	//uM, http://book.bionumbers.org/what-are-the-concentrations-of-free-metabolites-in-cells/
@@ -101,35 +148,40 @@ global bisdemethoxycurcumin: [0..bisdemethoxycurcumin_max] init 0;
 global dicaffeoylmethane: [0..dicaffeoylmethane_max] init 0;
 
 
+
+
+
+
 // [] [product] < maxproduct & [substrate] > 0 -> (Kcat*[enzyme]*[substrate])/(Km+[substrate]) : (product' = product+1)&(substrate'=substrate-1);
+//have to divide by 1000 as [enzyme] is in nM, need uM
 module pathways
  //---TAL---
- [] p_coumaric_acid < p_coumaric_acid_max & L_tyrosine > 0 -> (Kcat_TAL*E_TAL*L_tyrosine)/(Km_TAL+L_tyrosine) : (p_coumaric_acid' = p_coumaric_acid+1);
+ [] p_coumaric_acid < p_coumaric_acid_max & L_tyrosine > 0 & E_TAL > 0 -> (Kcat_TAL*E_TAL*L_tyrosine)/(1000*(Km_TAL+L_tyrosine)) : (p_coumaric_acid' = p_coumaric_acid+1);
 
  //---C3H---
- [] caffeic_acid < caffeic_acid_max & p_coumaric_acid > 0 -> (Kcat_C3H*E_C3H*p_coumaric_acid)/(Km_C3H+p_coumaric_acid) : (caffeic_acid' = caffeic_acid+1)&(p_coumaric_acid' = p_coumaric_acid-1);
- [] caffeoyl_CoA < caffeoyl_CoA_max & p_coumaroyl_CoA > 0 -> (Kcat_C3H*E_C3H*p_coumaroyl_CoA)/(Km_C3H+p_coumaroyl_CoA) : (caffeoyl_CoA' = caffeoyl_CoA+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
- [] piceatannol < piceatannol_max & resveratrol > 0 -> (Kcat_C3H*E_C3H*resveratrol)/(Km_C3H+resveratrol) : (piceatannol' = piceatannol+1)&(resveratrol' = resveratrol-1);
+ [] caffeic_acid < caffeic_acid_max & p_coumaric_acid > 0 & E_C3H > 0 -> (Kcat_C3H*E_C3H*p_coumaric_acid)/(1000*(Km_C3H+p_coumaric_acid)) : (caffeic_acid' = caffeic_acid+1)&(p_coumaric_acid' = p_coumaric_acid-1);
+ [] caffeoyl_CoA < caffeoyl_CoA_max & p_coumaroyl_CoA > 0 & E_C3H > 0 -> (Kcat_C3H*E_C3H*p_coumaroyl_CoA)/(1000*(Km_C3H+p_coumaroyl_CoA)) : (caffeoyl_CoA' = caffeoyl_CoA+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+ [] piceatannol < piceatannol_max & resveratrol > 0 & E_C3H > 0 -> (Kcat_C3H*E_C3H*resveratrol)/(1000*(Km_C3H+resveratrol)) : (piceatannol' = piceatannol+1)&(resveratrol' = resveratrol-1);
 
  //---4CL---
- [] p_coumaroyl_CoA < p_coumaroyl_CoA_max & p_coumaric_acid > 0 -> (Kcat_4CL*E_4CL*p_coumaric_acid)/(Km_4CL+p_coumaric_acid) : (p_coumaroyl_CoA' = p_coumaroyl_CoA+1)&(p_coumaric_acid' = p_coumaric_acid-1);
- [] caffeoyl_CoA < caffeoyl_CoA_max & caffeic_acid > 0 -> (Kcat_4CL*E_4CL*caffeic_acid)/(Km_4CL+caffeic_acid) : (caffeoyl_CoA' = caffeoyl_CoA+1)&(caffeic_acid' = caffeic_acid-1);
- [] feruloyl_CoA < feruloyl_CoA_max & ferulic_acid > 0 -> (Kcat_4CL*E_4CL*ferulic_acid)/(Km_4CL+ferulic_acid) : (feruloyl_CoA' = feruloyl_CoA+1)&(ferulic_acid' = ferulic_acid-1);
+ [] p_coumaroyl_CoA < p_coumaroyl_CoA_max & p_coumaric_acid > 0 & E_4CL > 0 -> (Kcat_4CL*E_4CL*p_coumaric_acid)/(1000*(Km_4CL+p_coumaric_acid)) : (p_coumaroyl_CoA' = p_coumaroyl_CoA+1)&(p_coumaric_acid' = p_coumaric_acid-1);
+ [] caffeoyl_CoA < caffeoyl_CoA_max & caffeic_acid > 0 & E_4CL > 0 -> (Kcat_4CL*E_4CL*caffeic_acid)/(1000*(Km_4CL+caffeic_acid)) : (caffeoyl_CoA' = caffeoyl_CoA+1)&(caffeic_acid' = caffeic_acid-1);
+ [] feruloyl_CoA < feruloyl_CoA_max & ferulic_acid > 0 & E_4CL > 0 -> (Kcat_4CL*E_4CL*ferulic_acid)/(1000*(Km_4CL+ferulic_acid)) : (feruloyl_CoA' = feruloyl_CoA+1)&(ferulic_acid' = ferulic_acid-1);
 
  //---COMT---
- [] ferulic_acid < ferulic_acid_max & caffeic_acid > 0 -> (Kcat_COMT*E_COMT*caffeic_acid)/(Km_COMT+caffeic_acid) : (ferulic_acid' = ferulic_acid+1)&(caffeic_acid' = caffeic_acid-1);
- [] feruloyl_CoA < feruloyl_CoA_max & caffeoyl_CoA > 0 -> (Kcat_COMT*E_COMT*caffeoyl_CoA)/(Km_COMT+caffeoyl_CoA) : (feruloyl_CoA' = feruloyl_CoA+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
+ [] ferulic_acid < ferulic_acid_max & caffeic_acid > 0 & E_COMT > 0 -> (Kcat_COMT*E_COMT*caffeic_acid)/(1000*(Km_COMT+caffeic_acid)) : (ferulic_acid' = ferulic_acid+1)&(caffeic_acid' = caffeic_acid-1);
+ [] feruloyl_CoA < feruloyl_CoA_max & caffeoyl_CoA > 0 & E_COMT > 0 -> (Kcat_COMT*E_COMT*caffeoyl_CoA)/(1000*(Km_COMT+caffeoyl_CoA)) : (feruloyl_CoA' = feruloyl_CoA+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
 
  //---STS---
- [] resveratrol < resveratrol_max & p_coumaroyl_CoA > 0 -> (Kcat_STS*E_STS*p_coumaroyl_CoA)/(Km_STS+p_coumaroyl_CoA) : (resveratrol' = resveratrol+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
- [] piceatannol < piceatannol_max & caffeoyl_CoA > 0 -> (Kcat_STS*E_STS*caffeoyl_CoA)/(Km_STS+caffeoyl_CoA) : (piceatannol' = piceatannol+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
+ [] resveratrol < resveratrol_max & p_coumaroyl_CoA > 0 & E_STS > 0 -> (Kcat_STS*E_STS*p_coumaroyl_CoA)/(1000*(Km_STS+p_coumaroyl_CoA)) : (resveratrol' = resveratrol+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+ [] piceatannol < piceatannol_max & caffeoyl_CoA > 0 & E_STS > 0 -> (Kcat_STS*E_STS*caffeoyl_CoA)/(1000*(Km_STS+caffeoyl_CoA)) : (piceatannol' = piceatannol+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
   //The rate used for caffeoyl-CoA -> piceatannol is a large assumption, and is most likely not representative of the actual rate.
 
  //---CUS--
- [] curcumin < curcumin_max & feruloyl_CoA > 1 -> (Kcat_CUS*E_CUS*feruloyl_CoA)/(Km_CUS+feruloyl_CoA) : (curcumin' = curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-2);
+ [] curcumin < curcumin_max & feruloyl_CoA > 1 & E_CUS > 0 -> (Kcat_CUS*E_CUS*feruloyl_CoA)/(1000*(Km_CUS+feruloyl_CoA)) : (curcumin' = curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-2);
   //Curcumin uses 2 of the reactant, feruloyl-CoA
- [] bisdemethoxycurcumin < bisdemethoxycurcumin_max & p_coumaroyl_CoA > 1 -> (Kcat_CUS*E_CUS*p_coumaroyl_CoA)/(Km_CUS+p_coumaroyl_CoA) : (bisdemethoxycurcumin' = bisdemethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-2);
- [] dicaffeoylmethane < dicaffeoylmethane_max & caffeoyl_CoA > 1 -> (Kcat_CUS*E_CUS*caffeoyl_CoA)/(Km_CUS+caffeoyl_CoA) : (dicaffeoylmethane' = dicaffeoylmethane+1)&(caffeoyl_CoA' = caffeoyl_CoA-2);
+ [] bisdemethoxycurcumin < bisdemethoxycurcumin_max & p_coumaroyl_CoA > 1 & E_CUS > 0 -> (1000*(Kcat_CUS*E_CUS*p_coumaroyl_CoA))/(Km_CUS+p_coumaroyl_CoA) : (bisdemethoxycurcumin' = bisdemethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-2);
+ [] dicaffeoylmethane < dicaffeoylmethane_max & caffeoyl_CoA > 1 & E_CUS > 0 -> (1000*(Kcat_CUS*E_CUS*caffeoyl_CoA)/(Km_CUS+caffeoyl_CoA)) : (dicaffeoylmethane' = dicaffeoylmethane+1)&(caffeoyl_CoA' = caffeoyl_CoA-2);
   //Neither of the above reactions have very much data. The rates used are for CUS and STS in the formation of curcumin.
   //The rates for both of these reactions is most likely not representative of the actual rate, as the constants are derived from a long sequence for a specific substrate
   //Both of these reactions use 2 of the reactant
