@@ -60,7 +60,7 @@ formula i_rate = 0.099/(0.25*(LacI/(0.0496277915632754*IPTG + 1))*(LacI/(0.04962
 //const int E_STS_max = 585;		//nM	mw 42.706kDa from Uniprot K7XD27
 //const int E_CUS_max = 578;		//nM	mw 43.212kDa from Uniprot Q8LIL0
 
-global E_GEN: int init 0;
+global E_GEN: [0..150] init 0;
 global E_4CL: int init 0;
 global E_C3H: int init 0;
 global E_COMT: int init 0;
@@ -135,19 +135,19 @@ const double Kcat_CUS = 0.0142;
 
 
 //Maximum molecule concentrations
-const int p_coumaric_acid_max = 1000;
+const int p_coumaric_acid_max = 50;
 const int p_coumaroyl_CoA_max = 1000;
-const int caffeic_acid_max = 1000;
-const int ferulic_acid_max = 1000;
-const int caffeoyl_CoA_max = 1000;
-const int feruloyl_CoA_max = 1000;
+const int caffeic_acid_max = 1;
+const int ferulic_acid_max = 1;
+const int caffeoyl_CoA_max = 1;
+const int feruloyl_CoA_max = 1;
 
-const int resveratrol_max = 100;
-const int piceatannol_max = 1000;
-const int curcumin_max = 1000;
+const int resveratrol_max = 500;
+const int piceatannol_max = 1;
+const int curcumin_max = 1;
 
-const int bisdemethoxycurcumin_max = 5;
-const int dicaffeoylmethane_max = 5;
+const int bisdemethoxycurcumin_max = 1;
+const int dicaffeoylmethane_max = 1;
 
 
 //Molecules
