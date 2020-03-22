@@ -68,7 +68,7 @@ global E_TAL: [0..150*9] init 0;
 global E_STS: [0..150*10] init 0;
 global E_CUS: [0..1] init 0;
 
-global LacI: int init 10; //nM
+global LacI: [0..10] init 10; //nM
 //http://book.bionumbers.org/what-are-the-copy-numbers-of-transcription-factors/
 
 module enzymes
