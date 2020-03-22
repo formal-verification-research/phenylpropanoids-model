@@ -61,12 +61,12 @@ formula i_rate = 0.099/(0.25*(LacI/(0.0496277915632754*IPTG + 1))*(LacI/(0.04962
 //const int E_CUS_max = 578;		//nM	mw 43.212kDa from Uniprot Q8LIL0
 
 global E_GEN: [0..150] init 0;
-global E_4CL: int init 0;
-global E_C3H: int init 0;
-global E_COMT: int init 0;
-global E_TAL: int init 0;
-global E_STS: int init 0;
-global E_CUS: int init 0;
+global E_4CL: [0..150*7] init 0;
+global E_C3H: [0..1] init 0;
+global E_COMT: [0..1] init 0;
+global E_TAL: [0..150*9] init 0;
+global E_STS: [0..150*10] init 0;
+global E_CUS: [0..1] init 0;
 
 global LacI: int init 10; //nM
 //http://book.bionumbers.org/what-are-the-copy-numbers-of-transcription-factors/
