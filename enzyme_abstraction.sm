@@ -1,3 +1,5 @@
+ctmc
+
 //Enzyme induction:
 
 const int IPTG = 200;  //molecules/cell
