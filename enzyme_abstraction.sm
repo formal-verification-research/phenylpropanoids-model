@@ -1,0 +1,57 @@
+//Enzyme induction:
+
+const int IPTG = 200;  //molecules/cell
+
+const double kd = 0.0075; //1/s		Degredation rate
+const double Kc = 0.05;   //1/molecule	Complex formation equilibrium
+const double nc = 2;      //molecules	Stoichiometry of binding
+const double Kr = 0.5;    //1/molecule	RNAP Binding equilibrium
+const double Ko = 0.033;  //1/molecule	Open complex production rate
+const double kp = 0.05;   //1/sec	Stoicheometry of production
+const double np = 10;     //none	Stoicheometry of production
+const double RNAP = 30;   //molecules	Number of RNAP molecules
+const double Plac = 2;    //molecules	Number of Plac promoters
+
+//formula i_rate = (np*kp*Plac*Ko*RNAP)/(1+(Ko*RNAP)+pow((Kr*(LacI/(1+(Kc*IPTG)))),nc));
+formula i_rate = 0.099/(0.25*(LacI/(0.0496277915632754*IPTG + 1))*(LacI/(0.0496277915632754*IPTG + 1)) + 1.99);
+//Formula results in molecules/sec, provided that IPTG concentration is in terms of molecules.
+
+//Enzyme concentrations
+//10-50mg/L, Calculated as 0.025g/L divided by enzyme mol weight	
+//const int E_4CL_max = 400;		//nM	mw 62.559kDa from Uniprot Q9LU36
+//const int E_C3H_max = 438;		//nM	mw 57.055kDa from Uniprot K0K952
+//const int E_COMT_max = 1016;		//nM	mw 24.602kDa from Uniprot J3JRD1
+//const int E_TAL_max = 463;		//nM	mw 53.967kDa from Uniprot K0K4B0
+//const int E_STS_max = 585;		//nM	mw 42.706kDa from Uniprot K7XD27
+//const int E_CUS_max = 578;		//nM	mw 43.212kDa from Uniprot Q8LIL0
+
+global E_GEN: [0..150] init 0;
+global E_4CL: [0..150*7] init 0;
+global E_C3H: [0..1] init 0;
+global E_COMT: [0..1] init 0;
+global E_TAL: [0..150*9] init 0;
+global E_STS: [0..150*10] init 0;
+global E_CUS: [0..1] init 0;
+
+global LacI: [0..10] init 10; //nM
+//http://book.bionumbers.org/what-are-the-copy-numbers-of-transcription-factors/
+
+module enzymes
+	[] E_GEN >= 0 -> i_rate : (E_GEN'=E_GEN+10)
+		&(E_4CL'=E_GEN*7)
+		//&(E_C3H' = E_GEN*8)
+		//&(E_COMT' = E_GEN*17)
+		&(E_TAL' = E_GEN*9)
+		&(E_STS' = E_GEN*10)
+		//&(E_CUS' = E_GEN*10)
+		 + 0.0075*E_GEN:(E_GEN'=E_GEN-1);
+	//[] E_4CL = 0 -> i_rate : (E_4CL'=E_4CL+1);
+	//[] E_C3H < E_C3H_max -> i_rate : (E_C3H'=E_C3H+1);
+	//[] E_COMT < E_COMT_max -> i_rate : (E_COMT'=E_COMT+1);
+	//[] E_TAL = 0 -> i_rate : (E_TAL'=E_TAL+1);
+	//[] E_STS = 0 -> i_rate : (E_STS'=E_STS+1);
+	//[] E_CUS < E_CUS_max -> i_rate : (E_CUS'=E_CUS+1);
+
+	[] LacI > 0 -> 0.0075*LacI:(LacI'=LacI-1);
+
+endmodule
