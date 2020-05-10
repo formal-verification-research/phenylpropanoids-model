@@ -26,70 +26,71 @@
 ctmc
 
 
+//From http://kirschner.med.harvard.edu/files/bionumbers/fundamentalBioNumbersHandout.pdf
+//Bacteria (e.coli): ~1mm diameter, 2mm length, ~1mm^3 in volume 10^9 cells/ml in an overnight culture (OD600~1) 
 
 
 
-
-//Important: The amount of molecules in a cell can be roughly estimated as
+////Important: The amount of molecules in a cell can be roughly estimated as
 //1 molecule/cell » 1nM
-
-//Enzyme induction:
-
-const int IPTG = 200;  //molecules/cell
-
-const double kd = 0.0075; //1/s		Degredation rate
-const double Kc = 0.05;   //1/molecule	Complex formation equilibrium
-const double nc = 2;      //molecules	Stoichiometry of binding
-const double Kr = 0.5;    //1/molecule	RNAP Binding equilibrium
-const double Ko = 0.033;  //1/molecule	Open complex production rate
-const double kp = 0.05;   //1/sec	Stoicheometry of production
-const double np = 10;     //none	Stoicheometry of production
-const double RNAP = 30;   //molecules	Number of RNAP molecules
-const double Plac = 2;    //molecules	Number of Plac promoters
-
+//
+////Enzyme induction:
+//
+//const int IPTG = 200;  //molecules/cell
+//
+//const double kd = 0.0075; //1/s		Degredation rate
+//const double Kc = 0.05;   //1/molecule	Complex formation equilibrium
+//const double nc = 2;      //molecules	Stoichiometry of binding
+//const double Kr = 0.5;    //1/molecule	RNAP Binding equilibrium
+//const double Ko = 0.033;  //1/molecule	Open complex production rate
+//const double kp = 0.05;   //1/sec	Stoicheometry of production
+//const double np = 10;     //none	Stoicheometry of production
+//const double RNAP = 30;   //molecules	Number of RNAP molecules
+//const double Plac = 2;    //molecules	Number of Plac promoters
+//
 //formula i_rate = (np*kp*Plac*Ko*RNAP)/(1+(Ko*RNAP)+pow((Kr*(LacI/(1+(Kc*IPTG)))),nc));
-formula i_rate = 0.099/(0.25*(LacI/(0.0496277915632754*IPTG + 1))*(LacI/(0.0496277915632754*IPTG + 1)) + 1.99);
+//formula i_rate = 0.099/(0.25*(LacI/(0.0496277915632754*IPTG + 1))*(LacI/(0.0496277915632754*IPTG + 1)) + 1.99);
 //Formula results in molecules/sec, provided that IPTG concentration is in terms of molecules.
-
-//Enzyme concentrations
-//10-50mg/L, Calculated as 0.025g/L divided by enzyme mol weight	
-//const int E_4CL_max = 400;		//nM	mw 62.559kDa from Uniprot Q9LU36
-//const int E_C3H_max = 438;		//nM	mw 57.055kDa from Uniprot K0K952
-//const int E_COMT_max = 1016;		//nM	mw 24.602kDa from Uniprot J3JRD1
-//const int E_TAL_max = 463;		//nM	mw 53.967kDa from Uniprot K0K4B0
-//const int E_STS_max = 585;		//nM	mw 42.706kDa from Uniprot K7XD27
-//const int E_CUS_max = 578;		//nM	mw 43.212kDa from Uniprot Q8LIL0
-
-global E_GEN: [0..150] init 0;
-global E_4CL: [0..150*7] init 0;
-global E_C3H: [0..1] init 0;
-global E_COMT: [0..1] init 0;
-global E_TAL: [0..150*9] init 0;
-global E_STS: [0..150*10] init 0;
-global E_CUS: [0..1] init 0;
-
-global LacI: [0..10] init 10; //nM
-//http://book.bionumbers.org/what-are-the-copy-numbers-of-transcription-factors/
-
-module enzymes
-	[] E_GEN >= 0 -> i_rate : (E_GEN'=E_GEN+10)
-		&(E_4CL'=E_GEN*7)
-		//&(E_C3H' = E_GEN*8)
-		//&(E_COMT' = E_GEN*17)
-		&(E_TAL' = E_GEN*9)
-		&(E_STS' = E_GEN*10)
-		//&(E_CUS' = E_GEN*10)
-		 + 0.0075*E_GEN:(E_GEN'=E_GEN-1);
-	//[] E_4CL = 0 -> i_rate : (E_4CL'=E_4CL+1);
-	//[] E_C3H < E_C3H_max -> i_rate : (E_C3H'=E_C3H+1);
-	//[] E_COMT < E_COMT_max -> i_rate : (E_COMT'=E_COMT+1);
-	//[] E_TAL = 0 -> i_rate : (E_TAL'=E_TAL+1);
-	//[] E_STS = 0 -> i_rate : (E_STS'=E_STS+1);
-	//[] E_CUS < E_CUS_max -> i_rate : (E_CUS'=E_CUS+1);
-
-	[] LacI > 0 -> 0.0075*LacI:(LacI'=LacI-1);
-
-endmodule
+//
+////Enzyme concentrations
+////10-50mg/L, Calculated as 0.025g/L divided by enzyme mol weight	
+////const int E_4CL_max = 400;		//nM	mw 62.559kDa from Uniprot Q9LU36
+////const int E_C3H_max = 438;		//nM	mw 57.055kDa from Uniprot K0K952
+////const int E_COMT_max = 1016;		//nM	mw 24.602kDa from Uniprot J3JRD1
+////const int E_TAL_max = 463;		//nM	mw 53.967kDa from Uniprot K0K4B0
+////const int E_STS_max = 585;		//nM	mw 42.706kDa from Uniprot K7XD27
+////const int E_CUS_max = 578;		//nM	mw 43.212kDa from Uniprot Q8LIL0
+//
+//global E_GEN: [0..150] init 0;
+//global E_4CL: [0..150*7] init 0;
+//global E_C3H: [0..1] init 0;
+//global E_COMT: [0..1] init 0;
+//global E_TAL: [0..150*9] init 0;
+//global E_STS: [0..150*10] init 0;
+//global E_CUS: [0..1] init 0;
+//
+//global LacI: [0..10] init 10; //nM
+////http://book.bionumbers.org/what-are-the-copy-numbers-of-transcription-factors/
+//
+//module enzymes
+//	[] E_GEN >= 0 -> i_rate : (E_GEN'=E_GEN+10)
+//		&(E_4CL'=E_GEN*7)
+//		//&(E_C3H' = E_GEN*8)
+//		//&(E_COMT' = E_GEN*17)
+//		&(E_TAL' = E_GEN*9)
+//		&(E_STS' = E_GEN*10)
+//		//&(E_CUS' = E_GEN*10)
+//		 + 0.0075*E_GEN:(E_GEN'=E_GEN-1);
+//	//[] E_4CL = 0 -> i_rate : (E_4CL'=E_4CL+1);
+//	//[] E_C3H < E_C3H_max -> i_rate : (E_C3H'=E_C3H+1);
+//	//[] E_COMT < E_COMT_max -> i_rate : (E_COMT'=E_COMT+1);
+//	//[] E_TAL = 0 -> i_rate : (E_TAL'=E_TAL+1);
+//	//[] E_STS = 0 -> i_rate : (E_STS'=E_STS+1);
+//	//[] E_CUS < E_CUS_max -> i_rate : (E_CUS'=E_CUS+1);
+//
+//	[] LacI > 0 -> 0.0075*LacI:(LacI'=LacI-1);
+//
+//endmodule
 
 
 
@@ -109,9 +110,42 @@ endmodule
 //STS	Stilbene synthase		2.3.1.95		
 //CUS	Curcuminoid synthase		2.3.1.211	
 
+//Enzyme molecular weights
+const int MW_4CL = 62559;	//Da from Uniprot Q9LU36
+const int MW_C3H = 57055;	//Da from Uniprot K0K952
+const int MW_COMT = 4602;	//Da from Uniprot J3JRD1
+const int MW_TAL = 53967;	//Da from Uniprot K0K4B0
+const int MW_STS = 42706;	//Da from Uniprot K7XD27
+const int MW_CUS = 43212;	//Da from Uniprot Q8LIL0
 
-const double Km_4CL = 432;	//uM
-const double Kcat_4CL = 0.62559;//1/s
+//Enzyme concentrations
+//10-50mg/L
+//(mg/L)/(mg/mmol) gives mmol/L, multiply by 10^6 for nM
+const double E_4CL = (25/MW_4CL)*1000;	
+const double E_C3H = (25/MW_C3H)*1000;
+const double E_COMT = (25/MW_COMT)*1000;
+const double E_TAL = (25/MW_TAL)*1000;
+const double E_STS = (25/MW_STS)*1000;
+const double E_CUS = (25/MW_CUS)*1000;
+
+
+////MAIN VALUE: S. espanaensis: (Sam8)
+const double Km_TAL = 4.7;	//uM, average
+const double Kcat_TAL = 0.015;	//1/s
+//const double Km_TAL = 24;
+//const double Kcat_TAL = 0.076;
+
+////MAIN VALUE: A. thaliana: (4CL1)
+const double Km_4CL = 25.1;	//uM
+const double Kcat_4CL = 16.3279;//1/s
+//const double Km_4CL = 188.7;
+//const double Kcat_4CL = 0.216;
+
+////MAIN VALUE: A. hypogaea
+const double Km_STS = 6.6;	//uM
+const double Kcat_STS = 0.0018937;//1/s
+//const double Km_STS = 11;
+//const double Kcat_STS = 0.02;
 
 //Needs to be updated
 const double Km_C3H = 227.41;
@@ -121,12 +155,6 @@ const double Kcat_C3H = 1.132;
 const double Km_COMT = 56;	//uM
 const double Kcat_COMT = 20.346;//1/s
 
-const double Km_TAL = 15.5;	//uM
-const double Kcat_TAL = 0.015;	//1/s
-
-const double Km_STS = 4.43; 	//uM
-const double Kcat_STS = 0.00167;//1/s
-
 //Values for CUS taken from https://www.ncbi.nlm.nih.gov/pubmed/19258320
 //Oryza sativa - Plant, values taken from Curcuma longa
 //Needs to be updated
@@ -135,23 +163,26 @@ const double Kcat_CUS = 0.0142;
 
 
 //Maximum molecule concentrations
-const int p_coumaric_acid_max = 50;
-const int p_coumaroyl_CoA_max = 1000;
+const int p_coumaric_acid_max = 100000;
+const int p_coumaroyl_CoA_max = 1000000;
 const int caffeic_acid_max = 1;
 const int ferulic_acid_max = 1;
 const int caffeoyl_CoA_max = 1;
 const int feruloyl_CoA_max = 1;
 
-const int resveratrol_max = 500;
+const int resveratrol_max = 100000;
 const int piceatannol_max = 1;
 const int curcumin_max = 1;
 
 const int bisdemethoxycurcumin_max = 1;
 const int dicaffeoylmethane_max = 1;
 
+const int resveratrol_product_max = 1000;
 
 //Molecules
-const int L_tyrosine = 29;	//uM, http://book.bionumbers.org/what-are-the-concentrations-of-free-metabolites-in-cells/
+const int L_tyrosine = 29;	//uM	http://book.bionumbers.org/what-are-the-concentrations-of-free-metabolites-in-cells/
+	//21 uM				https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2754216/
+	//0.41 umol/g			https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2754216/
 global p_coumaric_acid: [0..p_coumaric_acid_max] init 0;
 global p_coumaroyl_CoA: [0..p_coumaroyl_CoA_max] init 0;
 global caffeic_acid: [0..caffeic_acid_max] init 0;
@@ -166,16 +197,21 @@ global curcumin: [0..curcumin_max] init 0;
 global bisdemethoxycurcumin: [0..bisdemethoxycurcumin_max] init 0;
 global dicaffeoylmethane: [0..dicaffeoylmethane_max] init 0;
 
+global resveratrol_product: [0..resveratrol_product_max] init 0; //unitless, to be converted to umols by *0.0006
 
 
-
+//https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3086598/
+//Boolean model
+//Due to their simple nature, these models circumvent the need for quantitative details about the reactions of the biological systems, which makes Boolean models easy to analyze analytically, implement computationally and extend to large-scale biological systems.
+//Does not require high quality and quantity of data
+//Variation - http://www.crm.umontreal.ca/ecoles/Bio07/pdf/swainNotes.pdf
 
 
 // [] [product] < maxproduct & [substrate] > 0 -> (Kcat*[enzyme]*[substrate])/(Km+[substrate]) : (product' = product+1)&(substrate'=substrate-1);
 //have to divide by 1000 as [enzyme] is in nM, need uM
 module pathways
  //---TAL---
- [] p_coumaric_acid < p_coumaric_acid_max & L_tyrosine > 0 & E_TAL > 0 -> (Kcat_TAL*E_TAL*L_tyrosine)/(1000*(Km_TAL+L_tyrosine)) : (p_coumaric_acid' = p_coumaric_acid+1);
+ [] p_coumaric_acid < p_coumaric_acid_max & L_tyrosine > 0 & E_TAL > 0 -> (Kcat_TAL*E_TAL*L_tyrosine)/(Km_TAL+L_tyrosine) : (p_coumaric_acid' = p_coumaric_acid+1);
 
  //---C3H---
  //[] caffeic_acid < caffeic_acid_max & p_coumaric_acid > 0 & E_C3H > 0 -> (Kcat_C3H*E_C3H*p_coumaric_acid)/(1000*(Km_C3H+p_coumaric_acid)) : (caffeic_acid' = caffeic_acid+1)&(p_coumaric_acid' = p_coumaric_acid-1);
@@ -183,17 +219,17 @@ module pathways
  //[] piceatannol < piceatannol_max & resveratrol > 0 & E_C3H > 0 -> (Kcat_C3H*E_C3H*resveratrol)/(1000*(Km_C3H+resveratrol)) : (piceatannol' = piceatannol+1)&(resveratrol' = resveratrol-1);
 
  //---4CL---
- [] p_coumaroyl_CoA < p_coumaroyl_CoA_max & p_coumaric_acid > 0 & E_4CL > 0 -> (Kcat_4CL*E_4CL*p_coumaric_acid)/(1000*(Km_4CL+p_coumaric_acid)) : (p_coumaroyl_CoA' = p_coumaroyl_CoA+1)&(p_coumaric_acid' = p_coumaric_acid-1);
- [] caffeoyl_CoA < caffeoyl_CoA_max & caffeic_acid > 0 & E_4CL > 0 -> (Kcat_4CL*E_4CL*caffeic_acid)/(1000*(Km_4CL+caffeic_acid)) : (caffeoyl_CoA' = caffeoyl_CoA+1)&(caffeic_acid' = caffeic_acid-1);
- [] feruloyl_CoA < feruloyl_CoA_max & ferulic_acid > 0 & E_4CL > 0 -> (Kcat_4CL*E_4CL*ferulic_acid)/(1000*(Km_4CL+ferulic_acid)) : (feruloyl_CoA' = feruloyl_CoA+1)&(ferulic_acid' = ferulic_acid-1);
+ [] p_coumaroyl_CoA < p_coumaroyl_CoA_max & p_coumaric_acid > 0 & E_4CL > 0 -> (Kcat_4CL*E_4CL*p_coumaric_acid)/(Km_4CL+p_coumaric_acid) : (p_coumaroyl_CoA' = p_coumaroyl_CoA+1)&(p_coumaric_acid' = p_coumaric_acid-1);
+ [] caffeoyl_CoA < caffeoyl_CoA_max & caffeic_acid > 0 & E_4CL > 0 -> (Kcat_4CL*E_4CL*caffeic_acid)/(Km_4CL+caffeic_acid) : (caffeoyl_CoA' = caffeoyl_CoA+1)&(caffeic_acid' = caffeic_acid-1);
+ [] feruloyl_CoA < feruloyl_CoA_max & ferulic_acid > 0 & E_4CL > 0 -> (Kcat_4CL*E_4CL*ferulic_acid)/(Km_4CL+ferulic_acid) : (feruloyl_CoA' = feruloyl_CoA+1)&(ferulic_acid' = ferulic_acid-1);
 
  //---COMT---
  //[] ferulic_acid < ferulic_acid_max & caffeic_acid > 0 & E_COMT > 0 -> (Kcat_COMT*E_COMT*caffeic_acid)/(1000*(Km_COMT+caffeic_acid)) : (ferulic_acid' = ferulic_acid+1)&(caffeic_acid' = caffeic_acid-1);
  //[] feruloyl_CoA < feruloyl_CoA_max & caffeoyl_CoA > 0 & E_COMT > 0 -> (Kcat_COMT*E_COMT*caffeoyl_CoA)/(1000*(Km_COMT+caffeoyl_CoA)) : (feruloyl_CoA' = feruloyl_CoA+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
 
  //---STS---
- [] resveratrol < resveratrol_max & p_coumaroyl_CoA > 0 & E_STS > 0 -> (Kcat_STS*E_STS*p_coumaroyl_CoA)/(1000*(Km_STS+p_coumaroyl_CoA)) : (resveratrol' = resveratrol+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
- [] piceatannol < piceatannol_max & caffeoyl_CoA > 0 & E_STS > 0 -> (Kcat_STS*E_STS*caffeoyl_CoA)/(1000*(Km_STS+caffeoyl_CoA)) : (piceatannol' = piceatannol+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
+ [] resveratrol < resveratrol_max & p_coumaroyl_CoA > 0 & E_STS > 0 -> (Kcat_STS*E_STS*p_coumaroyl_CoA)/(Km_STS+p_coumaroyl_CoA) : (resveratrol' = resveratrol+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+ [] piceatannol < piceatannol_max & caffeoyl_CoA > 0 & E_STS > 0 -> (Kcat_STS*E_STS*caffeoyl_CoA)/(Km_STS+caffeoyl_CoA) : (piceatannol' = piceatannol+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
   //The rate used for caffeoyl-CoA -> piceatannol is a large assumption, and is most likely not representative of the actual rate.
 
  //---CUS--
@@ -207,30 +243,32 @@ module pathways
 endmodule
 
 
-////From https://www.ncbi.nlm.nih.gov/books/NBK21626/
-//	//Fick's law: dn/dt = ((KD)/x))(A)(C1-C2)
-//	//x=2.5-3nm
-//	//K - partition coefficient
-//	//D - diffusion coefficient in the membrane
-//
-////Product concentration is found by
-//	//Assuming 10^9cells/mL or 10^12cells/L, check in the lab using OD and conversion factors
-//	//Assuming 0.6um^3 cell volume, or 6x10^-16L
-//	//(cell concentration in mol/L)(6x10^-16 L/cell)(10^12 cell/L) = 0.0006mol/L
-//	//This means that for every 1 mol/L that leaves the cell, the broth increases by 0.0006mol/L
-//
-//const double Kdiff = 3.56; //from file:///C:/Users/mikec/Downloads/1-s2.0-S0009308410003269-main.pdf
-//const double Ddiff = 0.0000000005;//cm^2/s sucrose in water
-//const double mt = 0.0000025; //cm
-//const double ma = 0.0000004; //cm^2 from https://bionumbers.hms.harvard.edu/bionumber.aspx?s=n&v=2&id=106614
-//global resveratrol_product: int init 0; //unitless, to be converted to umols by *0.0000000000000000006?
-//formula diffusion = ((ma*Kdiff*Ddiff)/(mt*1000))*(resveratrol - resveratrol_product); //gives umol/s
-////This formula, as is, defines the amount of umol of resveratrol leaves 1 cell.
-////Multiplying by cell density (10^12 cells/L) and multiplying by the broth volume gives the total mass that leaves the cell, which is equal to the total mass that enters the broth.
-////To get density, divide by the broth volume to get concentration in the broth.
-//
-//const int broth_volume = 1; //L
-//
+//From https://www.ncbi.nlm.nih.gov/books/NBK21626/
+	//Fick's law: dn/dt = ((KD)/x))(A)(C1-C2)
+	//x=2.5-3nm
+	//K - partition coefficient
+	//D - diffusion coefficient in the membrane
+
+//Product concentration is found by
+	//Assuming 10^9cells/mL or 10^12cells/L, check in the lab using OD and conversion factors
+	//Assuming 0.6um^3 cell volume, or 6x10^-16L
+	//(cell concentration in mol/L)(6x10^-16 L/cell)(10^12 cell/L) = 0.0006mol/L
+	//This means that for every 1 mol/L that leaves the cell, the broth increases by 0.0006mol/L
+
+const double Kdiff = 3.56; //from file:///C:/Users/mikec/Downloads/1-s2.0-S0009308410003269-main.pdf
+const double Ddiff = 0.0000000005;//cm^2/s sucrose in water
+const double mt = 0.0000025; //cm
+const double ma = 0.0000004; //cm^2 from https://bionumbers.hms.harvard.edu/bionumber.aspx?s=n&v=2&id=106614
+formula diffusion = ((ma*Kdiff*Ddiff)/(mt*1000))*(resveratrol - resveratrol_product*0.0006); //gives umol/s
+//This formula, as is, defines the amount of umol of resveratrol leaves 1 cell.
+//Multiplying by cell density (10^12 cells/L) and multiplying by the broth volume gives the total mass that leaves the cell, which is equal to the total mass that enters the broth.
+//To get density, divide by the broth volume to get concentration in the broth.
+
+const int broth_volume = 1; //L
+
 //module diffusion
-//	[] resveratrol > resveratrol_product -> diffusion*pow(10, 12): (resveratrol' = resveratrol - 1)&(resveratrol_product' = resveratrol_product);
+//	[] resveratrol > 0 & diffusion > 0 -> diffusion/6E-16: (resveratrol' = resveratrol - 1)&(resveratrol_product' = resveratrol_product + 1);
+//	[] resveratrol > 0 & diffusion < 0 -> (diffusion*-1)/6E-16: (resveratrol' = resveratrol + 1)&(resveratrol_product' = resveratrol_product -1);
+	//NOTE: resveratrol_product MUST be multiplied by 0.0006 wherever it is used.
+	//This is becuse, in its current form, it has units mol/cell volume. It must be multiplied by the ratio 0.0006, cell volume/broth volume
 //endmodule
