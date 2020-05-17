@@ -1,10 +1,10 @@
 import csv
 import math
-import numpy.polynomial
-from scipy.optimize import brentq
+import numpy.polynomial     # Need to import
+from scipy.optimize import brentq   # Need to import
 import os.path
 import subprocess
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt     # Need to import
 from datetime import datetime
 
 # Normal distribution is given by:
@@ -153,7 +153,7 @@ if runb:
         if simn is None or simn == "":
             prism_input += " -sim"
         else:
-            prism_input += (" -simsamples " + simn)
+            prism_input += (" -sim -simsamples " + simn)
     prism_input += (" " + model + " " + propname)
     if memory != "":
         prism_input += (" -cuddmaxmem " + memory)
@@ -355,11 +355,11 @@ if graphb:
     plt.legend()
 
     if not resveratrolx:
-        #plt.show()
+        plt.show()
         plt.savefig("plot" + runnumber + ".png")
         print("Plot saved to plot"+runnumber+".txt")
     else:
-        #plt.show(block=False)
+        plt.show(block=False)
         plt.savefig("intracellular" + runnumber + ".png")
         print("Plot saved to intracellular"+runnumber+".txt")
         plt.figure()
@@ -368,6 +368,6 @@ if graphb:
         plt.ylabel("Resveratrol Yield (mg)")
         plt.xlabel("Time (s)")
         plt.legend()
-        #plt.show()
+        plt.show()
         plt.savefig("resveratrol" + runnumber + ".png")
         print("Plot saved to resveratrol"+runnumber+".txt")
