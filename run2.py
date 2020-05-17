@@ -153,7 +153,7 @@ if runb:
         if simn is None or simn == "":
             prism_raw_input += " -sim"
         else:
-            prism_raw_input += (" -simsamples " + simn)
+            prism_raw_input += (" -sim -simsamples " + simn)
     prism_raw_input += (" " + model + " " + propname)
     if memory != "":
         prism_raw_input += (" -cuddmaxmem " + memory)
