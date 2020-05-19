@@ -118,6 +118,7 @@ const int MW_TAL = 53967;	//Da from Uniprot K0K4B0
 const int MW_STS = 42706;	//Da from Uniprot K7XD27
 const int MW_CUS = 43212;	//Da from Uniprot Q8LIL0
 
+const double STS_MGML = 100;
 //Enzyme concentrations
 //10-50mg/L
 //(mg/L)/(mg/mmol) gives mmol/L, multiply by 10^6 for nM
@@ -125,15 +126,19 @@ const double E_4CL = (25/MW_4CL)*1000;
 const double E_C3H = (25/MW_C3H)*1000;
 const double E_COMT = (25/MW_COMT)*1000;
 const double E_TAL = (25/MW_TAL)*1000;
-const double E_STS = (50/MW_STS)*1000;
+const double E_STS = (STS_MGML/MW_STS)*1000;
 const double E_CUS = (25/MW_CUS)*1000;
 
 
 ////MAIN VALUE: S. espanaensis: (Sam8)
-const double Km_TAL = 4.7;	//uM, average
-const double Kcat_TAL = 0.015;	//1/s
+//const double Km_TAL = 4.7;	//uM, average
+//const double Kcat_TAL = 0.015;	//1/s
 //const double Km_TAL = 24;
 //const double Kcat_TAL = 0.076;
+//const double Km_TAL = 336.5;		//Sts_TAL
+//const double Kcat_TAL = 433.333;
+const double Km_TAL = 1492.2;
+const double Kcat_TAL = 155;
 
 ////MAIN VALUE: A. thaliana: (4CL1)
 const double Km_4CL = 25.1;	//uM
@@ -163,8 +168,8 @@ const double Kcat_CUS = 0.0142;
 
 
 //Maximum molecule concentrations
-const int p_coumaric_acid_max = 100;
-const int p_coumaroyl_CoA_max = 1000;
+const int p_coumaric_acid_max = 1000000;
+const int p_coumaroyl_CoA_max = 1000000;
 const int caffeic_acid_max = 1;
 const int ferulic_acid_max = 1;
 const int caffeoyl_CoA_max = 1;
