@@ -105,7 +105,7 @@ ctmc
 
 //4CL	p-Coumaryl-CoA ligase		6.2.1.12
 //C3H	p-Coumarate 3-hydroxylase	1.14.13.-		
-//COMT	Catechol-O-methyltransferase	2.1.1.68/2.1.1.104	
+//COMT	Caffeate-O-methyltransferase	2.1.1.68/2.1.1.104	
 //TAL	Tyrosine ammonia-lyase		4.3.1.25	
 //STS	Stilbene synthase		2.3.1.95		
 //CUS	Curcuminoid synthase		2.3.1.211	
@@ -113,12 +113,13 @@ ctmc
 //Enzyme molecular weights
 const int MW_4CL = 62559;	//Da from Uniprot Q9LU36
 const int MW_C3H = 57055;	//Da from Uniprot K0K952
-const int MW_COMT = 4602;	//Da from Uniprot J3JRD1
+const int MW_COMT = 27999;	//Da from Uniprot J3JRD1
 const int MW_TAL = 53967;	//Da from Uniprot K0K4B0
 const int MW_STS = 42706;	//Da from Uniprot K7XD27
 const int MW_CUS = 43212;	//Da from Uniprot Q8LIL0
 
-const double STS_MGML = 100;
+const double STS_MGL = 50;
+const double CUS_MGL = 50;
 //Enzyme concentrations
 //10-50mg/L
 //(mg/L)/(mg/mmol) gives mmol/L, multiply by 10^6 for nM
@@ -126,8 +127,8 @@ const double E_4CL = (25/MW_4CL)*1000;
 const double E_C3H = (25/MW_C3H)*1000;
 const double E_COMT = (25/MW_COMT)*1000;
 const double E_TAL = (25/MW_TAL)*1000;
-const double E_STS = (STS_MGML/MW_STS)*1000;
-const double E_CUS = (25/MW_CUS)*1000;
+const double E_STS = (STS_MGL/MW_STS)*1000;
+const double E_CUS = (CUS_MGL/MW_CUS)*1000;
 
 
 ////MAIN VALUE: S. espanaensis: (Sam8)
@@ -137,7 +138,7 @@ const double E_CUS = (25/MW_CUS)*1000;
 //const double Kcat_TAL = 0.076;
 //const double Km_TAL = 336.5;		//Sts_TAL
 //const double Kcat_TAL = 433.333;
-const double Km_TAL = 1492.2;
+const double Km_TAL = 1492.2;		//Sas_TAL
 const double Kcat_TAL = 155;
 
 ////MAIN VALUE: A. thaliana: (4CL1)
@@ -152,32 +153,30 @@ const double Kcat_STS = 0.0018937;//1/s
 //const double Km_STS = 11;
 //const double Kcat_STS = 0.02;
 
-//Needs to be updated
-const double Km_C3H = 227.41;
-const double Kcat_C3H = 1.132;
+const double Km_C3H = 143.03;
+const double Kcat_C3H = 0.0347;
 
-//Average of values for COMT1 and COMT2
-const double Km_COMT = 56;	//uM
-const double Kcat_COMT = 20.346;//1/s
+const double Km_COMT = 53;	//uM
+const double Kcat_COMT = 0.0256;//1/s
 
-//Values for CUS taken from https://www.ncbi.nlm.nih.gov/pubmed/19258320
-//Oryza sativa - Plant, values taken from Curcuma longa
-//Needs to be updated
-const double Km_CUS = 189;
-const double Kcat_CUS = 0.0142;
-
+//Using feruloyl-CoA as a substrate
+const double Km_CUS_fcoa = 12.1;
+const double Kcat_CUS_fcoa = 0.013;
+//Using p-coumaroyl-CoA as a substrate
+const double Km_CUS_pccoa = 117.6;
+const double Kcat_CUS_pccoa = 0.0125;
 
 //Maximum molecule concentrations
-const int p_coumaric_acid_max = 1000000;
-const int p_coumaroyl_CoA_max = 1000000;
-const int caffeic_acid_max = 1;
-const int ferulic_acid_max = 1;
-const int caffeoyl_CoA_max = 1;
-const int feruloyl_CoA_max = 1;
+const int p_coumaric_acid_max = 10000000;
+const int p_coumaroyl_CoA_max = 10000000;
+const int caffeic_acid_max = 10000000;
+const int ferulic_acid_max = 10000000;
+const int caffeoyl_CoA_max = 10000000;
+const int feruloyl_CoA_max = 10000000;
 
-const int resveratrol_max = 1000;
-const int piceatannol_max = 1;
-const int curcumin_max = 1;
+const int resveratrol_max = 10000000;
+const int piceatannol_max = 10000000;
+const int curcumin_max = 10000000;
 
 const int bisdemethoxycurcumin_max = 1;
 const int dicaffeoylmethane_max = 1;
@@ -219,9 +218,9 @@ module pathways
  [] p_coumaric_acid < p_coumaric_acid_max & L_tyrosine > 0 & E_TAL > 0 -> (Kcat_TAL*E_TAL*L_tyrosine)/(Km_TAL+L_tyrosine) : (p_coumaric_acid' = p_coumaric_acid+1);
 
  //---C3H---
- //[] caffeic_acid < caffeic_acid_max & p_coumaric_acid > 0 & E_C3H > 0 -> (Kcat_C3H*E_C3H*p_coumaric_acid)/(1000*(Km_C3H+p_coumaric_acid)) : (caffeic_acid' = caffeic_acid+1)&(p_coumaric_acid' = p_coumaric_acid-1);
- //[] caffeoyl_CoA < caffeoyl_CoA_max & p_coumaroyl_CoA > 0 & E_C3H > 0 -> (Kcat_C3H*E_C3H*p_coumaroyl_CoA)/(1000*(Km_C3H+p_coumaroyl_CoA)) : (caffeoyl_CoA' = caffeoyl_CoA+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
- //[] piceatannol < piceatannol_max & resveratrol > 0 & E_C3H > 0 -> (Kcat_C3H*E_C3H*resveratrol)/(1000*(Km_C3H+resveratrol)) : (piceatannol' = piceatannol+1)&(resveratrol' = resveratrol-1);
+ [] caffeic_acid < caffeic_acid_max & p_coumaric_acid > 0 & E_C3H > 0 -> (Kcat_C3H*E_C3H*p_coumaric_acid)/(Km_C3H+p_coumaric_acid) : (caffeic_acid' = caffeic_acid+1)&(p_coumaric_acid' = p_coumaric_acid-1);
+ [] caffeoyl_CoA < caffeoyl_CoA_max & p_coumaroyl_CoA > 0 & E_C3H > 0 -> (Kcat_C3H*E_C3H*p_coumaroyl_CoA)/(Km_C3H+p_coumaroyl_CoA) : (caffeoyl_CoA' = caffeoyl_CoA+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+ [] piceatannol < piceatannol_max & resveratrol > 0 & E_C3H > 0 -> (Kcat_C3H*E_C3H*resveratrol)/(Km_C3H+resveratrol) : (piceatannol' = piceatannol+1)&(resveratrol' = resveratrol-1);
 
  //---4CL---
  [] p_coumaroyl_CoA < p_coumaroyl_CoA_max & p_coumaric_acid > 0 & E_4CL > 0 -> (Kcat_4CL*E_4CL*p_coumaric_acid)/(Km_4CL+p_coumaric_acid) : (p_coumaroyl_CoA' = p_coumaroyl_CoA+1)&(p_coumaric_acid' = p_coumaric_acid-1);
@@ -229,21 +228,19 @@ module pathways
  [] feruloyl_CoA < feruloyl_CoA_max & ferulic_acid > 0 & E_4CL > 0 -> (Kcat_4CL*E_4CL*ferulic_acid)/(Km_4CL+ferulic_acid) : (feruloyl_CoA' = feruloyl_CoA+1)&(ferulic_acid' = ferulic_acid-1);
 
  //---COMT---
- //[] ferulic_acid < ferulic_acid_max & caffeic_acid > 0 & E_COMT > 0 -> (Kcat_COMT*E_COMT*caffeic_acid)/(1000*(Km_COMT+caffeic_acid)) : (ferulic_acid' = ferulic_acid+1)&(caffeic_acid' = caffeic_acid-1);
- //[] feruloyl_CoA < feruloyl_CoA_max & caffeoyl_CoA > 0 & E_COMT > 0 -> (Kcat_COMT*E_COMT*caffeoyl_CoA)/(1000*(Km_COMT+caffeoyl_CoA)) : (feruloyl_CoA' = feruloyl_CoA+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
+ [] ferulic_acid < ferulic_acid_max & caffeic_acid > 0 & E_COMT > 0 -> (Kcat_COMT*E_COMT*caffeic_acid)/(Km_COMT+caffeic_acid) : (ferulic_acid' = ferulic_acid+1)&(caffeic_acid' = caffeic_acid-1);
+ [] feruloyl_CoA < feruloyl_CoA_max & caffeoyl_CoA > 0 & E_COMT > 0 -> (Kcat_COMT*E_COMT*caffeoyl_CoA)/(Km_COMT+caffeoyl_CoA) : (feruloyl_CoA' = feruloyl_CoA+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
 
  //---STS---
- [] resveratrol < resveratrol_max & p_coumaroyl_CoA > 0 & E_STS > 0 -> (Kcat_STS*E_STS*p_coumaroyl_CoA)/(Km_STS+p_coumaroyl_CoA) : (resveratrol' = resveratrol+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
- [] piceatannol < piceatannol_max & caffeoyl_CoA > 0 & E_STS > 0 -> (Kcat_STS*E_STS*caffeoyl_CoA)/(Km_STS+caffeoyl_CoA) : (piceatannol' = piceatannol+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
-  //The rate used for caffeoyl-CoA -> piceatannol is a large assumption, and is most likely not representative of the actual rate.
+ //[] resveratrol < resveratrol_max & p_coumaroyl_CoA > 0 & E_STS > 0 -> (Kcat_STS*E_STS*p_coumaroyl_CoA)/(Km_STS+p_coumaroyl_CoA) : (resveratrol' = resveratrol+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+ //[] piceatannol < piceatannol_max & caffeoyl_CoA > 0 & E_STS > 0 -> (Kcat_STS*E_STS*caffeoyl_CoA)/(Km_STS+caffeoyl_CoA) : (piceatannol' = piceatannol+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
 
  //---CUS--
- //[] curcumin < curcumin_max & feruloyl_CoA > 1 & E_CUS > 0 -> (Kcat_CUS*E_CUS*feruloyl_CoA)/(1000*(Km_CUS+feruloyl_CoA)) : (curcumin' = curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-2);
+ [] curcumin < curcumin_max & feruloyl_CoA > 1 & E_CUS > 0 -> (Kcat_CUS_fcoa*E_CUS*feruloyl_CoA)/(Km_CUS_fcoa+feruloyl_CoA) : (curcumin' = curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-2);
   //Curcumin uses 2 of the reactant, feruloyl-CoA
- //[] bisdemethoxycurcumin < bisdemethoxycurcumin_max & p_coumaroyl_CoA > 1 & E_CUS > 0 -> (1000*(Kcat_CUS*E_CUS*p_coumaroyl_CoA))/(Km_CUS+p_coumaroyl_CoA) : (bisdemethoxycurcumin' = bisdemethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-2);
- //[] dicaffeoylmethane < dicaffeoylmethane_max & caffeoyl_CoA > 1 & E_CUS > 0 -> (1000*(Kcat_CUS*E_CUS*caffeoyl_CoA)/(Km_CUS+caffeoyl_CoA)) : (dicaffeoylmethane' = dicaffeoylmethane+1)&(caffeoyl_CoA' = caffeoyl_CoA-2);
-  //Neither of the above reactions have very much data. The rates used are for CUS and STS in the formation of curcumin.
-  //The rates for both of these reactions is most likely not representative of the actual rate, as the constants are derived from a long sequence for a specific substrate
+ [] bisdemethoxycurcumin < bisdemethoxycurcumin_max & p_coumaroyl_CoA > 1 & E_CUS > 0 -> (Kcat_CUS_pccoa*E_CUS*p_coumaroyl_CoA)/(Km_CUS_pccoa+p_coumaroyl_CoA) : (bisdemethoxycurcumin' = bisdemethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-2);
+ [] dicaffeoylmethane < dicaffeoylmethane_max & caffeoyl_CoA > 1 & E_CUS > 0 -> (Kcat_CUS_fcoa*E_CUS*caffeoyl_CoA)/(Km_CUS_fcoa+caffeoyl_CoA) : (dicaffeoylmethane' = dicaffeoylmethane+1)&(caffeoyl_CoA' = caffeoyl_CoA-2);
+  //No data on caffeoyl_CoA as a substrate, so here is assuming the rate from feruloyl_CoA substrate
   //Both of these reactions use 2 of the reactant
 endmodule
 
