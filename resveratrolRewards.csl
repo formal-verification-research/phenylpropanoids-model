@@ -1,0 +1,12 @@
+const double T;
+
+R{"tyrosine_produced"}=? [ I=T ]
+
+R{"p_coumaric_acid_produced"}=? [ I=T ]
+
+R{"p_coumaroyl_CoA_produced"}=? [ I=T ]
+
+R{"resveratrol_produced"}=? [ I=T ]
+
+R{"resveratrol_produced_mass"}=? [ I=T ]
+
