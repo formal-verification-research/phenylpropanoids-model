@@ -1,0 +1,523 @@
+ctmc
+
+const int gen_max = 10000000; //No real max needed for variables when simulating
+const int L_tyrosine = 29; //uM
+const int glucose = 100; //mM
+const int gen_E = 25; //mg/L, general enzyme concentration
+const int STS_MGL = 50; //mg/L, enzyme concentration for STS, a limiting enzyme for resveratrol production
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////// NATIVE PATHWAY //////////
+const double atp = 4270; //uM
+const double adp = 595; //uM
+const double amp = 955; //uM
+const double nadh = 100; //uM
+const double nad = 1470; //uM
+const double nadph = 62; //uM
+const double nadp = 195; //uM
+
+global g6p: [0..gen_max] init 3480; //uM
+global g1p: [0..gen_max] init 653; //uM
+global f6p: [0..gen_max] init 600; //uM
+global fdp: [0..gen_max] init 272; //uM
+global dhap: [0..gen_max] init 167; //uM
+global gap: [0..gen_max] init 218; //uM
+global pgp: [0..gen_max] init 8; //uM
+global _3pg: [0..gen_max] init 2130; //uM
+global _2pg: [0..gen_max] init 399; //uM
+global pep: [0..gen_max] init 2670; //uM
+global pyruvate: [0..gen_max] init 2670; //uM
+global oxaloacetate: [0..gen_max] init 0; //uM
+global acetyl_CoA: [0..gen_max] init 1; //uM
+global malonyl_CoA: [0..gen_max] init 1; //uM
+
+global _6pg: [0..gen_max] init 808; //uM
+global ribu5p: [0..gen_max] init 111; //uM
+global xyl5p: [0..gen_max] init 138; //uM
+global rib5p: [0..gen_max] init 398; //uM
+global sed7p: [0..gen_max] init 276; //uM
+global e4p: [0..gen_max] init 98; //uM
+
+
+
+
+
+//PTS - External->internal phosphotransferase system
+const double r_PTS_max = 7829780; //uM/s
+const double K_PTS_a1 = 3082300; //uM
+const double K_PTS_a2 = 10; //uM
+const double K_PTS_a3 = 245.3;
+const double K_PTS_g6p = 2140; //uM
+const double n_PTS_g6p = 3.66;
+formula rate_PTS = (r_PTS_max*glucose*(pep/pyruvate))/((K_PTS_a1+(K_PTS_a2*(pep/pyruvate))+(K_PTS_a3*glucose)+(glucose*(pep/pyruvate)))*(1+(g6p/K_PTS_g6p)));
+
+//PGM - Phosphoglucomutase
+const double r_PGM_max = 839.8242773; //uM/s
+const double K_PGM_g6p = 1038; //uM
+const double K_PGM_g1p = 13.6; //uM
+const double Keq_PGM = 0.196;
+formula rate_PGM = (r_PGM_max*(g6p-(g1p/Keq_PGM)))/((K_PGM_g6p*(1+(g1p/K_PGM_g1p)))+g6p);
+
+//G1PAT - Glucose 1-phosphate adenyltransferase
+const double r_G1PAT_max = 7.525458026; //uM/s
+const double K_G1PAT_g1p = 3200; //uM
+const double K_G1PAT_atp = 4420; //uM
+const double K_G1PAT_fdp = 119; //uM
+const double n_G1PAT_fdp = 1.2;
+formula rate_G1PAT = (r_G1PAT_max*g1p*atp*(1+pow(fdp/K_G1PAT_fdp,n_G1PAT_fdp)))/((K_G1PAT_g1p+g1p)*(K_G1PAT_atp+atp));
+
+//PGI - Phosphoglucoisomerase
+const double r_PGI_max = 650987.8687; //uM/s
+const double K_PGI_g6p = 2900; //uM
+const double K_PGI_f6p = 266; //uM
+const double Keq_PGI = 0.1725;
+const double K_PGI_g6p_6pginh = 200; //uM
+formula rate_PGI = (r_PGI_max*(g6p-(f6p/Keq_PGI)))/(K_PGI_g6p*(1+(_6pg/(K_PGI_f6p*(1+(_6pg/K_PGI_g6p_6pginh))))+(_6pg/K_PGI_g6p_6pginh))+g6p);
+
+//Mureine synthesis
+formula rate_mureine_synthesis = 0; ////////////////////
+
+//PFK - Phosphofructokinase
+const double r_PFK_max = 1840584.747; //uM/s
+const double K_PFK_f6p = 325; //uM
+const double K_PFK_atp = 123; //uM
+const double K_PFK_adp_a = 128000; //uM
+const double K_PFK_adp_b = 3890; //uM
+const double K_PFK_adp_c = 4140; //uM
+const double K_PFK_amp_a = 19100; //uM
+const double K_PFK_amp_b = 3200; //uM
+const double K_PFK_pep = 3260; //uM
+const double L_PFK = 5629067;
+const double n_PFK = 11.1;
+formula rate_PFK = (r_PFK_max*atp*f6p)/((atp+(K_PFK_atp*(1+(adp/K_PFK_adp_c))))*(f6p+(K_PFK_f6p*(subrate_A/subrate_B)))*pow(1+(L_PFK/((1+(f6p*(subrate_B/(K_PFK_f6p*subrate_A)))))),n_PFK));
+formula subrate_A = 1+(pep/K_PFK_pep)+(adp/K_PFK_adp_b)+(amp/K_PFK_amp_b);
+formula subrate_B = 1+(adp/K_PFK_adp_a)+(amp/(K_PFK_amp_a));
+
+//ALDO - Aldolase
+const double r_ALDO_max = 17414.64425; //uM/s
+const double K_ALDO_fdp = 1750; //uM
+const double K_ALDO_dhap = 88; //uM
+const double K_ALDO_gap = 88; //uM
+const double K_ALDO_gap_inh = 600; //uM
+const double V_ALDO_blf = 2;
+const double Keq_ALDO = 144; //uM
+formula rate_ALDO = (r_ALDO_max*(fdp-((gap*dhap)/Keq_ALDO)))/(K_ALDO_fdp+fdp+((K_ALDO_gap*dhap)/(Keq_ALDO*V_ALDO_blf))+((K_ALDO_dhap*gap)/(Keq_ALDO*V_ALDO_blf))+((fdp*gap)/(K_ALDO_gap_inh))+((dhap*gap)/(Keq_ALDO*V_ALDO_blf)));
+
+//G3PDH - Glycerol 3-phosphate-dehydrogenase
+const double r_G3PDH_max = 11.62042696; //uM/s
+const double K_G3PDH_dhap = 1000; //uM
+formula rate_G3PDH = (r_G3PDH_max*dhap)/(K_G3PDH_dhap+dhap);
+
+//TIS - Triosephosphate isomerase
+const double r_TIS_max = 68674.74392; //uM/s
+const double K_TIS_dhap = 2800; //uM
+const double K_TIS_gap = 300; //uM
+const double Keq_TIS = 1.39;
+formula rate_TIS = (r_TIS_max*(dhap-(gap/Keq_TIS)))/((K_TIS_dhap*(1+(gap/K_TIS_gap)))+dhap);
+
+//Trptophan Synthesis
+formula rate_tryptophan_synthesis = 1.037; //uM/s
+
+//GAPDH - Glyceraldehyde 3-phosphate dehydrogenase
+const double r_GAPDH_max = 921594.2861; //uM/s
+const double K_GAPDH_gap = 683; //uM
+const double K_GAPDH_pgp = 0.0104; //uM
+const double K_GAPDH_nad = 252; //uM
+const double K_GAPDH_nadh = 1090; //uM
+const double Keq_GAPDH = 0.63;
+formula rate_GAPDH = (r_GAPDH_max*((gap*nad)-((pgp*nadh)/Keq_GAPDH)))/(((K_GAPDH_gap*(1+(pgp/K_GAPDH_pgp)))+gap)*((K_GAPDH_nad*(1+(nadh/K_GAPDH_nadh)))+nad));
+
+//PGK - Phosphoglycerate kinase
+const double r_PGK_max = 3021773.771; //uM/s
+const double K_PGK_pgp = 46.8; //uM
+const double K_PGK_3pg = 473; //mM
+const double K_PGK_adp = 185; //mM
+const double K_PGK_atp = 653; //mM
+const double Keq_PGK = 1934.4;
+formula rate_PGK = (r_PGK_max*((adp*pgp)-((atp*_3pg)/Keq_PGK)))/(((K_PGK_adp*(1+(atp/K_PGK_atp)))+adp)*((K_PGK_pgp*(1+(_3pg/K_PGK_3pg)))+pgp));
+
+//Serine Synthesis
+const double r_serine_synthesis_max = 25.712107; //uM/s
+const double K_serine_synthesis = 1000; //uM
+formula rate_serine_synthesis = (r_serine_synthesis_max*_3pg)/(K_serine_synthesis + _3pg);
+
+//PGluMu - Phosphoglycerate Mutase
+const double r_PGluMu_max = 89049.65407; //uM/s
+const double K_PGluMu_3pg = 200; //uM
+const double K_PGluMu_2pg = 369; //uM
+const double Keq_PGluMu = 0.188;
+formula rate_PGluMu = (r_PGluMu_max*(_3pg-(_2pg/Keq_PGluMu)))/((K_PGluMu_3pg*(1+(_2pg/K_PGluMu_2pg)))+_3pg);
+
+//ENO - Enolase
+const double r_ENO_max = 330447.6151; //uM/s
+const double K_ENO_2pg = 100; //uM
+const double K_ENO_pep = 135; //uM
+const double Keq_ENO = 6730; //uM
+formula rate_ENO = (r_ENO_max*(_2pg-(pep/Keq_ENO)))/((K_ENO_2pg*(1+(pep/K_ENO_pep)))+_2pg);
+
+//Synth1 - Chorismate and mureine synthesis
+const double r_s1_max = 19.53897003; //uM/s
+const double K_s1 = 1000; //uM
+formula rate_synth1 = (r_s1_max*pep)/(K_s1+pep);
+
+//PK - Pyruvate kinase
+const double r_PK_max = 61.13150238; //uM/s
+const double K_PK_pep = 310; //uM
+const double K_PK_adp = 260; //uM
+const double K_PK_atp = 22500; //uM
+const double K_PK_fdp = 190; //uM
+const double K_PK_amp = 200; //uM
+const double L_PK = 1000;
+const double n_PK = 4;
+formula rate_PK = (r_PK_max*pep*pow((pep/K_PK_pep)+1,n_PK-1)*adp)/(K_PK_pep*((L_PK*pow((1+(atp/K_PK_atp))/((fdp/K_PK_fdp)+(amp/K_PK_amp)+1),n_PK))+pow((pep/K_PK_pep)+1,n_PK))*(adp+K_PK_adp));
+
+//PEPCxylase - Phosphoenylpyruvate carboxylase
+const double r_PEPCxylase_max = 107.0205858; //uM/s
+const double K_PEPCxylase_pep = 4070; //uM
+const double K_PEPCxylase_fdp = 700; //uM
+const double n_PEPCxylase = 4.21;
+formula rate_PEPCxylase = (r_PEPCxylase_max*pep*(1+pow(fdp/K_PEPCxylase_fdp,n_PEPCxylase)))/(K_PEPCxylase_pep+pep);
+
+//Methionine synthesis
+formula rate_methionine_synthesis = 2.2627; //uM/s
+
+//PDH - Pyruvate dehydrogenase
+const double r_PDH_max = 270277.34; //uM/s
+const double K_PDH = 1159000; //uM
+const double n_PDH = 3.68;
+const double KI_PDH = 22.2222; //uM
+formula rate_PDH = (r_PDH_max*pow(pyruvate,n_PDH))/((K_PDH*(1+(acetyl_CoA/KI_PDH)))+pow(pyruvate,n_PDH));
+
+//Synth2 - Isoleucine, alanine, a-ketoisovalerate, diaminopimelate synthesis
+const double r_s2_max = 73.61855055; //uM/s
+const double K_s2 = 1000; //uM
+formula rate_synth2 = (r_s2_max*pyruvate)/(K_s2+pyruvate);
+
+//G6PDH - Glucose-6-phosphate dehydrogenase
+const double r_G6PDH_max = 1380.196955; //uM/s
+const double K_G6PDH_g6p = 14400; //uM
+const double K_G6PDH_nadp = 24.6; //uM
+const double K_G6PDH_nadph_nadphinh = 10; //uM
+const double K_G6PDH_nadph_g6pinh = 6430; //uM
+formula rate_G6PDH = (r_G6PDH_max*g6p*nadp)/((g6p+K_G6PDH_g6p)*(1+(nadph/K_G6PDH_nadph_g6pinh))*((K_G6PDH_nadp*(1+(nadph/K_G6PDH_nadph_nadphinh)))+nadp));
+
+//PGDH - 6-phosphogluconate dehydrogenase
+const double r_PGDH_max = 16232.35977; //uM/s
+const double K_PGDH_6pg = 37500; //uM
+const double K_PGDH_nadp = 50.6; //uM
+const double K_PGDH_nadphinh = 13.8; //uM
+const double K_PGDH_atpinh = 208000; //uM
+formula rate_PGDH = (r_PGDH_max*_6pg*nadp)/((_6pg+K_PGDH_6pg)*(nadp+(K_PGDH_nadp*(1+(nadph/K_PGDH_nadphinh))*(1+(atp/K_PGDH_atpinh)))));
+
+//Ru5P - Ribulose phosphate epimerase
+const double r_Ru5P_max = 6739.029475; //uM/s
+const double Keq_Ru5P = 1.4;
+formula rate_Ru5P = r_Ru5P_max*(ribu5p-(xyl5p/Keq_Ru5P));
+
+//R5PI - Ribose phosphate isomerase
+const double r_R5PI_max = 4838.41193; //uM/s
+const double Keq_R5PI = 4.0;
+formula rate_R5PI = r_R5PI_max*(ribu5p-(rib5p/Keq_R5PI));
+
+//TKa - Transketolase a
+const double r_TKa_max = 9473.384783; //uM/s
+const double Keq_TKa = 1.2;
+formula rate_TKa = r_TKa_max*((rib5p*xyl5p)-((sed7p*gap)/Keq_TKa));
+
+//RPPK - Ribose phosphate pyrophosphokinase
+const double r_RPPK_max = 12.90045226; //uM/s 
+const double K_RPPK = 100; //uM
+formula rate_RPPK = (r_RPPK_max*rib5p)/(K_RPPK+rib5p);
+
+//TA - Transaldolase
+const double r_TA_max = 10871.64108; //uM/s
+const double Keq_TA = 1.05;
+formula rate_TA = r_TA_max*((gap*sed7p)-((e4p*f6p)/Keq_TA));
+
+//TKb - Transketolase b
+const double r_TKb_max = 86558.55855; //uM/s
+const double Keq_TKb = 10.0;
+formula rate_TKb = r_TKb_max*((xyl5p*e4p)-((f6p*gap)/Keq_TKb));
+
+//DAHPS - DAHP synthase - to aromatic amino acid synthesis
+const double r_DAHPS_max = 107.9531227; //uM/s
+const double K_DAHPS_e4p = 35; //uM
+const double K_DAHPS_pep = 5.3; //uM
+const double n_DAHPS_e4p = 2.6;
+const double n_DAHPS_pep = 2.2;
+formula rate_DAHPS = (r_DAHPS_max*pow(e4p,n_DAHPS_e4p)*pow(pep,n_DAHPS_pep))/((K_DAHPS_e4p+pow(e4p,n_DAHPS_e4p))*(K_DAHPS_pep+pow(pep,n_DAHPS_pep)));
+
+//ACCOAC - Acetyl-CoA Carboxylase:
+const double Vmax_ACCOAC = 0.4634; //uM/s, represents [E]*Kcat
+const double Km_ACCOAC = 0.3; //uM
+const double KI_ACCOAC = 100; //uM
+formula rate_ACCOAC = (Vmax_ACCOAC*acetyl_CoA)/(acetyl_CoA+(Km_ACCOAC*(1+(malonyl_CoA/KI_ACCOAC))));
+
+
+
+
+
+module native_pathway
+ [] g6p < gen_max -> rate_PTS : (g6p' = g6p+1);
+ [] g1p < gen_max & g6p > 0 -> rate_PGM : (g1p' = g1p+1)&(g6p' = g6p-1);
+ [] g1p > 0 -> rate_G1PAT : (g1p' = g1p-1);
+ [] f6p < gen_max & g6p > 0 & _6pg > 0 -> rate_PGI : (f6p' = f6p+1)&(g6p' = g6p-1);
+// [] f6p > 0 -> rate_mureine_synthesis : (f6p' = f6p-1);
+ [] fdp < gen_max & f6p > 0 -> rate_PFK : (fdp' = fdp+1)&(f6p' = f6p-1);
+ [] dhap < gen_max & gap < gen_max & fdp > 0 -> rate_ALDO : (dhap' = dhap+1)&(gap' = gap+1)&(fdp' = fdp-1);
+ [] dhap > 0 -> rate_G3PDH : (dhap' = -1);
+ [] dhap < gen_max & gap > 0 & gap < dhap -> rate_TIS : (gap' = gap+1)&(dhap' = dhap-1);
+ [] gap < gen_max & dhap > 0 & dhap < gap -> rate_TIS : (dhap' = dhap+1)&(gap' = gap-1);
+ [] gap < gen_max -> rate_tryptophan_synthesis : (gap' = gap+1);
+ [] pgp < gen_max & gap > 0 -> rate_GAPDH : (pgp' = pgp+1)&(gap' = gap-1);
+ [] _3pg < gen_max & pgp > 0 -> rate_PGK : (_3pg' = _3pg+1)&(pgp' = pgp-1);
+ [] _3pg > 0 -> rate_serine_synthesis : (_3pg' = _3pg-1);
+ [] _2pg < gen_max & _3pg > 0 -> rate_PGluMu : (_2pg' = _2pg+1)&(_3pg' = _3pg-1);
+ [] pep < gen_max & _2pg > 0 -> rate_ENO : (pep' = pep+1)&(_2pg' = _2pg-1);
+ [] pep > 0 -> rate_synth1 : (pep' = -1); 
+ [] pyruvate < gen_max & pep > 0 -> rate_PK : (pyruvate' = pyruvate+1)&(pep' = pep-1); 
+ [] oxaloacetate < gen_max & pep > 0 -> rate_PEPCxylase : (oxaloacetate' = oxaloacetate+1)&(pep' = pep-1); 
+ [] pyruvate > 0 -> rate_synth2 : (pyruvate' = pyruvate-1);
+ [] pyruvate < gen_max -> rate_methionine_synthesis : (pyruvate' = pyruvate+1); 
+ [] pyruvate < gen_max -> rate_tryptophan_synthesis : (pyruvate' = pyruvate+1); 
+ [] acetyl_CoA < gen_max & pyruvate > 0 -> rate_PDH : (acetyl_CoA' = acetyl_CoA+1)&(pyruvate' = pyruvate-1); 
+ [] _6pg < gen_max & g6p > 0 -> rate_G6PDH : (_6pg' = _6pg+1)&(g6p' = g6p-1); 
+ [] ribu5p < gen_max & _6pg > 0 -> rate_PGDH : (ribu5p' = ribu5p+1)&(_6pg' = _6pg-1); 
+ [] xyl5p < gen_max & ribu5p > 0 -> rate_Ru5P : (xyl5p' = xyl5p+1)&(ribu5p' = ribu5p-1); 
+ [] rib5p < gen_max & ribu5p > 0 -> rate_R5PI : (rib5p' = rib5p+1)&(ribu5p' = ribu5p-1); 
+ [] sed7p < gen_max & gap < gen_max & xyl5p > 0 & rib5p > 0 -> rate_TKa : (sed7p' = sed7p+1)&(gap' = gap+1)&(xyl5p' = xyl5p-1)&(rib5p' = rib5p-1);
+ [] e4p < gen_max & f6p < gen_max & sed7p > 0 & gap > 0 -> rate_TA : (e4p' = e4p+1)&(f6p' = f6p+1)&(sed7p' = sed7p-1)&(gap' = gap-1); 
+ [] f6p < gen_max & gap < gen_max & xyl5p > 0 & e4p > 0 -> rate_TKb : (f6p' = f6p+1)&(gap' = gap+1)&(xyl5p' = xyl5p-1)&(e4p' = e4p-1); 
+ [] e4p > 0 -> rate_DAHPS : (e4p' = e4p-1); 
+ [] rib5p > 0 -> rate_RPPK : (rib5p' = rib5p-1); 
+
+endmodule
+
+////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////// SYNTHETIC PATHWAY //////////
+
+global p_coumaric_acid: [0..gen_max] init 0;
+global p_coumaroyl_CoA: [0..gen_max] init 0;
+global caffeic_acid: [0..gen_max] init 0;
+global ferulic_acid: [0..gen_max] init 0;
+global caffeoyl_CoA: [0..gen_max] init 0;
+global feruloyl_CoA: [0..gen_max] init 0;
+
+global p_coumaroylacetyl_CoA: [0..gen_max] init 0;
+global caffeoylacetyl_CoA: [0..gen_max] init 0;
+global feruloylacetyl_CoA: [0..gen_max] init 0;
+
+global resveratrol: [0..gen_max] init 0;
+global piceatannol: [0..gen_max] init 0;
+
+global bisdemethoxycurcumin: [0..gen_max] init 0;
+global dicaffeoylmethane: [0..gen_max] init 0;
+global curcumin: [0..gen_max] init 0;
+
+
+
+
+
+//TAL - Tyrosine-ammonia lyase
+const int MW_TAL = 53967; //Da
+const double E_TAL = (gen_E/MW_TAL)*1000;
+const double Km_TAL = 1492.2; //uM
+const double Kcat_TAL = 155; //1/s
+formula rate_TAL_tyr = (Kcat_TAL*E_TAL*L_tyrosine)/(Km_TAL+L_tyrosine);
+
+//C3H - p-Coumarate 3-hydroxylase
+const int MW_C3H = 57055; //Da
+const double E_C3H = (gen_E/MW_C3H)*1000;
+const double Km_C3H = 143.03; //uM
+const double Kcat_C3H = 0.0347; //1/s
+formula rate_C3H_pca = (Kcat_C3H*E_C3H*p_coumaric_acid)/(Km_C3H+p_coumaric_acid);
+formula rate_C3H_pcca = (Kcat_C3H*E_C3H*p_coumaroyl_CoA)/(Km_C3H+p_coumaroyl_CoA);
+formula rate_C3H_rvtl = (Kcat_C3H*E_C3H*resveratrol)/(Km_C3H+resveratrol);
+
+//4CL - p-Coumaroyl-CoA ligase 6.2.1.12
+const int MW_4CL = 62559; //Da
+const double E_4CL = (gen_E/MW_4CL)*1000; //um
+const double Km_4CL_pca = 25.1; //uM, substrate p-coumaric acid
+const double Kcat_4CL_pca = 16.3279; //1/s, substrate p-coumaric acid
+const double Km_4CL_fa = 56.7; //uM, substrate ferulic acid
+const double Kcat_4CL_fa = 7.4758; //1/s, substrate ferulic acid
+formula rate_4CL_pca = (Kcat_4CL_pca*E_4CL*p_coumaric_acid)/(Km_4CL_pca+p_coumaric_acid);
+formula rate_4CL_fra = ((Kcat_4CL_pca*Kcat_4CL_fa*0.5)*E_4CL*ferulic_acid)/((Km_4CL_fa*Km_4CL_pca*0.5)+ferulic_acid); //Using an average of pca and fa substrates
+formula rate_4CL_cfa = (Kcat_4CL_fa*E_4CL*caffeic_acid)/(Km_4CL_fa+caffeic_acid);
+
+//COMT - Caffeate-O-methyltransferase
+const int MW_COMT = 27999; //Da
+const double E_COMT = (gen_E/MW_COMT)*1000;
+const double Km_COMT = 53; //uM
+const double Kcat_COMT = 0.0256; //1/s
+formula rate_COMT_cfa = (Kcat_COMT*E_COMT*caffeic_acid)/(Km_COMT+caffeic_acid);
+formula rate_COMT_cfca = (Kcat_COMT*E_COMT*caffeoyl_CoA)/(Km_COMT+caffeoyl_CoA);
+
+//STS - Stilbene synthase
+const int MW_STS = 42706; //Da
+const double E_STS = (STS_MGL/MW_STS)*1000;
+const double Km_STS = 6.6; //uM
+const double Kcat_STS = 0.0018937; //1/s
+formula rate_STS_pcca = (Kcat_STS*E_STS*p_coumaroyl_CoA)/(Km_STS+p_coumaroyl_CoA);
+formula rate_STS_cfca = (Kcat_STS*E_STS*caffeoyl_CoA)/(Km_STS+caffeoyl_CoA);
+
+//DCS - Phenylpropylacetyl-CoA synthase
+const int MW_DCS = 41995;
+const double E_DCS = (gen_E/MW_DCS)*1000;
+const double S50_DCS = 46; //uM
+const double HSC_DCS = 1.8;
+const double Kcat_DCS = 0.02; //1/s
+const double Km_DCS = 8.4; //uM for malonyl-CoA
+formula rate_DCS_flca = (Kcat_DCS*E_DCS*pow(feruloyl_CoA,HSC_DCS))/(pow(S50_DCS,HSC_DCS)+pow(feruloyl_CoA,HSC_DCS));
+
+//CURS - Curcumin synthase
+const int MW_CURS1 = 43034;	//Da
+const int MW_CURS2 = 43146;	//Da
+const int MW_CURS3 = 43099;	//Da
+const double E_CURS1 = (gen_E/MW_CURS1)*1000;
+const double E_CURS2 = (gen_E/MW_CURS2)*1000;
+const double E_CURS3 = (gen_E/MW_CURS3)*1000;
+const double Km_CURS1_pccoa = 189; //uM, substrate p-coumaroyl-CoA
+const double Km_CURS1_fcoa = 18; //uM, substrate feruloyl-CoA
+const double Kcat_CURS1_pccoa = 0.1417; //1/s, substrate p-coumaroyl-CoA
+const double Kcat_CURS1_fcoa = 0.0183; //1/s, substrate feruloyl-CoA
+const double Km_CURS2_pccoa = 89; //uM, substrate p-coumaroyl-CoA
+const double Km_CURS2_fcoa = 4.3; //uM, substrate feruloyl-CoA
+const double Kcat_CURS2_pccoa = 0.0157; //1/s, substrate p-coumaroyl-CoA
+const double Kcat_CURS2_fcoa = 0.0068; //1/s, substrate feruloyl-CoA
+const double Km_CURS3_pccoa = 3.4; //uM, substrate p-coumaroyl-CoA
+const double Km_CURS3_fcoa = 2.2; //uM, substrate feruloyl-CoA
+const double Kcat_CURS3_pccoa = 0.006; //1/s, substrate p-coumaroyl-CoA
+const double Kcat_CURS3_fcoa = 0.0032; //1/s, substrate feruloyl-CoA
+formula rate_CURS_pcca = (Kcat_CURS1_pccoa*E_CURS1*p_coumaroylacetyl_CoA)/(Km_CURS1_pccoa+p_coumaroyl_CoA);
+formula rate_CURS_cfca = ((Kcat_CURS1_pccoa*Kcat_CURS1_fcoa*0.5)*E_CURS1*caffeoylacetyl_CoA)/((Km_CURS1_pccoa*Km_CURS1_fcoa*0.5)+caffeoyl_CoA); //Using an average of pca and fa substrates
+formula rate_CURS_faca = (Kcat_CURS1_fcoa*E_CURS1*feruloylacetyl_CoA)/(Km_CURS1_fcoa+feruloylacetyl_CoA);
+
+
+
+
+
+module synthetic_pathway
+ //---TAL---
+ [] p_coumaric_acid < gen_max & L_tyrosine > 0 & E_TAL > 0 -> rate_TAL_tyr : (p_coumaric_acid' = p_coumaric_acid+1);
+
+ //---C3H---
+ [] caffeic_acid < gen_max & p_coumaric_acid > 0 & E_C3H > 0 -> rate_C3H_pca : (caffeic_acid' = caffeic_acid+1)&(p_coumaric_acid' = p_coumaric_acid-1);
+ [] caffeoyl_CoA < gen_max & p_coumaroyl_CoA > 0 & E_C3H > 0 -> rate_C3H_pcca : (caffeoyl_CoA' = caffeoyl_CoA+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+ [] piceatannol < gen_max & resveratrol > 0 & E_C3H > 0 -> rate_C3H_rvtl : (piceatannol' = piceatannol+1)&(resveratrol' = resveratrol-1);
+
+ //---4CL---
+ [] p_coumaroyl_CoA < gen_max & p_coumaric_acid > 0 & E_4CL > 0 -> rate_4CL_pca : (p_coumaroyl_CoA' = p_coumaroyl_CoA+1)&(p_coumaric_acid' = p_coumaric_acid-1);
+ [] caffeoyl_CoA < gen_max & caffeic_acid > 0 & E_4CL > 0 -> rate_4CL_cfa : (caffeoyl_CoA' = caffeoyl_CoA+1)&(caffeic_acid' = caffeic_acid-1);
+ [] feruloyl_CoA < gen_max & ferulic_acid > 0 & E_4CL > 0 -> rate_4CL_fra : (feruloyl_CoA' = feruloyl_CoA+1)&(ferulic_acid' = ferulic_acid-1);
+
+ //---COMT---
+ [] ferulic_acid < gen_max & caffeic_acid > 0 & E_COMT > 0 -> rate_COMT_cfa : (ferulic_acid' = ferulic_acid+1)&(caffeic_acid' = caffeic_acid-1);
+ [] feruloyl_CoA < gen_max & caffeoyl_CoA > 0 & E_COMT > 0 -> rate_COMT_cfca : (feruloyl_CoA' = feruloyl_CoA+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
+
+ //---STS---
+ //[] resveratrol < resveratrol_max & p_coumaroyl_CoA > 0 & E_STS > 0 -> rate_STS_pcca : (resveratrol' = resveratrol+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+ //[] piceatannol < piceatannol_max & caffeoyl_CoA > 0 & E_STS > 0 -> rate_STS_cfca : (piceatannol' = piceatannol+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
+
+ //---DCS---
+ [] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 -> rate_DCS_flca : (feruloylacetyl_CoA' = feruloylacetyl_CoA+1)&(feruloyl_CoA' = feruloyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-1);
+
+ //---CURS--
+ [] bisdemethoxycurcumin < gen_max & p_coumaroylacetyl_CoA > 0 -> rate_CURS_pcca : (bisdemethoxycurcumin' = bisdemethoxycurcumin+1)&(p_coumaroylacetyl_CoA' = p_coumaroylacetyl_CoA-2);
+ [] dicaffeoylmethane < gen_max & caffeoylacetyl_CoA > 0 -> rate_CURS_cfca : (dicaffeoylmethane' = dicaffeoylmethane+1)&(caffeoylacetyl_CoA' = caffeoylacetyl_CoA-2);
+ [] curcumin < gen_max & feruloylacetyl_CoA > 0 -> rate_CURS_faca : (curcumin' = curcumin+1)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-2);
+endmodule
+
+///////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///REWARDS STRUCTURES:
+//The following rewards structures allow simulations to return the value of each variable at a time
+rewards "tyrosine_produced"
+ true : L_tyrosine;
+endrewards
+rewards "p_coumaric_acid_produced"
+ true : p_coumaric_acid;
+endrewards
+rewards "caffeic_acid_produced"
+ true : caffeic_acid;
+endrewards
+rewards "p_coumaroyl_CoA_produced"
+ true : p_coumaroyl_CoA;
+endrewards
+rewards "ferulic_acid_produced"
+ true : ferulic_acid;
+endrewards
+rewards "caffeoyl_CoA_produced"
+ true : caffeoyl_CoA;
+endrewards
+rewards "feruloyl_CoA_produced"
+ true : feruloyl_CoA;
+endrewards
+
+rewards "resveratrol_produced"
+ true : resveratrol;
+endrewards
+rewards "resveratrol_produced_mass"
+ true : resveratrol*0.22824;
+endrewards
+
+rewards "feruloylacetyl_CoA_produced"
+ true : feruloylacetyl_CoA;
+endrewards
+rewards "curcumin_produced"
+ true : curcumin;
+endrewards
+rewards "curcumin_produced_mass"
+ true : curcumin*0.36838;
+endrewards
+
+
+
+//Sources:
+//Native pathway: https://onlinelibrary.wiley.com/doi/epdf/10.1002/bit.10288
+//Curcumin production: http://repositorium.sdum.uminho.pt/bitstream/1822/31617/1/document_18058_1.pdf
+//rmax values: https://www.ebi.ac.uk/biomodels-main/BIOMD0000000565
+//Tyrosine concentration: http://book.bionumbers.org/what-are-the-concentrations-of-free-metabolites-in-cells/
+//Tyrosine concentration: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2754216/
