@@ -270,38 +270,84 @@ formula rate_ACCOAC = (Vmax_ACCOAC*acetyl_CoA)/(acetyl_CoA+(Km_ACCOAC*(1+(malony
 
 
 module native_pathway
- [] g6p < gen_max -> rate_PTS : (g6p' = g6p+1);
- [] g1p < gen_max & g6p > 0 -> rate_PGM : (g1p' = g1p+1)&(g6p' = g6p-1);
- [] g1p > 0 -> rate_G1PAT : (g1p' = g1p-1);
- [] f6p < gen_max & g6p > 0 & _6pg > 0 -> rate_PGI : (f6p' = f6p+1)&(g6p' = g6p-1);
+
+ [] g6p < gen_max  -> rate_PTS : (g6p' = g6p+1);
+
+ [] g1p < gen_max & g6p > 0 & rate_PGM > 0 -> rate_PGM : (g1p' = g1p+1)&(g6p' = g6p-1);
+ [] g6p < gen_max & g1p > 0 & rate_PGM < 0 -> -rate_PGM : (g6p' = g6p+1)&(g1p' = g1p-1);
+
+ [] g1p > 0 & fdp > 0 -> rate_G1PAT : (g1p' = g1p-1);
+
+ [] f6p < gen_max & g6p > 0 & _6pg > 0 & rate_PGI > 0 -> rate_PGI : (f6p' = f6p+1)&(g6p' = g6p-1);
+ [] g6p < gen_max & f6p > 0 & _6pg > 0 & rate_PGI < 0 -> -rate_PGI : (g6p' = g6p+1)&(f6p' = f6p-1);
+
 // [] f6p > 0 -> rate_mureine_synthesis : (f6p' = f6p-1);
- [] fdp < gen_max & f6p > 0 -> rate_PFK : (fdp' = fdp+1)&(f6p' = f6p-1);
- [] dhap < gen_max & gap < gen_max & fdp > 0 -> rate_ALDO : (dhap' = dhap+1)&(gap' = gap+1)&(fdp' = fdp-1);
+
+ [] fdp < gen_max & f6p > 0 & pep > 0-> rate_PFK : (fdp' = fdp+1)&(f6p' = f6p-1);
+
+ [] dhap < gen_max & gap < gen_max & fdp > 0 & rate_ALDO > 0 -> rate_ALDO : (dhap' = dhap+1)&(gap' = gap+1)&(fdp' = fdp-1);
+ [] fdp < gen_max & dhap > 0 & gap > 0 & rate_ALDO < 0 -> -rate_ALDO : (fdp' = fdp+1)&(dhap' = dhap-1)&(gap' = gap-1);
+
  [] dhap > 0 -> rate_G3PDH : (dhap' = -1);
- [] dhap < gen_max & gap > 0 & gap < dhap -> rate_TIS : (gap' = gap+1)&(dhap' = dhap-1);
- [] gap < gen_max & dhap > 0 & dhap < gap -> rate_TIS : (dhap' = dhap+1)&(gap' = gap-1);
+
+ [] dhap < gen_max & gap > 0 & rate_TIS > 0 -> rate_TIS : (gap' = gap+1)&(dhap' = dhap-1);
+ [] gap < gen_max & dhap > 0 & rate_TIS < 0 -> -rate_TIS : (dhap' = dhap+1)&(gap' = gap-1);
+
  [] gap < gen_max -> rate_tryptophan_synthesis : (gap' = gap+1);
- [] pgp < gen_max & gap > 0 -> rate_GAPDH : (pgp' = pgp+1)&(gap' = gap-1);
- [] _3pg < gen_max & pgp > 0 -> rate_PGK : (_3pg' = _3pg+1)&(pgp' = pgp-1);
+
+ [] pgp < gen_max & gap > 0 & rate_GAPDH > 0 -> rate_GAPDH : (pgp' = pgp+1)&(gap' = gap-1);
+ [] gap < gen_max & pgp > 0 & rate_GAPDH < 0 -> -rate_GAPDH : (gap' = gap+1)&(pgp' = pgp-1);
+
+ [] _3pg < gen_max & pgp > 0 & rate_PGK > 0 -> rate_PGK : (_3pg' = _3pg+1)&(pgp' = pgp-1);
+ [] pgp < gen_max & _3pg > 0 & rate_PGK < 0 -> -rate_PGK : (pgp' = pgp+1)&(_3pg' = _3pg-1);
+
  [] _3pg > 0 -> rate_serine_synthesis : (_3pg' = _3pg-1);
- [] _2pg < gen_max & _3pg > 0 -> rate_PGluMu : (_2pg' = _2pg+1)&(_3pg' = _3pg-1);
- [] pep < gen_max & _2pg > 0 -> rate_ENO : (pep' = pep+1)&(_2pg' = _2pg-1);
- [] pep > 0 -> rate_synth1 : (pep' = -1); 
- [] pyruvate < gen_max & pep > 0 -> rate_PK : (pyruvate' = pyruvate+1)&(pep' = pep-1); 
- [] oxaloacetate < gen_max & pep > 0 -> rate_PEPCxylase : (oxaloacetate' = oxaloacetate+1)&(pep' = pep-1); 
+
+ [] _2pg < gen_max & _3pg > 0 & rate_PGluMu > 0 -> rate_PGluMu : (_2pg' = _2pg+1)&(_3pg' = _3pg-1);
+ [] _3pg < gen_max & _2pg > 0 & rate_PGluMu < 0 -> -rate_PGluMu : (_3pg' = _3pg+1)&(_2pg' = _2pg-1);
+
+ [] pep < gen_max & _2pg > 0 & rate_ENO > 0 -> rate_ENO : (pep' = pep+1)&(_2pg' = _2pg-1);
+ [] _2pg < gen_max & pep > 0 & rate_ENO < 0 -> -rate_ENO : (_2pg' = _2pg+1)&(pep' = pep-1);
+
+ [] pep > 0 -> rate_synth1 : (pep' = pep-1); 
+
+ [] pyruvate < gen_max & pep > 0 & fdp > 0 -> rate_PK : (pyruvate' = pyruvate+1)&(pep' = pep-1); 
+
+ [] oxaloacetate < gen_max & pep > 0 & fdp > 0 -> rate_PEPCxylase : (oxaloacetate' = oxaloacetate+1)&(pep' = pep-1); 
+
  [] pyruvate > 0 -> rate_synth2 : (pyruvate' = pyruvate-1);
+
  [] pyruvate < gen_max -> rate_methionine_synthesis : (pyruvate' = pyruvate+1); 
  [] pyruvate < gen_max -> rate_tryptophan_synthesis : (pyruvate' = pyruvate+1); 
+
  [] acetyl_CoA < gen_max & pyruvate > 0 -> rate_PDH : (acetyl_CoA' = acetyl_CoA+1)&(pyruvate' = pyruvate-1); 
+
  [] _6pg < gen_max & g6p > 0 -> rate_G6PDH : (_6pg' = _6pg+1)&(g6p' = g6p-1); 
+
  [] ribu5p < gen_max & _6pg > 0 -> rate_PGDH : (ribu5p' = ribu5p+1)&(_6pg' = _6pg-1); 
- [] xyl5p < gen_max & ribu5p > 0 -> rate_Ru5P : (xyl5p' = xyl5p+1)&(ribu5p' = ribu5p-1); 
- [] rib5p < gen_max & ribu5p > 0 -> rate_R5PI : (rib5p' = rib5p+1)&(ribu5p' = ribu5p-1); 
- [] sed7p < gen_max & gap < gen_max & xyl5p > 0 & rib5p > 0 -> rate_TKa : (sed7p' = sed7p+1)&(gap' = gap+1)&(xyl5p' = xyl5p-1)&(rib5p' = rib5p-1);
- [] e4p < gen_max & f6p < gen_max & sed7p > 0 & gap > 0 -> rate_TA : (e4p' = e4p+1)&(f6p' = f6p+1)&(sed7p' = sed7p-1)&(gap' = gap-1); 
- [] f6p < gen_max & gap < gen_max & xyl5p > 0 & e4p > 0 -> rate_TKb : (f6p' = f6p+1)&(gap' = gap+1)&(xyl5p' = xyl5p-1)&(e4p' = e4p-1); 
+
+ [] xyl5p < gen_max & ribu5p > 0 & rate_Ru5P > 0 -> rate_Ru5P : (xyl5p' = xyl5p+1)&(ribu5p' = ribu5p-1); 
+ [] ribu5p < gen_max & xyl5p > 0 & rate_Ru5P < 0 -> -rate_Ru5P : (ribu5p' = ribu5p+1)&(xyl5p' = xyl5p-1); 
+
+ [] rib5p < gen_max & ribu5p > 0 & rate_R5PI > 0 -> rate_R5PI : (rib5p' = rib5p+1)&(ribu5p' = ribu5p-1); 
+ [] ribu5p < gen_max & rib5p > 0 & rate_R5PI < 0 -> -rate_R5PI : (ribu5p' = ribu5p+1)&(rib5p' = rib5p-1); 
+
+ [] sed7p < gen_max & gap < gen_max & xyl5p > 0 & rib5p > 0 & rate_TKa > 0 -> rate_TKa : (sed7p' = sed7p+1)&(gap' = gap+1)&(xyl5p' = xyl5p-1)&(rib5p' = rib5p-1);
+ [] xyl5p < gen_max & rib5p < gen_max & sed7p > 0 & gap > 0 & rate_TKa < 0 -> -rate_TKa : (xyl5p' = xyl5p+1)&(rib5p' = rib5p+1)&(sed7p' = sed7p-1)&(gap' = gap-1);
+
+ [] e4p < gen_max & f6p < gen_max & sed7p > 0 & gap > 0 & rate_TA > 0 -> rate_TA : (e4p' = e4p+1)&(f6p' = f6p+1)&(sed7p' = sed7p-1)&(gap' = gap-1); 
+ [] sed7p < gen_max & gap < gen_max & e4p > 0 & f6p > 0 & rate_TA < 0 -> -rate_TA : (sed7p' = sed7p+1)&(gap' = gap+1)&(e4p' = e4p-1)&(f6p' = f6p-1); 
+
+ [] f6p < gen_max & gap < gen_max & xyl5p > 0 & e4p > 0 & rate_TKb > 0 -> rate_TKb : (f6p' = f6p+1)&(gap' = gap+1)&(xyl5p' = xyl5p-1)&(e4p' = e4p-1); 
+ [] xyl5p < gen_max & e4p < gen_max & f6p > 0 & gap > 0 & rate_TKb < 0 -> -rate_TKb : (xyl5p' = xyl5p+1)&(e4p' = e4p+1)&(f6p' = f6p-1)&(gap' = gap-1); 
+
  [] e4p > 0 -> rate_DAHPS : (e4p' = e4p-1); 
+
  [] rib5p > 0 -> rate_RPPK : (rib5p' = rib5p-1); 
+
+
+
+ [] malonyl_CoA < gen_max & acetyl_CoA > 0 -> rate_ACCOAC : (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
 
 endmodule
 
@@ -474,6 +520,72 @@ endmodule
 
 ///REWARDS STRUCTURES:
 //The following rewards structures allow simulations to return the value of each variable at a time
+rewards "rg6p"
+ true: g6p;
+endrewards
+rewards "rg1p"
+ true: g1p;
+endrewards
+rewards "rf6p"
+ true: f6p;
+endrewards
+rewards "rfdp"
+ true: fdp;
+endrewards
+rewards "rdhap"
+ true: dhap;
+endrewards
+rewards "rgap"
+ true: gap;
+endrewards
+rewards "rpgp"
+ true: pgp;
+endrewards
+rewards "r3pg"
+ true: _3pg;
+endrewards
+rewards "r2pg"
+ true: _2pg;
+endrewards
+rewards "rpep"
+ true: pep;
+endrewards
+rewards "rpyruvate"
+ true: pyruvate;
+endrewards
+rewards "roxaloacetate"
+ true: oxaloacetate;
+endrewards
+rewards "racetyl_CoA"
+ true: acetyl_CoA;
+endrewards
+rewards "rmalonyl_CoA"
+ true: malonyl_CoA;
+endrewards
+
+rewards "r6pg"
+ true: _6pg;
+endrewards
+rewards "rribu5p"
+ true: ribu5p;
+endrewards
+rewards "rxyl5p"
+ true: xyl5p;
+endrewards
+rewards "rrib5p"
+ true: rib5p;
+endrewards
+rewards "rsed7p"
+ true: sed7p;
+endrewards
+rewards "re4p"
+ true: e4p;
+endrewards
+
+
+
+
+
 rewards "tyrosine_produced"
  true : L_tyrosine;
 endrewards
