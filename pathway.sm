@@ -2,7 +2,7 @@ ctmc
 
 const int gen_max = 10000000; //No real max needed for variables when simulating
 const int L_tyrosine = 29; //uM
-const int glucose = 100; //mM
+const int glucose = 100000; //uM
 const int gen_E = 25; //mg/L, general enzyme concentration
 const int STS_MGL = 50; //mg/L, enzyme concentration for STS, a limiting enzyme for resveratrol production
 
@@ -492,8 +492,8 @@ module synthetic_pathway
  //[] feruloyl_CoA < gen_max & caffeoyl_CoA > 0 & E_COMT > 0 -> rate_COMT_cfca : (feruloyl_CoA' = feruloyl_CoA+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
 
  //---STS---
- [] resveratrol < resveratrol_max & p_coumaroyl_CoA > 0 & E_STS > 0 -> rate_STS_pcca : (resveratrol' = resveratrol+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
- [] piceatannol < piceatannol_max & caffeoyl_CoA > 0 & E_STS > 0 -> rate_STS_cfca : (piceatannol' = piceatannol+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
+ [] resveratrol < gen_max & p_coumaroyl_CoA > 0 & E_STS > 0 -> rate_STS_pcca : (resveratrol' = resveratrol+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+ [] piceatannol < gen_max & caffeoyl_CoA > 0 & E_STS > 0 -> rate_STS_cfca : (piceatannol' = piceatannol+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
 
  //---DCS---
  //[] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_flca : (feruloylacetyl_CoA' = feruloylacetyl_CoA+1)&(feruloyl_CoA' = feruloyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-1);
