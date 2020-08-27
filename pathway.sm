@@ -113,7 +113,7 @@ const double K_ALDO_gap = 88; //uM
 const double K_ALDO_gap_inh = 600; //uM
 const double V_ALDO_blf = 2;
 const double Keq_ALDO = 144; //uM
-formula rate_ALDO = (r_ALDO_max*(fdp-((gap*dhap)/Keq_ALDO)))/(K_ALDO_fdp+fdp+((K_ALDO_gap*dhap)/(Keq_ALDO*V_ALDO_blf))+((K_ALDO_dhap*gap)/(Keq_ALDO*V_ALDO_blf))+((fdp*gap)/(K_ALDO_gap_inh))+((dhap*gap)/(Keq_ALDO*V_ALDO_blf)));
+formula rate_ALDO = (r_ALDO_max*(fdp-((gap/Keq_ALDO)*dhap)))/(K_ALDO_fdp+fdp+((K_ALDO_gap*dhap)/(Keq_ALDO*V_ALDO_blf))+((K_ALDO_dhap*gap)/(Keq_ALDO*V_ALDO_blf))+((fdp/K_ALDO_gap_inh)*gap)+((dhap/Keq_ALDO*V_ALDO_blf)*gap));
 
 //G3PDH - Glycerol 3-phosphate-dehydrogenase
 const double r_G3PDH_max = 11.62042696; //uM/s
