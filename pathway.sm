@@ -42,8 +42,8 @@ const int density = pow(10,9); //http://book.bionumbers.org/what-is-the-concentr
 //global pyruvate: [0..gen_max] init 2670; //uM
 const double pyruvate = 2670; //uM, https://bionumbers.hms.harvard.edu/bionumber.aspx?s=n&v=7&id=101192
 //global oxaloacetate: [0..gen_max] init 0; //uM
-global acetyl_CoA: [0..gen_max] init 40; //uM
-global malonyl_CoA: [0..gen_max] init 12; //uM
+global acetyl_CoA: [0..gen_max] init 600; //uM
+global malonyl_CoA: [0..gen_max] init 90; //uM
 
 global pcoarxn: int init 0;
 global malrxn: int init 0;
@@ -200,11 +200,12 @@ formula rate_methionine_synthesis = 2.2627; //uM/s
 
 ///////////////////////////////////////////////////////////////////
 //PDH - Pyruvate dehydrogenase
-const double r_PDH_max = 270.27734; //mM/s
-const double K_PDH = 1159; //mM
-const double n_PDH = 3.68;
-const double KI_PDH = 0.0222222; //mM
-formula rate_PDH = (r_PDH_max*(pow(pyruvate/1000,n_PDH)*1000))/((K_PDH*(1+((acetyl_CoA/1000)/KI_PDH)))+(pow(pyruvate/1000,n_PDH)));
+//const double r_PDH_max = 270.27734; //mM/s
+//const double K_PDH = 1159; //mM
+//const double n_PDH = 3.68;
+//const double KI_PDH = 0.0222222; //mM
+//formula rate_PDH = (r_PDH_max*(pow(pyruvate/1000,n_PDH)*1000))/((K_PDH*(1+((acetyl_CoA/1000)/KI_PDH)))+(pow(pyruvate/1000,n_PDH)));
+const double rate_PDH = 1333.3333; //uM/s
 //////////////////////////////////////////////////////////////
 
 //Synth2 - Isoleucine, alanine, a-ketoisovalerate, diaminopimelate synthesis
@@ -267,19 +268,21 @@ const double n_DAHPS_pep = 2.2;
 //formula rate_DAHPS = (r_DAHPS_max*(pow(e4p/1000,n_DAHPS_e4p)*1000)*(pow(pep/1000,n_DAHPS_pep)*1000))/((K_DAHPS_e4p+(pow(e4p/1000,n_DAHPS_e4p)*1000))*(K_DAHPS_pep+(pow(pep/1000,n_DAHPS_pep)*1000)));
 
 //ACCOAC - Acetyl-CoA Carboxylase:
-const double Vmax_ACCOAC = 1450.285714; //uM/s, represents [E]*Kcat
-const double Km_ACCOAC = 0.3; //uM
+const double Vmax_ACCOAC = 411.056; //uM/s, represents [E]*Kcat
+const double Km_ACCOAC = 18; //uM
 const double KI_ACCOAC = 100; //uM
 formula rate_ACCOAC = (Vmax_ACCOAC*ACC_mult*acetyl_CoA)/(acetyl_CoA+(Km_ACCOAC*(1+(malonyl_CoA/KI_ACCOAC))));
 
 //Synth3
-const double Vmax_Synth3 = 7321.912748; //uM/s
-const double Km_Synth3 = 100; //uM
+const double Vmax_Synth3 = 0; //uM/s
+const double Km_Synth3 = 1000; //uM
 formula rate_Synth3 = (Vmax_Synth3*acetyl_CoA)/(Km_Synth3+acetyl_CoA);
+formula rate_PTA = (513.611*acetyl_CoA)/(45+acetyl_CoA);
+formula rate_CS = (1011.111*acetyl_CoA)/(700+acetyl_CoA);
 
 //Synth4
-const double Vmax_Synth4 = 9000;
-const double Km_Synth4 = 100; //uM
+const double Vmax_Synth4 = 4709.877; //uM/s
+const double Km_Synth4 = 1000; //uM
 formula rate_Synth4 = (Vmax_Synth4*malonyl_CoA)/(Km_Synth4+malonyl_CoA);
 
 const double rate_glucose_consumption = ((11.9*1000)/3600)*density; //11.9 mmol/g cells*hr
@@ -366,9 +369,11 @@ module native_pathway
 
  [] malonyl_CoA < gen_max & acetyl_CoA > 0 -> rate_ACCOAC : (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
 
- [] acetyl_CoA > 0 -> rate_Synth3 : (acetyl_CoA' = acetyl_CoA-1);
+ [] acetyl_CoA > 0 & rate_Synth3 > 0 -> rate_Synth3 : (acetyl_CoA' = acetyl_CoA-1);
+ [] acetyl_CoA > 0 & rate_PTA > 0 -> rate_PTA : (acetyl_CoA' = acetyl_CoA-1);
+ [] acetyl_CoA > 0 & rate_CS > 0 -> rate_CS : (acetyl_CoA' = acetyl_CoA-1);
 
- [] malonyl_CoA > 0 -> rate_Synth4 : (malonyl_CoA' = malonyl_CoA-1);
+ [] malonyl_CoA > 0 & rate_Synth4 > 0 -> rate_Synth4 : (malonyl_CoA' = malonyl_CoA-1);
 
 endmodule
 
