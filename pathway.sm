@@ -456,17 +456,30 @@ formula rate_COMT_cfca = (Kcat_COMT*E_COMT*caffeoyl_CoA)/(Km_COMT+caffeoyl_CoA);
 //STS - Stilbene synthase
 const int MW_STS = 42706; //Da
 const double E_STS = (STS_MGL/MW_STS)*1000;
-const double Km_STS_pcca = 2; //uM
+//const double Km_STS_pcca = 2; //uM
 //const double Kcat_STS_pcca = 0.0038; //1/s
 //const double Kcat_STS_pcca = 0.0018937; //1/s
-const double Km_STS_mcoa = 4.43; //uM
-const double Kcat_STS = 0.0021; //uM
+//const double Km_STS_mcoa = 4.43; //uM
+//const double Kcat_STS = 0.0021; //1/s
 const double Ki_STS = 520; //uM
 //const double Kcat_STS_mcoa = 0.0076; //1/s
 //formula rate_STS_pcca = (Kcat_STS_pcca*E_STS*p_coumaroyl_CoA)/(Km_STS_pcca+p_coumaroyl_CoA);
 //formula rate_STS_mcoa = (Kcat_STS_mcoa*E_STS*malonyl_CoA)/(Km_STS_mcoa+malonyl_CoA);
 formula rate_STS = (E_STS*Kcat_STS*p_coumaroyl_CoA*malonyl_CoA)/((Km_STS_mcoa*(1+(acetyl_CoA/Ki_STS))*p_coumaroyl_CoA)+(Km_STS_pcca*malonyl_CoA)+(malonyl_CoA*p_coumaroyl_CoA));
 //formula rate_STS_cfca = (Kcat_STS*E_STS*caffeoyl_CoA)/(Km_STS+caffeoyl_CoA);
+const double Km_STS_pcca = 4.43; //uM	A hyp
+const double Km_STS_mcoa = 2; //uM	A hyp
+const double Kcat_STS = 0.00167; //1/s	A hyp
+//const double Km_STS_pcca = 8.56; //uM	V vinv
+//const double Km_STS_mcoa = 2; //uM	V vin
+//const double Kcat_STS = 0.003; //1/s	V vin
+//const double Km_STS_pcca = 2.87; //uM	P stro
+//const double Km_STS_mcoa = 2; //uM	P stro
+//const double Kcat_STS = 0.0005; //1/s	P stro
+//const double Km_STS_pcca = 11.85; //	P mass
+//const double Km_STS_mcoa = 2; // 	P mass
+//const double Kcat_STS = 0.0023; //	P mass
+
 
 //DCS - Phenylpropylacetyl-CoA synthase
 const int MW_DCS = 41995;
