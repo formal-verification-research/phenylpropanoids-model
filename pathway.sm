@@ -474,14 +474,14 @@ formula rate_STS = (E_STS*Kcat_STS*p_coumaroyl_CoA*malonyl_CoA)/((Km_STS_mcoa*(1
 //const double Km_STS_pcca = 8.56; //uM	V vinv
 //const double Km_STS_mcoa = 2; //uM	V vin
 //const double Kcat_STS = 0.003; //1/s	V vin
-const double Ki_STS = 970; //uM	P stro
-const double Km_STS_pcca = 2.87; //uM	P stro
-const double Km_STS_mcoa = 2; //uM	P stro
-const double Kcat_STS = 0.0005; //1/s	P stro
-//const double Ki_STS = 787; //uM	P mass
-//const double Km_STS_pcca = 11.85; //	P mass
-//const double Km_STS_mcoa = 2; // 	P mass
-//const double Kcat_STS = 0.0023; //	P mass
+//const double Ki_STS = 970; //uM	P stro
+//const double Km_STS_pcca = 2.87; //uM	P stro
+//const double Km_STS_mcoa = 2; //uM	P stro
+//const double Kcat_STS = 0.0005; //1/s	P stro
+const double Ki_STS = 787; //uM	P mass
+const double Km_STS_pcca = 11.85; //	P mass
+const double Km_STS_mcoa = 2; // 	P mass
+const double Kcat_STS = 0.0023; //	P mass
 
 
 //DCS - Phenylpropylacetyl-CoA synthase
