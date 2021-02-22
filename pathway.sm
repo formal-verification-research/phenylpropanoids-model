@@ -4,7 +4,7 @@ const int gen_max = 10000000; //No real max needed for variables when simulating
 const int L_tyrosine = 29; //uM
 const int glucose = 100000; //uM
 const int gen_E = 25; //mg/L, general enzyme concentration
-const int STS_MGL = 25; //mg/L, enzyme concentration for STS, a limiting enzyme for resveratrol production
+const int STS_MGL = 50; //mg/L, enzyme concentration for STS, a limiting enzyme for resveratrol production
 const int ACC_mult = 1; //mg/L
 const int density = pow(10,9); //http://book.bionumbers.org/what-is-the-concentration-of-bacterial-cells-in-a-saturated-culture/
 
@@ -416,6 +416,25 @@ global curcumin: [0..gen_max] init 0;
 
 
 
+//ACC - Acetyl-CoA Carboxylase src:https://reader.elsevier.com/reader/sd/pii/S1046592806001781?token=FFF01F7B3A520EFC072179DED2DD205F105944F402A7C01B7CC48E17E2D6D93712C1FB1481A25C00316E7CAA120C0039
+//Human ACC1
+const int MW_ACC = 265554; //Da
+const double E_ACC = (gen_E/MW_ACC)*1000;
+const double Km_ACC = 34; //uM
+const double Kcat_ACC = 10.1; //1/s
+//formula rate_ACC = (Kcat_ACC*E_ACC*acetyl_CoA)/(Km_ACC+acetyl_CoA);
+//Human ACC2
+//const int MW_ACC = 276541;
+//const double E_ACC = (gen_E/MW_ACC)*1000;
+//const double Km_ACC = 58; //uM
+//const double Kcat_ACC = 11.8; //1/s
+//formula rate_ACC = (Kcat_ACC*E_ACC*acetyl_CoA)/(Km_ACC+acetyl_CoA);
+//Rat ACC2
+//const int MW_ACC = 276100;
+//const double E_ACC = (gen_E/MW_ACC)*1000;
+//const double Km_ACC = 37; //uM
+//const double Kcat_ACC = 11.6; //1/s
+//formula rate_ACC = (Kcat_ACC*E_ACC*acetyl_CoA)/(Km_ACC+acetyl_CoA);
 
 
 //TAL - Tyrosine-ammonia lyase
@@ -467,20 +486,20 @@ const double E_STS = (STS_MGL/MW_STS)*1000;
 formula rate_STS = (E_STS*Kcat_STS*p_coumaroyl_CoA*malonyl_CoA)/((Km_STS_mcoa*(1+(acetyl_CoA/Ki_STS))*p_coumaroyl_CoA)+(Km_STS_pcca*malonyl_CoA)+(malonyl_CoA*p_coumaroyl_CoA));
 //formula rate_STS_cfca = (Kcat_STS*E_STS*caffeoyl_CoA)/(Km_STS+caffeoyl_CoA);
 const double Ki_STS = 520; //uM		A hyp
-const double Km_STS_pcca = 4.43; //uM	A hyp
-const double Km_STS_mcoa = 2; //uM	A hyp
+const double Km_STS_pcca = 2; //uM	A hyp
+const double Km_STS_mcoa = 4.43; //uM	A hyp
 const double Kcat_STS = 0.00167; //1/s	A hyp
 //const double Ki_STS = 460; //uM	V vinv
-//const double Km_STS_pcca = 8.56; //uM	V vinv
-//const double Km_STS_mcoa = 2; //uM	V vin
+//const double Km_STS_pcca = 2; //uM	V vinv	//Try to find a new kinetic parameter?
+//const double Km_STS_mcoa = 8.56; //uM	V vin
 //const double Kcat_STS = 0.003; //1/s	V vin
 //const double Ki_STS = 970; //uM	P stro
-//const double Km_STS_pcca = 2.87; //uM	P stro
-//const double Km_STS_mcoa = 2; //uM	P stro
-//const double Kcat_STS = 0.0005; //1/s	P stro
+//const double Km_STS_pcca = 4; //uM	P stro	//This one is different!!!	https://www.pnas.org/content/99/5/3335#sec-10
+//const double Km_STS_mcoa = 2.87; //uM	P stro	
+//const double Kcat_STS = 0.0005; //1/s	P stro  //Kodan, 2002 reports 0.014
 //const double Ki_STS = 787; //uM	P mass
-//const double Km_STS_pcca = 11.85; //	P mass
-//const double Km_STS_mcoa = 2; // 	P mass
+//const double Km_STS_pcca = 2; //	P mass	//Try to find a new kinetic parameter
+//const double Km_STS_mcoa = 11.85; // 	P mass
 //const double Kcat_STS = 0.0023; //	P mass
 
 
@@ -523,6 +542,9 @@ formula rate_CURS_faca = (Kcat_CURS1_combined*E_CURS1*feruloylacetyl_CoA*feruloy
 
 
 module synthetic_pathway
+ //---ACC---
+ //[] malonyl_CoA < gen_max & acetyl_CoA > 0 & E_ACC > 0 -> rate_ACC: (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
+
  //---TAL---
  [] p_coumaric_acid < gen_max & L_tyrosine > 0 & E_TAL > 0 -> rate_TAL_tyr : (p_coumaric_acid' = p_coumaric_acid+1);
 
