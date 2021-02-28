@@ -281,8 +281,8 @@ formula rate_PTA = (513.611*acetyl_CoA)/(45+acetyl_CoA);
 formula rate_CS = (1011.111*acetyl_CoA)/(700+acetyl_CoA);
 
 //Synth4
-const double Vmax_Synth4 = 4709.877; //uM/s
-const double Km_Synth4 = 1000; //uM
+const double Vmax_Synth4 = 820.987654321; //uM/s
+const double Km_Synth4 = 100; //uM
 formula rate_Synth4 = (Vmax_Synth4*malonyl_CoA)/(Km_Synth4+malonyl_CoA);
 
 const double rate_glucose_consumption = ((11.9*1000)/3600)*density; //11.9 mmol/g cells*hr
@@ -490,9 +490,9 @@ const double Km_STS_pcca = 2; //uM	A hyp
 const double Km_STS_mcoa = 4.43; //uM	A hyp
 const double Kcat_STS = 0.00167; //1/s	A hyp
 //const double Ki_STS = 460; //uM	V vinv
-//const double Km_STS_pcca = 2; //uM	V vinv	//Try to find a new kinetic parameter?
+//const double Km_STS_pcca = 2; //uM	V vinv	//7 from file:///C:/Users/mikec/Downloads/Comparisonofstilbenesynthasefromdifferentplantsourcesforresveratrolbiosynthesis.pdf
 //const double Km_STS_mcoa = 8.56; //uM	V vin
-//const double Kcat_STS = 0.003; //1/s	V vin
+//const double Kcat_STS = 0.003; //1/s	V vin	//0.04-0.1 from guo, 2014
 //const double Ki_STS = 970; //uM	P stro
 //const double Km_STS_pcca = 4; //uM	P stro	//This one is different!!!	https://www.pnas.org/content/99/5/3335#sec-10
 //const double Km_STS_mcoa = 2.87; //uM	P stro	
