@@ -50,7 +50,7 @@ const double rate_glucose_consumption = ((11.9*1000)/3600)*density; //11.9 mmol/
 module native_pathway
  [] malonyl_CoA < gen_max & acetyl_CoA > 0 -> rate_ACCOAC : (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
 
- [] acetyl_CoA > 0 & rate_Synth3 > 0 -> rate_Synth3 : (acetyl_CoA' = acetyl_CoA-1);
+ //[] acetyl_CoA > 0 & rate_Synth3 > 0 -> rate_Synth3 : (acetyl_CoA' = acetyl_CoA-1);
  [] acetyl_CoA > 0 & rate_PTA > 0 -> rate_PTA : (acetyl_CoA' = acetyl_CoA-1);
  [] acetyl_CoA > 0 & rate_CS > 0 -> rate_CS : (acetyl_CoA' = acetyl_CoA-1);
 
