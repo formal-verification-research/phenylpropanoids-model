@@ -48,6 +48,9 @@ const double rate_glucose_consumption = ((11.9*1000)/3600)*density; //11.9 mmol/
 
 
 module native_pathway
+
+ [] acetyl_CoA < gen_max & pyruvate > 0 -> rate_PDH : (acetyl_CoA' = acetyl_CoA+1);//&(pyruvate' = pyruvate-1); 
+
  [] malonyl_CoA < gen_max & acetyl_CoA > 0 -> rate_ACCOAC : (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
 
  //[] acetyl_CoA > 0 & rate_Synth3 > 0 -> rate_Synth3 : (acetyl_CoA' = acetyl_CoA-1);
@@ -79,21 +82,21 @@ endmodule
 
 global p_coumaric_acid: [0..gen_max] init 0;
 global p_coumaroyl_CoA: [0..gen_max] init 0;
-global caffeic_acid: [0..gen_max] init 0;
-global ferulic_acid: [0..gen_max] init 0;
-global caffeoyl_CoA: [0..gen_max] init 0;
-global feruloyl_CoA: [0..gen_max] init 0;
+//global caffeic_acid: [0..gen_max] init 0;
+//global ferulic_acid: [0..gen_max] init 0;
+//global caffeoyl_CoA: [0..gen_max] init 0;
+//global feruloyl_CoA: [0..gen_max] init 0;
 
-global p_coumaroylacetyl_CoA: [0..gen_max] init 0;
-global caffeoylacetyl_CoA: [0..gen_max] init 0;
-global feruloylacetyl_CoA: [0..gen_max] init 0;
+//global p_coumaroylacetyl_CoA: [0..gen_max] init 0;
+//global caffeoylacetyl_CoA: [0..gen_max] init 0;
+//global feruloylacetyl_CoA: [0..gen_max] init 0;
 
 global resveratrol: [0..gen_max] init 0;
-global piceatannol: [0..gen_max] init 0;
+//global piceatannol: [0..gen_max] init 0;
 
-global bisdemethoxycurcumin: [0..gen_max] init 0;
-global dicaffeoylmethane: [0..gen_max] init 0;
-global curcumin: [0..gen_max] init 0;
+//global bisdemethoxycurcumin: [0..gen_max] init 0;
+//global dicaffeoylmethane: [0..gen_max] init 0;
+//global curcumin: [0..gen_max] init 0;
 
 
 
@@ -133,8 +136,8 @@ const double Kcat_4CL_pca = 16.3279; //1/s, substrate p-coumaric acid
 const double Km_4CL_fa = 56.7; //uM, substrate ferulic acid
 const double Kcat_4CL_fa = 7.4758; //1/s, substrate ferulic acid
 formula rate_4CL_pca = (Kcat_4CL_pca*E_4CL*p_coumaric_acid)/(Km_4CL_pca+p_coumaric_acid);
-formula rate_4CL_fra = ((Kcat_4CL_pca*Kcat_4CL_fa*0.5)*E_4CL*ferulic_acid)/((Km_4CL_fa*Km_4CL_pca*0.5)+ferulic_acid); //Using an average of pca and fa substrates
-formula rate_4CL_cfa = (Kcat_4CL_fa*E_4CL*caffeic_acid)/(Km_4CL_fa+caffeic_acid);
+//formula rate_4CL_fra = ((Kcat_4CL_pca*Kcat_4CL_fa*0.5)*E_4CL*ferulic_acid)/((Km_4CL_fa*Km_4CL_pca*0.5)+ferulic_acid); //Using an average of pca and fa substrates
+//formula rate_4CL_cfa = (Kcat_4CL_fa*E_4CL*caffeic_acid)/(Km_4CL_fa+caffeic_acid);
 
 //STS - Stilbene synthase
 const int MW_STS = 42706; //Da
@@ -220,38 +223,38 @@ endmodule
 
 ///REWARDS STRUCTURES:
 //The following rewards structures allow simulations to return the value of each variable at a time
-rewards "racetyl_CoA"
- true: acetyl_CoA;
-endrewards
-rewards "rmalonyl_CoA"
- true: malonyl_CoA;
-endrewards
+//rewards "racetyl_CoA"
+// true: acetyl_CoA;
+//endrewards
+//rewards "rmalonyl_CoA"
+// true: malonyl_CoA;
+//endrewards
 
 
 
 
 
-rewards "tyrosine_produced"
- true : L_tyrosine;
-endrewards
-rewards "p_coumaric_acid_produced"
- true : p_coumaric_acid;
-endrewards
-rewards "caffeic_acid_produced"
- true : caffeic_acid;
-endrewards
-rewards "p_coumaroyl_CoA_produced"
- true : p_coumaroyl_CoA;
-endrewards
-rewards "ferulic_acid_produced"
- true : ferulic_acid;
-endrewards
-rewards "caffeoyl_CoA_produced"
- true : caffeoyl_CoA;
-endrewards
-rewards "feruloyl_CoA_produced"
- true : feruloyl_CoA;
-endrewards
+//rewards "tyrosine_produced"
+// true : L_tyrosine;
+//endrewards
+//rewards "p_coumaric_acid_produced"
+// true : p_coumaric_acid;
+//endrewards
+//rewards "caffeic_acid_produced"
+// true : caffeic_acid;
+//endrewards
+//rewards "p_coumaroyl_CoA_produced"
+// true : p_coumaroyl_CoA;
+//endrewards
+//rewards "ferulic_acid_produced"
+// true : ferulic_acid;
+//endrewards
+//rewards "caffeoyl_CoA_produced"
+// true : caffeoyl_CoA;
+//endrewards
+//rewards "feruloyl_CoA_produced"
+// true : feruloyl_CoA;
+//endrewards
 
 rewards "resveratrol_produced"
  true : resveratrol;
@@ -260,22 +263,22 @@ rewards "resveratrol_produced_mass"
  true : resveratrol*0.22824;
 endrewards
 
-rewards "feruloylacetyl_CoA_produced"
- true : feruloylacetyl_CoA;
-endrewards
-rewards "curcumin_produced"
- true : curcumin;
-endrewards
-rewards "curcumin_produced_mass"
- true : curcumin*0.36838;
-endrewards
+//rewards "feruloylacetyl_CoA_produced"
+// true : feruloylacetyl_CoA;
+//endrewards
+//rewards "curcumin_produced"
+// true : curcumin;
+//endrewards
+//rewards "curcumin_produced_mass"
+// true : curcumin*0.36838;
+//endrewards
 
-rewards "acetyl_CoA_produced"
- true : acetyl_CoA;
-endrewards
-rewards "malonyl_CoA_produced"
- true : malonyl_CoA;
-endrewards
+//rewards "acetyl_CoA_produced"
+// true : acetyl_CoA;
+//endrewards
+//rewards "malonyl_CoA_produced"
+// true : malonyl_CoA;
+//endrewards
 
 //Sources:
 //Native pathway: https://onlinelibrary.wiley.com/doi/epdf/10.1002/bit.10288
