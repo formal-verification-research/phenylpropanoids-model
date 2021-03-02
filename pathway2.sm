@@ -4,7 +4,7 @@ const int gen_max = 10000000; //No real max needed for variables when simulating
 const int L_tyrosine = 29; //uM
 const int glucose = 100000; //uM
 const int gen_E = 25; //mg/L, general enzyme concentration
-const int STS_MGL = 50; //mg/L, enzyme concentration for STS, a limiting enzyme for resveratrol production
+const int STS_MGL = 25; //mg/L, enzyme concentration for STS, a limiting enzyme for resveratrol production
 const int ACC_mult = 1; //mg/L
 const int density = pow(10,9); //http://book.bionumbers.org/what-is-the-concentration-of-bacterial-cells-in-a-saturated-culture/
 
