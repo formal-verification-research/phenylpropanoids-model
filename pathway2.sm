@@ -108,11 +108,11 @@ global resveratrol: [0..gen_max] init 0;
 //const double Kcat_ACC = 10.1; //1/s
 //formula rate_ACC = (Kcat_ACC*E_ACC*acetyl_CoA)/(Km_ACC+acetyl_CoA);
 //Human ACC2
-const int MW_ACC = 276541;
-const double E_ACC = (gen_E/MW_ACC)*1000;
-const double Km_ACC = 58; //uM
-const double Kcat_ACC = 11.8; //1/s
-formula rate_ACC = (Kcat_ACC*E_ACC*acetyl_CoA)/(Km_ACC+acetyl_CoA);
+//const int MW_ACC = 276541;
+//const double E_ACC = (gen_E/MW_ACC)*1000;
+//const double Km_ACC = 58; //uM
+//const double Kcat_ACC = 11.8; //1/s
+//formula rate_ACC = (Kcat_ACC*E_ACC*acetyl_CoA)/(Km_ACC+acetyl_CoA);
 //Rat ACC2
 //const int MW_ACC = 276100;
 //const double E_ACC = (gen_E/MW_ACC)*1000;
@@ -172,7 +172,7 @@ const double Kcat_STS = 0.00167; //1/s	A hyp
 
 module synthetic_pathway
  //---ACC---
- [] malonyl_CoA < gen_max & acetyl_CoA > 0 & E_ACC > 0 -> rate_ACC: (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
+ //[] malonyl_CoA < gen_max & acetyl_CoA > 0 & E_ACC > 0 -> rate_ACC: (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
 
  //---TAL---
  [] p_coumaric_acid < gen_max & L_tyrosine > 0 & E_TAL > 0 -> rate_TAL_tyr : (p_coumaric_acid' = p_coumaric_acid+1);
