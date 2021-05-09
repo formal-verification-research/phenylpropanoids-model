@@ -1,5 +1,5 @@
 # phenylpropanoids-model
-######A probablistic CTMC model used to simulate the biosynthetic microbial production of various phenylpropanoids. 
+###### A probablistic CTMC model used to simulate the biosynthetic microbial production of various phenylpropanoids. 
 
 ### Contents
 The main pathway file is included in pathway.sm. This file, in and of itself, contains the entire model with both modules, and the simulation of different phenotypes, concentrations, pathways, or other deviations are typically done through commenting and uncommenting certain parts of the code. For example, to test different homologs of STS, one would remove the comments from the four lines that define that homolog (146-149 for AhSTS), and leave the other 12 lines (150-161) commented out. To remove ACC from the biosynthetic pathway, one would comment out that enzyme's command statement (line 167). For both modules, the model defines the kinetic parameters and rates for each enzyme above the module, and then uses commands to represent that enzyme within the module, using the previously defined rates. At the end of the model, reward statements exist to allow for the appropriate data to be collected. Typically, model checking and stochastic simulation in PRISM only allow for probabilities of events to be calculated, and not the actual values of variables. Any time these reward structures are evaluated, they return the value of the variable that they coorespond with, which is the micromolar concentration of each species.
@@ -28,3 +28,9 @@ Finally, the `-cuddmaxmem` switch defined the amount of memory to use while runn
 ### Notes
 Both old folders, old-f20 and old-s21, contain old versions of the project that could potentially be useful in the future, mostly in the form of the inclusion of more native and recombinant enzymes. The contents of these folders are not documented.
 
+
+
+###### Utah State University 
+###### Biological Engineering Department
+###### Electrical & Computer Engineering Department
+###### 2019-2021
