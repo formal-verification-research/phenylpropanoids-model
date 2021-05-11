@@ -44,7 +44,7 @@ formula rate_Synth4 = (Vmax_Synth4*malonyl_CoA)/(Km_Synth4+malonyl_CoA);
 
 module native_pathway
 
- [] acetyl_CoA < gen_max & pyruvate > 0 -> rate_PDH : (acetyl_CoA' = acetyl_CoA+1);//&(pyruvate' = pyruvate-1); 
+ [] acetyl_CoA < gen_max -> rate_PDH : (acetyl_CoA' = acetyl_CoA+1);//&(pyruvate' = pyruvate-1); 
 
  [] malonyl_CoA < gen_max & acetyl_CoA > 0 -> rate_ACCOAC : (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
 
@@ -212,9 +212,9 @@ endmodule
 //rewards "racetyl_CoA"
 // true: acetyl_CoA;
 //endrewards
-//rewards "rmalonyl_CoA"
-// true: malonyl_CoA;
-//endrewards
+rewards "rmalonyl_CoA"
+ true: malonyl_CoA;
+endrewards
 
 //rewards "tyrosine_produced"
 // true : L_tyrosine;
