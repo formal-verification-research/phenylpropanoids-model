@@ -15,7 +15,6 @@ const int STS_MGL = 50; //mg/L, enzyme concentration for STS, a limiting enzyme 
 
 ////////// NATIVE PATHWAY //////////
 
-const double pyruvate = 2670; //uM, https://bionumbers.hms.harvard.edu/bionumber.aspx?s=n&v=7&id=101192
 global acetyl_CoA: [0..gen_max] init 600; //uM
 global malonyl_CoA: [0..gen_max] init 90; //uM
 
