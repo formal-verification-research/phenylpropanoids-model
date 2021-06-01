@@ -15,8 +15,8 @@ const int STS_MGL = 50; //mg/L, enzyme concentration for STS, a limiting enzyme 
 
 ////////// NATIVE PATHWAY //////////
 
-global acetyl_CoA: [0..gen_max] init 600; //uM
-global malonyl_CoA: [0..gen_max] init 90; //uM
+global acetyl_CoA: [0..1000] init 600; //uM
+global malonyl_CoA: [0..150] init 90; //uM
 
 
 
@@ -71,8 +71,8 @@ endmodule
 
 const int L_tyrosine = 29; //uM
 
-global p_coumaric_acid: [0..gen_max] init 0;
-global p_coumaroyl_CoA: [0..gen_max] init 0;
+global p_coumaric_acid: [0..200] init 0;
+global p_coumaroyl_CoA: [0..375000] init 0;
 //global caffeic_acid: [0..gen_max] init 0;
 //global ferulic_acid: [0..gen_max] init 0;
 //global caffeoyl_CoA: [0..gen_max] init 0;
@@ -82,7 +82,7 @@ global p_coumaroyl_CoA: [0..gen_max] init 0;
 //global caffeoylacetyl_CoA: [0..gen_max] init 0;
 //global feruloylacetyl_CoA: [0..gen_max] init 0;
 
-global resveratrol: [0..gen_max] init 0;
+global resveratrol: [0..1000] init 0;
 //global piceatannol: [0..gen_max] init 0;
 
 //global bisdemethoxycurcumin: [0..gen_max] init 0;
