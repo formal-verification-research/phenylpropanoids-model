@@ -44,9 +44,9 @@ formula rate_Synth4 = (Vmax_Synth4*malonyl_CoA)/(Km_Synth4+malonyl_CoA);
 
 module native_pathway
 
- [] acetyl_CoA < gen_max -> rate_PDH : (acetyl_CoA' = acetyl_CoA+1);//&(pyruvate' = pyruvate-1); 
+ [] acetyl_CoA < 1000 -> rate_PDH : (acetyl_CoA' = acetyl_CoA+1);//&(pyruvate' = pyruvate-1); 
 
- [] malonyl_CoA < gen_max & acetyl_CoA > 0 -> rate_ACCOAC : (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
+ [] malonyl_CoA < 150 & acetyl_CoA > 0 -> rate_ACCOAC : (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
 
  [] acetyl_CoA > 0 & rate_PTA > 0 -> rate_PTA : (acetyl_CoA' = acetyl_CoA-1);
 
@@ -163,10 +163,10 @@ const double Kcat_STS = 0.00167; //1/s	A hyp
 
 module synthetic_pathway
  //---ACC---
- [] malonyl_CoA < gen_max & acetyl_CoA > 0 & E_ACC > 0 -> rate_ACC: (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
+ [] malonyl_CoA < 150 & acetyl_CoA > 0 & E_ACC > 0 -> rate_ACC: (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
 
  //---TAL---
- [] p_coumaric_acid < gen_max & L_tyrosine > 0 & E_TAL > 0 -> rate_TAL_tyr : (p_coumaric_acid' = p_coumaric_acid+1);
+ [] p_coumaric_acid < 200 & L_tyrosine > 0 & E_TAL > 0 -> rate_TAL_tyr : (p_coumaric_acid' = p_coumaric_acid+1);
 
  //---C3H---
  //[] caffeic_acid < gen_max & p_coumaric_acid > 0 & E_C3H > 0 -> rate_C3H_pca : (caffeic_acid' = caffeic_acid+1)&(p_coumaric_acid' = p_coumaric_acid-1);
@@ -174,7 +174,7 @@ module synthetic_pathway
  //[] piceatannol < gen_max & resveratrol > 0 & E_C3H > 0 -> rate_C3H_rvtl : (piceatannol' = piceatannol+1)&(resveratrol' = resveratrol-1);
 
  //---4CL---
- [] p_coumaroyl_CoA < gen_max & p_coumaric_acid > 0 & E_4CL > 0 -> rate_4CL_pca : (p_coumaroyl_CoA' = p_coumaroyl_CoA+1)&(p_coumaric_acid' = p_coumaric_acid-1);
+ [] p_coumaroyl_CoA < 375000 & p_coumaric_acid > 0 & E_4CL > 0 -> rate_4CL_pca : (p_coumaroyl_CoA' = p_coumaroyl_CoA+1)&(p_coumaric_acid' = p_coumaric_acid-1);
 ///// [] caffeoyl_CoA < gen_max & caffeic_acid > 0 & E_4CL > 0 -> rate_4CL_cfa : (caffeoyl_CoA' = caffeoyl_CoA+1)&(caffeic_acid' = caffeic_acid-1);
 ///// [] feruloyl_CoA < gen_max & ferulic_acid > 0 & E_4CL > 0 -> rate_4CL_fra : (feruloyl_CoA' = feruloyl_CoA+1)&(ferulic_acid' = ferulic_acid-1);
 
@@ -183,7 +183,7 @@ module synthetic_pathway
  //[] feruloyl_CoA < gen_max & caffeoyl_CoA > 0 & E_COMT > 0 -> rate_COMT_cfca : (feruloyl_CoA' = feruloyl_CoA+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
 
  //---STS---
- [] resveratrol < gen_max & p_coumaroyl_CoA > 0 & malonyl_CoA > 0 & E_STS > 0 -> rate_STS : (resveratrol' = resveratrol+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-3);
+ [] resveratrol < 1000 & p_coumaroyl_CoA > 0 & malonyl_CoA > 0 & E_STS > 0 -> rate_STS : (resveratrol' = resveratrol+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-3);
 
  //[] piceatannol < gen_max & caffeoyl_CoA > 0 & E_STS > 0 -> rate_STS_cfca : (piceatannol' = piceatannol+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
 
