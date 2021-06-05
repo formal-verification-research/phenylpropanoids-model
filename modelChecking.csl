@@ -13,3 +13,4 @@ P=?[F[0,120000] (resveratrol>=219)]
 // Within 48 hours, is the probability greater than 70% that the resveratrol will be 50 mg/L?
 P>0.7[ F[0,172800] (resveratrol>=219.068)]
 
+ 
