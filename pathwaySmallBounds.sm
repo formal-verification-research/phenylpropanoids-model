@@ -72,7 +72,7 @@ endmodule
 const int L_tyrosine = 29; //uM
 
 global p_coumaric_acid: [0..200] init 0;
-global p_coumaroyl_CoA: [0..23630] init 0;
+global p_coumaroyl_CoA: [0..1000] init 0;
 //global caffeic_acid: [0..gen_max] init 0;
 //global ferulic_acid: [0..gen_max] init 0;
 //global caffeoyl_CoA: [0..gen_max] init 0;
@@ -125,7 +125,7 @@ const double Km_4CL_pca = 25.1; //uM, substrate p-coumaric acid
 const double Kcat_4CL_pca = 16.3279; //1/s, substrate p-coumaric acid
 const double Km_4CL_fa = 56.7; //uM, substrate ferulic acid
 const double Kcat_4CL_fa = 7.4758; //1/s, substrate ferulic acid
-formula rate_4CL_pca = (Kcat_4CL_pca*E_4CL*p_coumaric_acid)/(10*(Km_4CL_pca+p_coumaric_acid));
+formula rate_4CL_pca = (Kcat_4CL_pca*E_4CL*p_coumaric_acid)/(Km_4CL_pca+p_coumaric_acid);
 //formula rate_4CL_fra = ((Kcat_4CL_pca*Kcat_4CL_fa*0.5)*E_4CL*ferulic_acid)/((Km_4CL_fa*Km_4CL_pca*0.5)+ferulic_acid); //Using an average of pca and fa substrates
 //formula rate_4CL_cfa = (Kcat_4CL_fa*E_4CL*caffeic_acid)/(Km_4CL_fa+caffeic_acid);
 
@@ -140,7 +140,7 @@ const double E_STS = (STS_MGL/MW_STS)*1000;
 //const double Kcat_STS_mcoa = 0.0076; //1/s
 //formula rate_STS_pcca = (Kcat_STS_pcca*E_STS*p_coumaroyl_CoA)/(Km_STS_pcca+p_coumaroyl_CoA);
 //formula rate_STS_mcoa = (Kcat_STS_mcoa*E_STS*malonyl_CoA)/(Km_STS_mcoa+malonyl_CoA);
-formula rate_STS = (E_STS*Kcat_STS*p_coumaroyl_CoA*malonyl_CoA)/(10*((Km_STS_mcoa*(1+(acetyl_CoA/Ki_STS))*p_coumaroyl_CoA)+(Km_STS_pcca*malonyl_CoA)+(malonyl_CoA*p_coumaroyl_CoA)));
+formula rate_STS = (E_STS*Kcat_STS*p_coumaroyl_CoA*malonyl_CoA)/((Km_STS_mcoa*(1+(acetyl_CoA/Ki_STS))*p_coumaroyl_CoA)+(Km_STS_pcca*malonyl_CoA)+(malonyl_CoA*p_coumaroyl_CoA));
 //formula rate_STS_cfca = (Kcat_STS*E_STS*caffeoyl_CoA)/(Km_STS+caffeoyl_CoA);
 const double Ki_STS = 520; //uM		A hyp
 const double Km_STS_pcca = 2; //uM	A hyp
@@ -158,6 +158,7 @@ const double Kcat_STS = 0.00167; //1/s	A hyp
 //const double Km_STS_pcca = 11.1; //	P mass	//Try to find a new kinetic parameter
 //const double Km_STS_mcoa = 11.85; // 	P mass	//Used from p stro
 //const double Kcat_STS = 0.0023; //	P mass
+formula rate_STS_ss = (E_STS*Kcat_STS)/(((Km_STS_mcoa*(1+(acetyl_CoA/Ki_STS)))/malonyl_CoA)+1);
 
 
 
@@ -174,7 +175,8 @@ module synthetic_pathway
  //[] piceatannol < gen_max & resveratrol > 0 & E_C3H > 0 -> rate_C3H_rvtl : (piceatannol' = piceatannol+1)&(resveratrol' = resveratrol-1);
 
  //---4CL---
- [] p_coumaroyl_CoA < 23621 & p_coumaric_acid > 9 & E_4CL > 0 -> rate_4CL_pca : (p_coumaroyl_CoA' = p_coumaroyl_CoA+1)&(p_coumaric_acid' = p_coumaric_acid-10);
+ [] p_coumaroyl_CoA < 1000 & p_coumaric_acid > 0 & E_4CL > 0 -> rate_4CL_pca : (p_coumaroyl_CoA' = p_coumaroyl_CoA+1)&(p_coumaric_acid' = p_coumaric_acid-1);
+ [] p_coumaroyl_CoA = 1000 & p_coumaric_acid > 0 & E_4CL > 0 -> rate_4CL_pca : (p_coumaric_acid' = p_coumaric_acid-1);
 ///// [] caffeoyl_CoA < gen_max & caffeic_acid > 0 & E_4CL > 0 -> rate_4CL_cfa : (caffeoyl_CoA' = caffeoyl_CoA+1)&(caffeic_acid' = caffeic_acid-1);
 ///// [] feruloyl_CoA < gen_max & ferulic_acid > 0 & E_4CL > 0 -> rate_4CL_fra : (feruloyl_CoA' = feruloyl_CoA+1)&(ferulic_acid' = ferulic_acid-1);
 
@@ -183,8 +185,8 @@ module synthetic_pathway
  //[] feruloyl_CoA < gen_max & caffeoyl_CoA > 0 & E_COMT > 0 -> rate_COMT_cfca : (feruloyl_CoA' = feruloyl_CoA+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
 
  //---STS---
- [] resveratrol < 991 & p_coumaroyl_CoA > 0 & malonyl_CoA > 30 & E_STS > 0 -> rate_STS : (resveratrol' = resveratrol+10)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-30);
-
+ [] resveratrol < 1000 & p_coumaroyl_CoA > 0 & p_coumaroyl_CoA < 1000 & malonyl_CoA > 0 & E_STS > 0 -> rate_STS : (resveratrol' = resveratrol+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-3);
+ [] resveratrol < 1000 & p_coumaroyl_CoA = 1000 & malonyl_CoA > 0 & E_STS > 0 -> rate_STS_ss : (resveratrol' = resveratrol+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-3);
  //[] piceatannol < gen_max & caffeoyl_CoA > 0 & E_STS > 0 -> rate_STS_cfca : (piceatannol' = piceatannol+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
 
  //---DCS---
