@@ -1,0 +1,16 @@
+//const crit_concentration;
+
+P=? [ true U[0,172800] (resveratrol >= 307)]
+//P=?[F[0,120000] (resveratrol>=219)]
+
+// Probability that malonyl-CoA will fall below some critical intracellular concentration throughout the experiment
+//P=? [ F[0,172800] (mcoa <= crit_concentration)]
+//1 - P=? [ F[0,172800] (mcoa >= crit_concentration) ]
+
+// At what time within 48 hours is the probability greater than 70% that the resveratrol will be 50 mg/L?
+// R{"resveratrol_produced" >=219.068 } >0.7 [ C<=172800 ]
+
+// Within 48 hours, is the probability greater than 70% that the resveratrol will be 50 mg/L?
+//P>0.7[ F[0,172800] (resveratrol>=219.068)]
+
+ 

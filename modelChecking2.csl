@@ -1,0 +1,6 @@
+const double T;
+
+P=?[F[0,172800] (resveratrol>=438.135)]
+P=?[F[0,172800] (malonyl_CoA<=4.43)]
+P=?[F[0,172800] (malonyl_CoA<=65)]
+P=?[F[0,T] (resveratrol>=219.068)]
