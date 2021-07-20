@@ -23,46 +23,46 @@ const int STS_MGL = 50; //mg/L, enzyme concentration for STS, a limiting enzyme 
 
 ////////// NATIVE PATHWAY //////////
 
-global acetyl_CoA: [0..gen_max] init 600; //uM
-global malonyl_CoA: [0..gen_max] init 90; //uM
+//global acetyl_CoA: [0..gen_max] init 600; //uM
+//global malonyl_CoA: [0..gen_max] init 90; //uM
 
 
 
 //PDH - Pyruvate dehydrogenase
-const double rate_PDH = 1333.3333; //uM/s
+//const double rate_PDH = 1333.3333; //uM/s
 
 //ACCOAC - Acetyl-CoA Carboxylase:
-const double Vmax_ACCOAC = 412.23; //uM/s, represents [E]*Kcat
-const double Km_ACCOAC = 18; //uM
-const double KI_ACCOAC = 100; //uM
-formula rate_ACCOAC = (Vmax_ACCOAC*acetyl_CoA)/(acetyl_CoA+(Km_ACCOAC*(1+(malonyl_CoA/KI_ACCOAC))));
+//const double Vmax_ACCOAC = 412.23; //uM/s, represents [E]*Kcat
+//const double Km_ACCOAC = 18; //uM
+//const double KI_ACCOAC = 100; //uM
+//formula rate_ACCOAC = (Vmax_ACCOAC*acetyl_CoA)/(acetyl_CoA+(Km_ACCOAC*(1+(malonyl_CoA/KI_ACCOAC))));
 
 //PTA - Phosphate Acetyltransferase:
-formula rate_PTA = (501.666666*acetyl_CoA)/(45+acetyl_CoA);
+//formula rate_PTA = (501.666666*acetyl_CoA)/(45+acetyl_CoA);
 
 //CS - Citrate Synthase
-formula rate_CS = (1035.185185*acetyl_CoA)/(700+acetyl_CoA);
+//formula rate_CS = (1035.185185*acetyl_CoA)/(700+acetyl_CoA);
 
 //Synth4
-const double Vmax_Synth4 = 820.987654321; //uM/s
-const double Km_Synth4 = 100; //uM
-formula rate_Synth4 = (Vmax_Synth4*malonyl_CoA)/(Km_Synth4+malonyl_CoA);
+//const double Vmax_Synth4 = 820.987654321; //uM/s
+//const double Km_Synth4 = 100; //uM
+//formula rate_Synth4 = (Vmax_Synth4*malonyl_CoA)/(Km_Synth4+malonyl_CoA);
 
 
 
-module native_pathway
+//module native_pathway
 
- [] acetyl_CoA < gen_max -> rate_PDH : (acetyl_CoA' = acetyl_CoA+1);//&(pyruvate' = pyruvate-1); 
+ //[] acetyl_CoA < gen_max -> rate_PDH : (acetyl_CoA' = acetyl_CoA+1);//&(pyruvate' = pyruvate-1); 
 
- [] malonyl_CoA < gen_max & acetyl_CoA > 0 -> rate_ACCOAC : (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
+ //[] malonyl_CoA < gen_max & acetyl_CoA > 0 -> rate_ACCOAC : (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
 
- [] acetyl_CoA > 0 & rate_PTA > 0 -> rate_PTA : (acetyl_CoA' = acetyl_CoA-1);
+ //[] acetyl_CoA > 0 & rate_PTA > 0 -> rate_PTA : (acetyl_CoA' = acetyl_CoA-1);
 
- [] acetyl_CoA > 0 & rate_CS > 0 -> rate_CS : (acetyl_CoA' = acetyl_CoA-1);
+ //[] acetyl_CoA > 0 & rate_CS > 0 -> rate_CS : (acetyl_CoA' = acetyl_CoA-1);
 
- [] malonyl_CoA > 0 & rate_Synth4 > 0 -> rate_Synth4 : (malonyl_CoA' = malonyl_CoA-1);
+ //[] malonyl_CoA > 0 & rate_Synth4 > 0 -> rate_Synth4 : (malonyl_CoA' = malonyl_CoA-1);
 
-endmodule
+//endmodule
 
 ////////////////////////////////////
 
@@ -105,7 +105,7 @@ const int MW_ACC = 265554; //Da
 const double E_ACC = (gen_E/MW_ACC)*1000;
 const double Km_ACC = 34; //uM
 const double Kcat_ACC = 10.1; //1/s
-formula rate_ACC = (Kcat_ACC*E_ACC*acetyl_CoA)/(Km_ACC+acetyl_CoA);
+//formula rate_ACC = (Kcat_ACC*E_ACC*acetyl_CoA)/(Km_ACC+acetyl_CoA);
 //Human ACC2
 //const int MW_ACC = 276541;
 //const double E_ACC = (gen_E/MW_ACC)*1000;
@@ -209,7 +209,7 @@ formula rate_CURS_fcoa = (Kcat_CURS_fcoa*E_CURS*feruloyl_CoA) / (Km_CURS_fcoa+fe
 
 module synthetic_pathway
  //---ACC---
- [] malonyl_CoA < gen_max & acetyl_CoA > 0 & E_ACC > 0 -> rate_ACC: (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
+ //[] malonyl_CoA < gen_max & acetyl_CoA > 0 & E_ACC > 0 -> rate_ACC: (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
 
  //---TAL---
  [] p_coumaric_acid < gen_max & L_tyrosine > 0 & E_TAL > 0 -> rate_TAL_tyr : (p_coumaric_acid' = p_coumaric_acid+1);
@@ -234,7 +234,8 @@ module synthetic_pathway
  //[] piceatannol < gen_max & caffeoyl_CoA > 0 & E_STS > 0 -> rate_STS_cfca : (piceatannol' = piceatannol+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
 
  //---DCS---
- [] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+1)&(feruloyl_CoA' = feruloyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-1);
+ //[] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+1)&(feruloyl_CoA' = feruloyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-1);
+ [] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+1)&(feruloyl_CoA' = feruloyl_CoA-1);
 
  //---CURS--
  //[] bisdemethoxycurcumin < gen_max & p_coumaroylacetyl_CoA > 0 & p_coumaroyl_CoA > 0 -> rate_CURS_pcca : (bisdemethoxycurcumin' = bisdemethoxycurcumin+1)&(p_coumaroylacetyl_CoA' = p_coumaroylacetyl_CoA-2);
@@ -258,31 +259,31 @@ endmodule
 //rewards "racetyl_CoA"
 // true: acetyl_CoA;
 //endrewards
-rewards "rmalonyl_CoA"
- true: malonyl_CoA;
-endrewards
+//rewards "rmalonyl_CoA"
+// true: malonyl_CoA;
+//endrewards
 
-//rewards "tyrosine_produced"
-// true : L_tyrosine;
-//endrewards
-//rewards "p_coumaric_acid_produced"
-// true : p_coumaric_acid;
-//endrewards
-//rewards "caffeic_acid_produced"
-// true : caffeic_acid;
-//endrewards
-//rewards "p_coumaroyl_CoA_produced"
-// true : p_coumaroyl_CoA;
-//endrewards
-//rewards "ferulic_acid_produced"
-// true : ferulic_acid;
-//endrewards
-//rewards "caffeoyl_CoA_produced"
-// true : caffeoyl_CoA;
-//endrewards
-//rewards "feruloyl_CoA_produced"
-// true : feruloyl_CoA;
-//endrewards
+rewards "tyrosine_produced"
+ true : L_tyrosine;
+endrewards
+rewards "p_coumaric_acid_produced"
+ true : p_coumaric_acid;
+endrewards
+rewards "caffeic_acid_produced"
+ true : caffeic_acid;
+endrewards
+rewards "p_coumaroyl_CoA_produced"
+ true : p_coumaroyl_CoA;
+endrewards
+rewards "ferulic_acid_produced"
+ true : ferulic_acid;
+endrewards
+rewards "caffeoyl_CoA_produced"
+ true : caffeoyl_CoA;
+endrewards
+rewards "feruloyl_CoA_produced"
+ true : feruloyl_CoA;
+endrewards
 
 rewards "resveratrol_produced"
  true : resveratrol;
@@ -294,9 +295,9 @@ endrewards
 //rewards "feruloylacetyl_CoA_produced"
 // true : feruloylacetyl_CoA;
 //endrewards
-//rewards "curcumin_produced"
-// true : curcumin;
-//endrewards
-//rewards "curcumin_produced_mass"
-// true : curcumin*0.36838;
-//endrewards
+rewards "curcumin_produced"
+ true : curcumin;
+endrewards
+rewards "curcumin_produced_mass"
+ true : curcumin*0.36838;
+endrewards
