@@ -86,15 +86,15 @@ global ferulic_acid: [0..gen_max] init 0;
 global caffeoyl_CoA: [0..gen_max] init 0;
 global feruloyl_CoA: [0..gen_max] init 0;
 
-//global p_coumaroylacetyl_CoA: [0..gen_max] init 0;
-//global caffeoylacetyl_CoA: [0..gen_max] init 0;
-//global feruloylacetyl_CoA: [0..gen_max] init 0;
+global p_coumaroylacetyl_CoA: [0..gen_max] init 0;
+global caffeoylacetyl_CoA: [0..gen_max] init 0;
+global feruloylacetyl_CoA: [0..gen_max] init 0;
 
 global resveratrol: [0..gen_max] init 0;
 //global piceatannol: [0..gen_max] init 0;
 
-//global bisdemethoxycurcumin: [0..gen_max] init 0;
-//global dicaffeoylmethane: [0..gen_max] init 0;
+global bisdemethoxycurcumin: [0..gen_max] init 0;
+global dicaffeoylmethane: [0..gen_max] init 0;
 global curcumin: [0..gen_max] init 0;
 
 
@@ -166,7 +166,7 @@ const double Vmax_DCS_fcoa = 1; //#TODO Find this value
 const double S50_DCS_fcoa = 46; //
 const double Kcat_DCS_fcoa = 0.02;
 const double n_DCS_fcoa = 1.8;
-formula rate_DCS_fcoa = pow(feruloyl_CoA,n_DCS_fcoa) / (pow(S50_DCS_fcoa,n_DCS_fcoa) + pow(feruloyl_CoA,n_DCS_fcoa)); //Hill Equation
+formula rate_DCS_fcoa = (Kcat_DCS_fcoa*E_DCS*pow(feruloyl_CoA,n_DCS_fcoa)) / (pow(S50_DCS_fcoa,n_DCS_fcoa) + pow(feruloyl_CoA,n_DCS_fcoa)); //Hill Equation
 
 //CURS - Curcumin Synthase
 const int MW_CURS = 43034; //Da
@@ -215,18 +215,18 @@ module synthetic_pathway
  [] p_coumaric_acid < gen_max & L_tyrosine > 0 & E_TAL > 0 -> rate_TAL_tyr : (p_coumaric_acid' = p_coumaric_acid+1);
 
  //---C3H---
- //[] caffeic_acid < gen_max & p_coumaric_acid > 0 & E_C3H > 0 -> rate_C3H_pca : (caffeic_acid' = caffeic_acid+1)&(p_coumaric_acid' = p_coumaric_acid-1);
- //[] caffeoyl_CoA < gen_max & p_coumaroyl_CoA > 0 & E_C3H > 0 -> rate_C3H_pcca : (caffeoyl_CoA' = caffeoyl_CoA+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+ [] caffeic_acid < gen_max & p_coumaric_acid > 0 & E_C3H > 0 -> rate_C3H_pca : (caffeic_acid' = caffeic_acid+1)&(p_coumaric_acid' = p_coumaric_acid-1);
+ [] caffeoyl_CoA < gen_max & p_coumaroyl_CoA > 0 & E_C3H > 0 -> rate_C3H_pcoa : (caffeoyl_CoA' = caffeoyl_CoA+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
  //[] piceatannol < gen_max & resveratrol > 0 & E_C3H > 0 -> rate_C3H_rvtl : (piceatannol' = piceatannol+1)&(resveratrol' = resveratrol-1);
 
  //---4CL---
  [] p_coumaroyl_CoA < gen_max & p_coumaric_acid > 0 & E_4CL > 0 -> rate_4CL_pca : (p_coumaroyl_CoA' = p_coumaroyl_CoA+1)&(p_coumaric_acid' = p_coumaric_acid-1);
-///// [] caffeoyl_CoA < gen_max & caffeic_acid > 0 & E_4CL > 0 -> rate_4CL_cfa : (caffeoyl_CoA' = caffeoyl_CoA+1)&(caffeic_acid' = caffeic_acid-1);
-///// [] feruloyl_CoA < gen_max & ferulic_acid > 0 & E_4CL > 0 -> rate_4CL_fra : (feruloyl_CoA' = feruloyl_CoA+1)&(ferulic_acid' = ferulic_acid-1);
+ [] caffeoyl_CoA < gen_max & caffeic_acid > 0 & E_4CL > 0 -> rate_4CL_ca : (caffeoyl_CoA' = caffeoyl_CoA+1)&(caffeic_acid' = caffeic_acid-1);
+ [] feruloyl_CoA < gen_max & ferulic_acid > 0 & E_4CL > 0 -> rate_4CL_fa : (feruloyl_CoA' = feruloyl_CoA+1)&(ferulic_acid' = ferulic_acid-1);
 
  //---COMT---
- //[] ferulic_acid < gen_max & caffeic_acid > 0 & E_COMT > 0 -> rate_COMT_cfa : (ferulic_acid' = ferulic_acid+1)&(caffeic_acid' = caffeic_acid-1);
- //[] feruloyl_CoA < gen_max & caffeoyl_CoA > 0 & E_COMT > 0 -> rate_COMT_cfca : (feruloyl_CoA' = feruloyl_CoA+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
+ [] ferulic_acid < gen_max & caffeic_acid > 0 & E_COMT > 0 -> rate_COMT_ca : (ferulic_acid' = ferulic_acid+1)&(caffeic_acid' = caffeic_acid-1);
+ [] feruloyl_CoA < gen_max & caffeoyl_CoA > 0 & E_COMT > 0 -> rate_COMT_ccoa : (feruloyl_CoA' = feruloyl_CoA+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
 
  //---STS---
  //[] resveratrol < gen_max & p_coumaroyl_CoA > 0 & malonyl_CoA > 0 & E_STS > 0 -> rate_STS : (resveratrol' = resveratrol+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-3);
@@ -234,12 +234,12 @@ module synthetic_pathway
  //[] piceatannol < gen_max & caffeoyl_CoA > 0 & E_STS > 0 -> rate_STS_cfca : (piceatannol' = piceatannol+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
 
  //---DCS---
- //[] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_flca : (feruloylacetyl_CoA' = feruloylacetyl_CoA+1)&(feruloyl_CoA' = feruloyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-1);
+ [] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+1)&(feruloyl_CoA' = feruloyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-1);
 
  //---CURS--
  //[] bisdemethoxycurcumin < gen_max & p_coumaroylacetyl_CoA > 0 & p_coumaroyl_CoA > 0 -> rate_CURS_pcca : (bisdemethoxycurcumin' = bisdemethoxycurcumin+1)&(p_coumaroylacetyl_CoA' = p_coumaroylacetyl_CoA-2);
  //[] dicaffeoylmethane < gen_max & caffeoylacetyl_CoA > 0 & p_coumaroyl_CoA > 0 -> rate_CURS_cfca : (dicaffeoylmethane' = dicaffeoylmethane+1)&(caffeoylacetyl_CoA' = caffeoylacetyl_CoA-2);
- //[] curcumin < gen_max & feruloylacetyl_CoA > 0 & feruloyl_CoA > 0-> rate_CURS_faca : (curcumin' = curcumin+1)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-1)&(feruloyl_CoA' = feruloyl_CoA-1);
+ [] curcumin < gen_max & feruloylacetyl_CoA > 0 & feruloyl_CoA > 0-> rate_CURS_fcoa : (curcumin' = curcumin+1)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-1)&(feruloyl_CoA' = feruloyl_CoA-1);
 endmodule
 
 ///////////////////////////////////////
