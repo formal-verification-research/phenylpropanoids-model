@@ -292,9 +292,9 @@ rewards "resveratrol_produced_mass"
  true : resveratrol*0.22824;
 endrewards
 
-//rewards "feruloylacetyl_CoA_produced"
-// true : feruloylacetyl_CoA;
-//endrewards
+rewards "feruloylacetyl_CoA_produced"
+ true : feruloylacetyl_CoA;
+endrewards
 rewards "curcumin_produced"
  true : curcumin;
 endrewards
