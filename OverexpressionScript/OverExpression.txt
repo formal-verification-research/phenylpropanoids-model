@@ -1,0 +1,19 @@
+const double T;
+const double E_TAL = 0.18529842311041933;
+const double E_4CL = 0.15984910244728975;
+const double E_C3H = 0.1752694768206117;
+const double E_COMT = 0.40647101861637264;
+const double E_CCOMT = 0.32679738562091504;
+const double E_DCS = 0.23782909601160607;
+const double E_CURS = 0.2323744016359158;
+
+
+R{"p_coumaric_acid_produced"}=? [I=T]
+R{"caffeic_acid_produced"}=? [I=T]
+R{"ferulic_acid_produced"}=? [I=T]
+R{"p_coumaroyl_CoA_produced"}=? [I=T]
+R{"caffeoyl_CoA_produced"}=? [I=T]
+R{"feruloyl_CoA_produced"}=? [I=T]
+R{"feruloylacetyl_CoA_produced"}=? [I=T]
+R{"curcumin_produced"}=? [I=T]
+R{"curcumin_produced_mass"}=? [I=T]
