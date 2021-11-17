@@ -5,7 +5,8 @@ import os
 #itertools.combination(list of enzymes, number of changed enzymes)
 
 enzymes = {'E_TAL':53967, 'E_4CL':62559, 'E_C3H':57055, 'E_COMT':24602, 'E_CCOMT':30600, 'E_DCS':42047, 'E_CURS':43034}
-conc = 10
+differentConcentration = 10
+concentration = 25
 comb = 0
 combinations_2 = itertools.combinations(enzymes,2)
 combinations_3 = itertools.combinations(enzymes,3)
@@ -23,7 +24,7 @@ file.write("const double T;\n".encode())
 
 #2 enzymes
 for enzyme in comb2[comb]:
-    constant = 'const double ' + str(enzyme) + ' = ' + str(conc*1000/enzymes[enzyme]) + ';\n'
+    constant = 'const double ' + str(enzyme) + ' = ' + str(differentConcentration*1000/enzymes[enzyme]) + ';\n'
     file.write(constant.encode())
 
 #
@@ -34,7 +35,7 @@ for enzyme in comb2[comb]:
 
 for enzyme in enzymes:
     if enzyme not in comb2[comb]:
-        constant = 'const double ' + str(enzyme) + ' = ' + str(conc*1000/enzymes[enzyme]) + ';\n'
+        constant = 'const double ' + str(enzyme) + ' = ' + str(concentration*1000/enzymes[enzyme]) + ';\n'
         file.write(constant.encode())
 
 file.write("\n\n".encode())
@@ -50,8 +51,7 @@ rewards = 'R{"p_coumaric_acid_produced"}=? [I=T]\n' \
 file.write(rewards.encode())
 file.close()
 
-prism = "C:\Program Files\prism-4.7\\bin\prism.bat"
-subprocess.run([prism, "-help"])
+subprocess.run(["prism", "-help"])
 
 # for i in combinations_2:
 #     file.write(('const double ' + combinations_3[i][0] + ';').encode())
