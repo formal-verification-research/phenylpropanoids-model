@@ -51,7 +51,8 @@ rewards = 'R{"p_coumaric_acid_produced"}=? [I=T]\n' \
 file.write(rewards.encode())
 file.close()
 
-subprocess.run(["prism", "-help"])
+results = subprocess.run(["prism", "../../pathway_curcumin.sm", "OverExpression.txt"], capture_output=True)
+print(results)
 
 # for i in combinations_2:
 #     file.write(('const double ' + combinations_3[i][0] + ';').encode())
