@@ -51,7 +51,7 @@ rewards = 'R{"p_coumaric_acid_produced"}=? [I=T]\n' \
 file.write(rewards.encode())
 file.close()
 
-results = subprocess.run(["prism", "../pathway_curcumin.sm", "curcuminRewards.csl", "-param E_TAL=0.18529842311041933", "-sim", "-simsamples 100", "-const T=172800", "-v", "-cuddmaxmem 110g"])
+results = subprocess.run(["prism", "../pathway_curcumin.sm", "curcuminRewards.csl", "-param E_TAL=0.18529842311041933:0.18529842311041933", "-sim", "-simsamples 100", "-const T=172800", "-v", "-cuddmaxmem 110g"])
 print(results)
 
 # for i in combinations_2:
