@@ -120,7 +120,7 @@ const double Kcat_ACC = 10.1; //1/s
 
 //TAL - Tyrosine-ammonia lyase
 const int MW_TAL = 53967; //Da
-const double E_TAL = (gen_E/MW_TAL)*1000;
+const double E_TAL;// = (gen_E/MW_TAL)*1000;
 const double Km_TAL = 1492.2; //uM
 const double Kcat_TAL = 155; //1/s
 formula rate_TAL_tyr = (Kcat_TAL*E_TAL*L_tyrosine)/(Km_TAL+L_tyrosine);

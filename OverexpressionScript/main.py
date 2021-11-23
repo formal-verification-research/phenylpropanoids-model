@@ -52,8 +52,8 @@ file.write(rewards.encode())
 file.close()
 
 "-param E_TAL=0.18529842311041933:0.18529842311041933"
-results = subprocess.run(["prism", "../pathway_curcumin.sm", "../curcuminRewards.csl", "-sim", "-simsamples 100", "-const T=172800", "-v", "-cuddmaxmem 110g"])
-#results = subprocess.run(["prism", "../pathway_curcumin.sm", "../curcuminRewards.csl", "-const E_TAL=0.18529842311041933", "-sim", "-simsamples 100", "-const T=172800", "-v", "-cuddmaxmem 110g"])
+#results = subprocess.run(["prism", "../pathway_curcumin.sm", "../curcuminRewards.csl", "-sim", "-simsamples 100", "-const T=172800", "-v", "-cuddmaxmem 110g"])
+results = subprocess.run(["prism", "../pathway_curcumin.sm", "../curcuminRewards.csl", "-const\ E_TAL=0.18529842311041933", "-sim", "-simsamples\ 100", "-const\ T=172800", "-v", "-cuddmaxmem\ 110g"])
 #print(results)
 
 # for i in combinations_2:
