@@ -61,12 +61,12 @@ for comb in comb3:
 #     file.write("\n\n".encode())
 
 
-fullStatement = "prism ../pathway_curcumin.sm ../curcuminRewards.csl " + statements[42] + " -sim -simsamples 100 -const T=172800 -v -cuddmaxmen 110g -exportresults " + str(files[42])
+fullStatement = "prism ../pathway_curcumin.sm ../curcuminRewards.csl " + statements[42] + " -sim -simsamples 100 -const T=172800 -v -cuddmaxmem 110g -exportresults " + str(files[42])
 subprocess.run([fullStatement], shell=True)
 
 '''
 for i in range (len(statements)):
-    fullStatement = "prism ../pathway_curcumin.sm ../curcuminRewards.csl " + statements[i] + " -sim -simsamples 100 -const T=172800 -v -cuddmaxmen 110g -exportresults " + str(files[i])
+    fullStatement = "prism ../pathway_curcumin.sm ../curcuminRewards.csl " + statements[i] + " -sim -simsamples 100 -const T=172800 -v -cuddmaxmem 110g -exportresults " + str(files[i])
     subprocess.run([fullStatement], shell=True)
 '''
 
