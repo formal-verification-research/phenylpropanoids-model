@@ -5,9 +5,7 @@ import os
 #itertools.combination(list of enzymes, number of changed enzymes)
 
 enzymes = {'E_TAL':53967, 'E_4CL':62559, 'E_C3H':57055, 'E_COMT':24602, 'E_CCOMT':30600, 'E_DCS':42047, 'E_CURS':43034}
-differentConcentration = 10
-concentration = 25
-comb = 0
+concentrations = [10,25,50]
 combinations_2 = itertools.combinations(enzymes,2)
 combinations_3 = itertools.combinations(enzymes,3)
 
@@ -19,42 +17,61 @@ comb3 = []
 for item in combinations_3:
     comb3.append(item)
 
-file = open('OverExpression.txt','wb')
-file.write("const double T;\n".encode())
+statements = []
+files = []
 
-#2 enzymes
-for enzyme in comb2[comb]:
-    constant = 'const double ' + str(enzyme) + ' = ' + str(differentConcentration*1000/enzymes[enzyme]) + ';\n'
-    file.write(constant.encode())
+for comb in comb2:
+    for i in range(3):
+        for j in range(3):
+            enzyme1 = concentrations[i]*1000/enzymes[comb[0]]
+            enzyme2 = concentrations[j]*1000/enzymes[comb[1]]
+            statement = "-const " + str(comb[0]) + "=" + str(enzyme1) + "," + str(comb[1]) + "=" + str(enzyme2) + ","
+            filename = str(comb[0].replace('E_','')) + str(concentrations[i]) + "_" + str(comb[1].replace('E_','')) + str(concentrations[j]) + ".txt:csv"
+            files.append(filename)
+            for enzyme in enzymes:
+                if enzyme not in comb:
+                    statement += str(enzyme) + "=" + str(25*1000/enzymes[enzyme])
+                    if enzyme != "E_CURS":
+                        statement += ","
+            statements.append(statement)
 
-#
-# #3 enzymes
-# for enzyme in comb3[comb]:
-#     constant = 'const double ' + str(enzyme) + ' = ' + str(conc*1000/enzymes[enzyme]) + ';\n'
-#     file.write(constant.encode())
 
-for enzyme in enzymes:
-    if enzyme not in comb2[comb]:
-        constant = 'const double ' + str(enzyme) + ' = ' + str(concentration*1000/enzymes[enzyme]) + ';\n'
-        file.write(constant.encode())
+for comb in comb3:
+    for i in range(3):
+        for j in range(3):
+            for k in range(3):
+                enzyme1 = concentrations[i]*1000/enzymes[comb[0]]
+                enzyme2 = concentrations[j]*1000/enzymes[comb[1]]
+                enzyme3 = concentrations[k]*1000/enzymes[comb[2]]
+                statement = "-const " + str(comb[0]) + "=" + str(enzyme1) + "," + str(comb[1]) + "=" + str(enzyme2) + "," + str(comb[2]) + "=" + str(enzyme3) + ","
+                filename = str(comb[0].replace('E_','')) + str(concentrations[i]) + "_" + str(comb[1].replace('E_','')) + str(concentrations[j]) + "_" + str(comb[2].replace('E_','')) + str(concentrations[k]) + ".txt:csv"
+                files.append(filename)
+                for enzyme in enzymes:
+                    if enzyme not in comb:
+                        statement += str(enzyme) + "=" + str(25*1000/enzymes[enzyme])
+                        if enzyme != "E_CURS":
+                            statement += ","
+                statements.append(statement)
 
-file.write("\n\n".encode())
-rewards = 'R{"p_coumaric_acid_produced"}=? [I=T]\n' \
-          'R{"caffeic_acid_produced"}=? [I=T]\n' \
-          'R{"ferulic_acid_produced"}=? [I=T]\n' \
-          'R{"p_coumaroyl_CoA_produced"}=? [I=T]\n' \
-          'R{"caffeoyl_CoA_produced"}=? [I=T]\n' \
-          'R{"feruloyl_CoA_produced"}=? [I=T]\n' \
-          'R{"feruloylacetyl_CoA_produced"}=? [I=T]\n' \
-          'R{"curcumin_produced"}=? [I=T]\n' \
-          'R{"curcumin_produced_mass"}=? [I=T]\n'
-file.write(rewards.encode())
-file.close()
+# file=open("Statements.txt", 'wb')
+# for i in range(len(statements)):
+#     file.write(statements[i].encode())
+#     file.write("\n".encode())
+#     file.write(files[i].encode())
+#     file.write("\n\n".encode())
 
-"-param E_TAL=0.18529842311041933:0.18529842311041933"
-results = subprocess.run(["prism ../pathway_curcumin.sm ../curcuminMassReward.csl -const E_TAL=0.18529842311041933 -sim -simsamples 100 -const T=172800 -v -cuddmaxmem 110g -exportresults results.txt:csv"], shell=True)
-#results = subprocess.run(["prism", "../pathway_curcumin.sm", "../curcuminRewards.csl", "-const E_TAL=0.18529842311041933", "-sim", "-simsamples 100", "-const T=172800", "-v", "-cuddmaxmem 110g"])
-#print(results)
+
+fullStatement = "prism ../pathway_curcumin.sm ../curcuminRewards.csl " + statements[42] + " -sim -simsamples 100 -const T=172800 -v -cuddmaxmen 110g -exportresults " + str(files[42])
+subprocess.run([fullStatement], shell=True)
+
+'''
+for i in range (len(statements)):
+    fullStatement = "prism ../pathway_curcumin.sm ../curcuminRewards.csl " + statements[i] + " -sim -simsamples 100 -const T=172800 -v -cuddmaxmen 110g -exportresults " + str(files[i])
+    subprocess.run([fullStatement], shell=True)
+'''
+
+#subprocess.run(["prism ../pathway_curcumin.sm ../curcuminMassReward.csl -const E_TAL=0.18529842311041933 -sim -simsamples 100 -const T=172800 -v -cuddmaxmem 110g -exportresults results.txt:csv"], shell=True)
+
 
 # for i in combinations_2:
 #     file.write(('const double ' + combinations_3[i][0] + ';').encode())
