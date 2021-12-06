@@ -53,16 +53,17 @@ for comb in comb3:
                             statement += ","
                 statements.append(statement)
 
-# file=open("Statements.txt", 'wb')
-# for i in range(len(statements)):
-#     file.write(statements[i].encode())
-#     file.write("\n".encode())
-#     file.write(files[i].encode())
-#     file.write("\n\n".encode())
+file=open("Statements.txt", 'wb')
+for i in range(len(statements)):
+    file.write(statements[i].encode())
+    file.write("\n".encode())
+    file.write(files[i].encode())
+    file.write("\n\n".encode())
+file.close()
 
-
-fullStatement = "prism ../pathway_curcumin.sm ../curcuminRewards.csl " + statements[42] + " -sim -simsamples 100 -const T=0.0:3600:172800 -v -cuddmaxmem 110g -exportresults " + str(files[42])
-subprocess.run([fullStatement], shell=True)
+for statement in statements:
+    fullStatement = "prism ../pathway_curcumin.sm ../curcuminRewards.csl " + statement + " -sim -simsamples 100 -const T=0.0:3600:172800 -v -cuddmaxmem 110g -exportresults " + str(files[42])
+    subprocess.run([fullStatement], shell=True)
 
 '''
 for i in range (len(statements)):
