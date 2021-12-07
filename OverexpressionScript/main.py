@@ -61,8 +61,8 @@ for i in range(len(statements)):
     file.write("\n\n".encode())
 file.close()
 
-for statement in statements:
-    fullStatement = "prism ../pathway_curcumin.sm ../curcuminRewards.csl " + statement + " -sim -simsamples 100 -const T=0.0:3600:172800 -v -cuddmaxmem 110g -exportresults " + str(files[42])
+for i in range(len(statements)):
+    fullStatement = "prism ../pathway_curcumin.sm ../curcuminRewards.csl " + str(statements[i]) + " -sim -simsamples 100 -const T=0.0:3600:172800 -v -cuddmaxmem 110g -exportresults " + str(files[i])
     subprocess.run([fullStatement], shell=True)
 
 '''
