@@ -4,6 +4,8 @@ import sys
 import os
 #itertools.combination(list of enzymes, number of changed enzymes)
 
+
+
 enzymes = {'E_TAL':53967, 'E_4CL':62559, 'E_C3H':57055, 'E_COMT':24602, 'E_CCOMT':30600, 'E_DCS':42047, 'E_CURS':43034}
 concentrations = [10,25,50]
 combinations_2 = itertools.combinations(enzymes,2)
@@ -61,13 +63,19 @@ for i in range(len(statements)):
     file.write("\n\n".encode())
 file.close()
 
-for i in range(5):
-    statements.pop(0)
-    files.pop(0)
-
+file=open("Files.txt", 'wb')
 for i in range(len(statements)):
-    fullStatement = "prism ../pathway_curcumin.sm ../curcuminRewards.csl " + str(statements[i]) + " -sim -simsamples 100 -const T=0.0:3600:172800 -v -cuddmaxmem 110g -exportresults " + str(files[i])
-    subprocess.run([fullStatement], shell=True)
+    file.write(files[i].encode())
+    file.write("\n".encode())
+file.close()
+#
+# for i in range(5):
+#     statements.pop(0)
+#     files.pop(0)
+#
+# for i in range(len(statements)):
+#     fullStatement = "prism ../pathway_curcumin.sm ../curcuminRewards.csl " + str(statements[i]) + " -sim -simsamples 100 -const T=0.0:3600:172800 -v -cuddmaxmem 110g -exportresults " + str(files[i])
+#     subprocess.run([fullStatement], shell=True)
 
 '''
 for i in range (len(statements)):
