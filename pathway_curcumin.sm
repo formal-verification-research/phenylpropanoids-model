@@ -159,10 +159,10 @@ formula rate_COMT_ca = (Kcat_COMT_ca*E_COMT*caffeic_acid) / (Km_COMT_ca+caffeic_
 //formula rate_COMT_ccoa = (Kcat_COMT_ccoa*E_COMT*caffeoyl_CoA) / (Km_COMT_ccoa+caffeoyl_CoA);
 
 //CCOMT - Caffeoyl-CoA 3-O-methyltransferase
-const int MW_CCOMT = 24602;//30600; //Da
+const int MW_CCOMT = 30600; //Da
 const double E_CCOMT;// = (gen_E/MW_CCOMT)*1000; //uM
-const double Km_CCOMT_ccoa = 26;//20;//72; // uM
-const double Kcat_CCOMT_ccoa = 0.145152;//1.043;//72*5.03*pow(0.10,4);
+const double Km_CCOMT_ccoa = 20;//72; // uM
+const double Kcat_CCOMT_ccoa = 1.043;//72*5.03*pow(0.10,4);
 formula rate_CCOMT_ccoa = (Kcat_CCOMT_ccoa*E_CCOMT*caffeoyl_CoA) / (Km_CCOMT_ccoa+caffeoyl_CoA);
 
 //DCS - Diketide-CoA Synthase
