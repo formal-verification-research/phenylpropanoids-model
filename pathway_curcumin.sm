@@ -143,8 +143,8 @@ const int MW_C3H = 57055; //Da
 const double E_C3H;// = (50/MW_C3H)*1000; //uM
 const double Km_C3H_pca = 143.03; //uM, substrate p-coumaric acid
 const double Kcat_C3H_pca = 0.0347; //1/s, substrate p-coumaric acid
-const double Km_C3H_pcoa = 26;//143.03; //uM, substrate p-coumaroyl CoA
-const double Kcat_C3H_pcoa = 88;//0.0347; //1/s, substrate p-coumaroyl CoA
+const double Km_C3H_pcoa = 27;//143.03; //uM, substrate p-coumaroyl CoA
+const double Kcat_C3H_pcoa = 126;//0.0347; //1/s, substrate p-coumaroyl CoA
 formula rate_C3H_pca = (Kcat_C3H_pca*E_C3H*p_coumaric_acid) / (Km_C3H_pca+p_coumaric_acid);
 formula rate_C3H_pcoa = (Kcat_C3H_pcoa*E_C3H*p_coumaroyl_CoA) / (Km_C3H_pcoa+p_coumaroyl_CoA);
 
@@ -159,10 +159,10 @@ formula rate_COMT_ca = (Kcat_COMT_ca*E_COMT*caffeic_acid) / (Km_COMT_ca+caffeic_
 //formula rate_COMT_ccoa = (Kcat_COMT_ccoa*E_COMT*caffeoyl_CoA) / (Km_COMT_ccoa+caffeoyl_CoA);
 
 //CCOMT - Caffeoyl-CoA 3-O-methyltransferase
-const int MW_CCOMT = 30600; //Da
+const int MW_CCOMT = 24602;//30600; //Da
 const double E_CCOMT;// = (gen_E/MW_CCOMT)*1000; //uM
-const double Km_CCOMT_ccoa = 20;//72; // uM
-const double Kcat_CCOMT_ccoa = 1.043;//72*5.03*pow(0.10,4);
+const double Km_CCOMT_ccoa = 26;//20;//72; // uM
+const double Kcat_CCOMT_ccoa = 0.145152;//1.043;//72*5.03*pow(0.10,4);
 formula rate_CCOMT_ccoa = (Kcat_CCOMT_ccoa*E_CCOMT*caffeoyl_CoA) / (Km_CCOMT_ccoa+caffeoyl_CoA);
 
 //DCS - Diketide-CoA Synthase
