@@ -1,0 +1,9 @@
+const double T;
+R{"p_coumaric_acid_produced"}=? [ I=T ]
+R{"caffeic_acid_produced"}=? [ I=T ]
+R{"ferulic_acid_produced"}=? [ I=T ]
+R{"p_coumaroyl_CoA_produced"}=? [ I=T ]
+R{"caffeoyl_CoA_produced"}=? [ I=T ]
+R{"feruloyl_CoA_produced"}=? [ I=T ]
+R{"curcuminoid12_produced"}=? [ I=T ]
+R{"curcuminoid23_produced"}=? [ I=T ]
