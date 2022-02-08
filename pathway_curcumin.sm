@@ -143,8 +143,8 @@ const int MW_C3H = 57055; //Da
 const double E_C3H;// = (50/MW_C3H)*1000; //uM
 const double Km_C3H_pca = 143.03; //uM, substrate p-coumaric acid
 const double Kcat_C3H_pca = 0.0347; //1/s, substrate p-coumaric acid
-const double Km_C3H_pcoa = 143.03; //uM, substrate p-coumaroyl CoA
-const double Kcat_C3H_pcoa = 0.0347; //1/s, substrate p-coumaroyl CoA
+const double Km_C3H_pcoa = 27;//143.03; //uM, substrate p-coumaroyl CoA
+const double Kcat_C3H_pcoa = 126;//0.0347; //1/s, substrate p-coumaroyl CoA
 formula rate_C3H_pca = (Kcat_C3H_pca*E_C3H*p_coumaric_acid) / (Km_C3H_pca+p_coumaric_acid);
 formula rate_C3H_pcoa = (Kcat_C3H_pcoa*E_C3H*p_coumaroyl_CoA) / (Km_C3H_pcoa+p_coumaroyl_CoA);
 
