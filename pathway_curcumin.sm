@@ -168,8 +168,8 @@ formula rate_COMT_ccoa = (Kcat_COMT_ccoa*E_COMT*caffeoyl_CoA) / (Km_COMT_ccoa+ca
 //DCS - Diketide-CoA Synthase
 const int MW_DCS = 42047; //Da
 const double E_DCS;// = (50/MW_DCS)*1000; //uM
-const double S50_DCS_fcoa = 1;//46; //
-const double Kcat_DCS_fcoa = 0.02;//0.02;
+const double S50_DCS_fcoa = 46;//46; //
+const double Kcat_DCS_fcoa = 0.1;//0.02;
 const double n_DCS_fcoa = 1.8;
 formula rate_DCS_fcoa = (Kcat_DCS_fcoa*E_DCS*pow(feruloyl_CoA,n_DCS_fcoa)) / (pow(S50_DCS_fcoa,n_DCS_fcoa) + pow(feruloyl_CoA,n_DCS_fcoa)); //Hill Equation
 
@@ -240,12 +240,12 @@ module synthetic_pathway
 
  //---DCS---
  //[] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+1)&(feruloyl_CoA' = feruloyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-1);
- [] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+1)&(feruloyl_CoA' = feruloyl_CoA-1);
+ [] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 & E_DCS > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+1)&(feruloyl_CoA' = feruloyl_CoA-1);
 
  //---CURS--
  //[] bisdemethoxycurcumin < gen_max & p_coumaroylacetyl_CoA > 0 & p_coumaroyl_CoA > 0 -> rate_CURS_pcca : (bisdemethoxycurcumin' = bisdemethoxycurcumin+1)&(p_coumaroylacetyl_CoA' = p_coumaroylacetyl_CoA-2);
  //[] dicaffeoylmethane < gen_max & caffeoylacetyl_CoA > 0 & p_coumaroyl_CoA > 0 -> rate_CURS_cfca : (dicaffeoylmethane' = dicaffeoylmethane+1)&(caffeoylacetyl_CoA' = caffeoylacetyl_CoA-2);
- [] curcumin < gen_max & feruloylacetyl_CoA > 0 & feruloyl_CoA > 0-> rate_CURS_fcoa : (curcumin' = curcumin+1)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-1)&(feruloyl_CoA' = feruloyl_CoA-1);
+ [] curcumin < gen_max & feruloylacetyl_CoA > 0 & feruloyl_CoA > 0 & E_CURS > 0 -> rate_CURS_fcoa : (curcumin' = curcumin+1)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-1)&(feruloyl_CoA' = feruloyl_CoA-1);
 
 
 endmodule
