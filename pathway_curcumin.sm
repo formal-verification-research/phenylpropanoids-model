@@ -143,18 +143,18 @@ const int MW_C3H = 57055; //Da
 const double E_C3H;// = (50/MW_C3H)*1000; //uM
 const double Km_C3H_pca = 143.03; //uM, substrate p-coumaric acid
 const double Kcat_C3H_pca = 0.0347; //1/s, substrate p-coumaric acid
-const double Km_C3H_pcoa = 27;//143.03; //uM, substrate p-coumaroyl CoA
-const double Kcat_C3H_pcoa = 126;//0.0347; //1/s, substrate p-coumaroyl CoA
+const double Km_C3H_pcoa = 143.03; //uM, substrate p-coumaroyl CoA
+const double Kcat_C3H_pcoa = 0.0347; //1/s, substrate p-coumaroyl CoA
 formula rate_C3H_pca = (Kcat_C3H_pca*E_C3H*p_coumaric_acid) / (Km_C3H_pca+p_coumaric_acid);
 formula rate_C3H_pcoa = (Kcat_C3H_pcoa*E_C3H*p_coumaroyl_CoA) / (Km_C3H_pcoa+p_coumaroyl_CoA);
 
 //COMT - Caffeic Acid 3-O-methyltransferase
 const int MW_COMT = 24602; //Da
 const double E_COMT;// = (gen_E/MW_COMT)*1000; //uM
-const double Km_COMT_ca = 24;//59.5; //uM, substrate caffeic acid
-const double Kcat_COMT_ca = .62;//0.145152; //1/s, substrate caffeic acid
-const double Km_COMT_ccoa = 26; //uM, substrate caffeoyl CoA
-const double Kcat_COMT_ccoa = 0.145152; //1/s, substrate caffeoyl CoA, #TODO: MAJOR ASSUMPTION, CHECK
+const double Km_COMT_ca = 68.75;//uM, substrate caffeic acid
+const double Kcat_COMT_ca = 97.1;//1/s, substrate caffeic acid
+const double Km_COMT_ccoa = 83.04;//uM, substrate caffeoyl CoA
+const double Kcat_COMT_ccoa = 51.22; //1/s, substrate caffeoyl CoA, #TODO: MAJOR ASSUMPTION, CHECK
 formula rate_COMT_ca = (Kcat_COMT_ca*E_COMT*caffeic_acid) / (Km_COMT_ca+caffeic_acid);
 formula rate_COMT_ccoa = (Kcat_COMT_ccoa*E_COMT*caffeoyl_CoA) / (Km_COMT_ccoa+caffeoyl_CoA);
 
