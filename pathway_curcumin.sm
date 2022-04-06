@@ -343,12 +343,12 @@ endrewards
 rewards "curcumin_produced_mass"
  true : curcumin*0.36838; // g/L
 endrewards
-rewards "demethoxycurcumin"
+rewards "demethoxycurcumin_produced"
  true : demethoxycurcumin;
 endrewards
-rewards "demethoxy_or_bisdemethoxy"
+rewards "demethoxy_or_bisdemethoxy_produced"
  true : demethoxy_or_bisdemethoxy;
 endrewards
-rewards "demethoxy_or_curcumin"
+rewards "demethoxy_or_curcumin_produced"
  true : demethoxy_or_curcumin;
 endrewards
