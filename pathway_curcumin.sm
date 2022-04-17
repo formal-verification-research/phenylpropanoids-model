@@ -188,23 +188,23 @@ formula rate_CURS_pcoa = (Kcat_CURS_pcoa*E_CURS*p_coumaroyl_CoA) / (Km_CURS_pcoa
 
 //CURS2 - Curcumin Synthase 2
 const int MW_CURS2 = 43146; //Da
-const double E_CURS2;//
+//const double E_CURS2;//
 const double Km_CURS2_fcoa = 4.3; //uM
 const double Kcat_CURS2_fcoa = 0.00683333333333333; //1/s
 const double Km_CURS2_pcoa = 89; //uM
 const double Kcat_CURS2_pcoa = 0.0156667; //1/s
-formula rate_CURS2_fcoa = (Kcat_CURS2_fcoa*E_CURS2*feruloyl_CoA) / (Km_CURS2_fcoa+feruloyl_CoA);
-formula rate_CURS2_pcoa = (Kcat_CURS2_pcoa*E_CURS2*p_coumaroyl_CoA) / (Km_CURS2_pcoa+p_coumaroyl_CoA);
+//formula rate_CURS2_fcoa = (Kcat_CURS2_fcoa*E_CURS2*feruloyl_CoA) / (Km_CURS2_fcoa+feruloyl_CoA);
+//formula rate_CURS2_pcoa = (Kcat_CURS2_pcoa*E_CURS2*p_coumaroyl_CoA) / (Km_CURS2_pcoa+p_coumaroyl_CoA);
 
 //CURS3 - Curcumin Synthase 3
 const int MW_CURS3 = 43099; //Da
-const double E_CURS3;
+//const double E_CURS3;
 const double Km_CURS3_fcoa = 2.2; //uM
 const double Kcat_CURS3_fcoa = 0.00316667; //1/s
 const double Km_CURS3_pcoa = 3.4; //uM
 const double Kcat_CURS3_pcoa = 0.006; //1/s
-formula rate_CURS3_fcoa = (Kcat_CURS3_fcoa*E_CURS3*feruloyl_CoA) / (Km_CURS3_fcoa+feruloyl_CoA);
-formula rate_CURS3_pcoa = (Kcat_CURS3_pcoa*E_CURS3*p_coumaroyl_CoA) / (Km_CURS3_pcoa+p_coumaroyl_CoA);
+//formula rate_CURS3_fcoa = (Kcat_CURS3_fcoa*E_CURS3*feruloyl_CoA) / (Km_CURS3_fcoa+feruloyl_CoA);
+//formula rate_CURS3_pcoa = (Kcat_CURS3_pcoa*E_CURS3*p_coumaroyl_CoA) / (Km_CURS3_pcoa+p_coumaroyl_CoA);
 
 
 //STS - Stilbene synthase
