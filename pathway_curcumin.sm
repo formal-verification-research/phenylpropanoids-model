@@ -188,23 +188,23 @@ const double Kcat_CURS_pcoa = 0.01416667; //1/s
 
 //CURS2 - Curcumin Synthase 2
 const int MW_CURS2 = 43146; //Da
-const double E_CURS2;//
+//const double E_CURS2;//
 const double Km_CURS2_fcoa = 4.3; //uM
 const double Kcat_CURS2_fcoa = 0.00683333333333333; //1/s
 const double Km_CURS2_pcoa = 89; //uM
 const double Kcat_CURS2_pcoa = 0.0156667; //1/s
-formula rate_CURS2_fcoa = (Kcat_CURS2_fcoa*E_CURS2*feruloyl_CoA) / (Km_CURS2_fcoa+feruloyl_CoA);
-formula rate_CURS2_pcoa = (Kcat_CURS2_pcoa*E_CURS2*p_coumaroyl_CoA) / (Km_CURS2_pcoa+p_coumaroyl_CoA);
+//formula rate_CURS2_fcoa = (Kcat_CURS2_fcoa*E_CURS2*feruloyl_CoA) / (Km_CURS2_fcoa+feruloyl_CoA);
+//formula rate_CURS2_pcoa = (Kcat_CURS2_pcoa*E_CURS2*p_coumaroyl_CoA) / (Km_CURS2_pcoa+p_coumaroyl_CoA);
 
 //CURS3 - Curcumin Synthase 3
 const int MW_CURS3 = 43099; //Da
-//const double E_CURS3;
+const double E_CURS3;
 const double Km_CURS3_fcoa = 2.2; //uM
 const double Kcat_CURS3_fcoa = 0.00316667; //1/s
 const double Km_CURS3_pcoa = 3.4; //uM
 const double Kcat_CURS3_pcoa = 0.006; //1/s
-//formula rate_CURS3_fcoa = (Kcat_CURS3_fcoa*E_CURS3*feruloyl_CoA) / (Km_CURS3_fcoa+feruloyl_CoA);
-//formula rate_CURS3_pcoa = (Kcat_CURS3_pcoa*E_CURS3*p_coumaroyl_CoA) / (Km_CURS3_pcoa+p_coumaroyl_CoA);
+formula rate_CURS3_fcoa = (Kcat_CURS3_fcoa*E_CURS3*feruloyl_CoA) / (Km_CURS3_fcoa+feruloyl_CoA);
+formula rate_CURS3_pcoa = (Kcat_CURS3_pcoa*E_CURS3*p_coumaroyl_CoA) / (Km_CURS3_pcoa+p_coumaroyl_CoA);
 
 
 //STS - Stilbene synthase
@@ -276,12 +276,12 @@ module synthetic_pathway
  //[] curcumin < gen_max & feruloylacetyl_CoA > 0 & feruloyl_CoA > 0 & E_CURS > 0 -> rate_CURS_fcoa : (curcumin' = curcumin+1)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-1)&(feruloyl_CoA' = feruloyl_CoA-1);
 
  //---CURS2---
- [] demethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & E_CURS2 > 0 -> rate_CURS2_pcoa : (demethoxycurcumin' = demethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
- [] curcumin < gen_max & feruloyl_CoA > 0 & E_CURS2 > 0 -> rate_CURS2_fcoa : (curcumin' = curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-1);
+ //[] demethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & E_CURS2 > 0 -> rate_CURS2_pcoa : (demethoxycurcumin' = demethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+ //[] curcumin < gen_max & feruloyl_CoA > 0 & E_CURS2 > 0 -> rate_CURS2_fcoa : (curcumin' = curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-1);
 
  //---CURS3---
-// [] demethoxy_or_bisdemethoxy < gen_max & p_coumaroyl_CoA > 0 & E_CURS3 > 0 -> rate_CURS3_pcoa : (demethoxy_or_bisdemethoxy' = demethoxy_or_bisdemethoxy+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
-// [] demethoxy_or_curcumin < gen_max & feruloyl_CoA > 0 & E_CURS3 > 0 -> rate_CURS3_fcoa : (demethoxy_or_curcumin' = demethoxy_or_curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-1);
+ [] demethoxy_or_bisdemethoxy < gen_max & p_coumaroyl_CoA > 0 & E_CURS3 > 0 -> rate_CURS3_pcoa : (demethoxy_or_bisdemethoxy' = demethoxy_or_bisdemethoxy+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+ [] demethoxy_or_curcumin < gen_max & feruloyl_CoA > 0 & E_CURS3 > 0 -> rate_CURS3_fcoa : (demethoxy_or_curcumin' = demethoxy_or_curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-1);
 
 endmodule
 
@@ -340,15 +340,15 @@ endrewards
 rewards "curcumin_produced"
  true : curcumin;
 endrewards
-rewards "curcumin_produced_mass"
- true : curcumin*0.36838; // g/L
-endrewards
-rewards "demethoxycurcumin_produced"
- true : demethoxycurcumin;
-endrewards
-//rewards "demethoxy_or_bisdemethoxy_produced"
-// true : demethoxy_or_bisdemethoxy;
+//rewards "curcumin_produced_mass"
+// true : curcumin*0.36838; // g/L
 //endrewards
-//rewards "demethoxy_or_curcumin_produced"
-// true : demethoxy_or_curcumin;
+//rewards "demethoxycurcumin_produced"
+// true : demethoxycurcumin;
 //endrewards
+rewards "demethoxy_or_bisdemethoxy_produced"
+ true : demethoxy_or_bisdemethoxy;
+endrewards
+rewards "demethoxy_or_curcumin_produced"
+ true : demethoxy_or_curcumin;
+endrewards
