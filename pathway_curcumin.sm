@@ -91,12 +91,12 @@ global feruloylacetyl_CoA: [0..gen_max] init 0;
 
 global resveratrol: [0..gen_max] init 0;
 //global piceatannol: [0..gen_max] init 0;
+global dicaffeoylmethane: [0..gen_max] init 0;
 
 global demethoxy_or_bisdemethoxy: [0..gen_max] init 0;
 global demethoxy_or_curcumin: [0..gen_max] init 0;
 global demethoxycurcumin: [0..gen_max] init 0;
 global bisdemethoxycurcumin: [0..gen_max] init 0;
-global dicaffeoylmethane: [0..gen_max] init 0;
 global curcumin: [0..gen_max] init 0;
 
 
@@ -276,12 +276,12 @@ module synthetic_pathway
  [] curcumin < gen_max & feruloylacetyl_CoA > 0 & feruloyl_CoA > 0 & E_CURS > 0 -> rate_CURS_fcoa : (curcumin' = curcumin+1)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-1)&(feruloyl_CoA' = feruloyl_CoA-1);
 
  //---CURS2---
- [] demethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & E_CURS2 > 0 -> rate_CURS2_pcoa : (demethoxycurcumin' = demethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
- [] curcumin < gen_max & feruloyl_CoA > 0 & E_CURS2 > 0 -> rate_CURS2_fcoa : (curcumin' = curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-1);
+// [] demethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & E_CURS2 > 0 -> rate_CURS2_pcoa : (demethoxycurcumin' = demethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+// [] curcumin < gen_max & feruloyl_CoA > 0 & E_CURS2 > 0 -> rate_CURS2_fcoa : (curcumin' = curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-1);
 
  //---CURS3---
- [] demethoxy_or_bisdemethoxy < gen_max & p_coumaroyl_CoA > 0 & E_CURS3 > 0 -> rate_CURS3_pcoa : (demethoxy_or_bisdemethoxy' = demethoxy_or_bisdemethoxy+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
- [] demethoxy_or_curcumin < gen_max & feruloyl_CoA > 0 & E_CURS3 > 0 -> rate_CURS3_fcoa : (demethoxy_or_curcumin' = demethoxy_or_curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-1);
+// [] demethoxy_or_bisdemethoxy < gen_max & p_coumaroyl_CoA > 0 & E_CURS3 > 0 -> rate_CURS3_pcoa : (demethoxy_or_bisdemethoxy' = demethoxy_or_bisdemethoxy+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+// [] demethoxy_or_curcumin < gen_max & feruloyl_CoA > 0 & E_CURS3 > 0 -> rate_CURS3_fcoa : (demethoxy_or_curcumin' = demethoxy_or_curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-1);
 
 endmodule
 
@@ -346,9 +346,9 @@ endrewards
 rewards "demethoxycurcumin_produced"
  true : demethoxycurcumin;
 endrewards
-rewards "demethoxy_or_bisdemethoxy_produced"
- true : demethoxy_or_bisdemethoxy;
-endrewards
-rewards "demethoxy_or_curcumin_produced"
- true : demethoxy_or_curcumin;
-endrewards
+//rewards "demethoxy_or_bisdemethoxy_produced"
+// true : demethoxy_or_bisdemethoxy;
+//endrewards
+//rewards "demethoxy_or_curcumin_produced"
+// true : demethoxy_or_curcumin;
+//endrewards
