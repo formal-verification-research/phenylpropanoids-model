@@ -178,23 +178,23 @@ formula rate_DCS_fcoa = (Kcat_DCS_fcoa*E_DCS*pow(feruloyl_CoA,n_DCS_fcoa)) / (po
 
 //CURS - Curcumin Synthase 1
 const int MW_CURS = 43034; //Da
-const double E_CURS;// = (50/MW_CURS)*1000; //uM
+//const double E_CURS;// = (50/MW_CURS)*1000; //uM
 const double Km_CURS_fcoa = 18; //uM, substrate feruloyl CoA
 const double Kcat_CURS_fcoa = 0.01833; //1/s, substrate feruloyl CoA
 const double Km_CURS_pcoa = 189; //uM
 const double Kcat_CURS_pcoa = 0.01416667; //1/s
-formula rate_CURS_fcoa = (Kcat_CURS_fcoa*E_CURS*feruloyl_CoA) / (Km_CURS_fcoa+feruloyl_CoA);
-formula rate_CURS_pcoa = (Kcat_CURS_pcoa*E_CURS*p_coumaroyl_CoA) / (Km_CURS_pcoa+p_coumaroyl_CoA);
+//formula rate_CURS_fcoa = (Kcat_CURS_fcoa*E_CURS*feruloyl_CoA) / (Km_CURS_fcoa+feruloyl_CoA);
+//formula rate_CURS_pcoa = (Kcat_CURS_pcoa*E_CURS*p_coumaroyl_CoA) / (Km_CURS_pcoa+p_coumaroyl_CoA);
 
 //CURS2 - Curcumin Synthase 2
 const int MW_CURS2 = 43146; //Da
-//const double E_CURS2;//
+const double E_CURS2;//
 const double Km_CURS2_fcoa = 4.3; //uM
 const double Kcat_CURS2_fcoa = 0.00683333333333333; //1/s
 const double Km_CURS2_pcoa = 89; //uM
 const double Kcat_CURS2_pcoa = 0.0156667; //1/s
-//formula rate_CURS2_fcoa = (Kcat_CURS2_fcoa*E_CURS2*feruloyl_CoA) / (Km_CURS2_fcoa+feruloyl_CoA);
-//formula rate_CURS2_pcoa = (Kcat_CURS2_pcoa*E_CURS2*p_coumaroyl_CoA) / (Km_CURS2_pcoa+p_coumaroyl_CoA);
+formula rate_CURS2_fcoa = (Kcat_CURS2_fcoa*E_CURS2*feruloyl_CoA) / (Km_CURS2_fcoa+feruloyl_CoA);
+formula rate_CURS2_pcoa = (Kcat_CURS2_pcoa*E_CURS2*p_coumaroyl_CoA) / (Km_CURS2_pcoa+p_coumaroyl_CoA);
 
 //CURS3 - Curcumin Synthase 3
 const int MW_CURS3 = 43099; //Da
@@ -272,12 +272,12 @@ module synthetic_pathway
  //---CURS---
  //[] bisdemethoxycurcumin < gen_max & p_coumaroylacetyl_CoA > 0 & p_coumaroyl_CoA > 0 -> rate_CURS_pcca : (bisdemethoxycurcumin' = bisdemethoxycurcumin+1)&(p_coumaroylacetyl_CoA' = p_coumaroylacetyl_CoA-2);
  //[] dicaffeoylmethane < gen_max & caffeoylacetyl_CoA > 0 & p_coumaroyl_CoA > 0 -> rate_CURS_cfca : (dicaffeoylmethane' = dicaffeoylmethane+1)&(caffeoylacetyl_CoA' = caffeoylacetyl_CoA-2);
- [] demethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & E_CURS > 0 -> rate_CURS_pcoa : (demethoxycurcumin' = demethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
- [] curcumin < gen_max & feruloylacetyl_CoA > 0 & feruloyl_CoA > 0 & E_CURS > 0 -> rate_CURS_fcoa : (curcumin' = curcumin+1)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-1)&(feruloyl_CoA' = feruloyl_CoA-1);
+ //[] demethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & E_CURS > 0 -> rate_CURS_pcoa : (demethoxycurcumin' = demethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+ //[] curcumin < gen_max & feruloylacetyl_CoA > 0 & feruloyl_CoA > 0 & E_CURS > 0 -> rate_CURS_fcoa : (curcumin' = curcumin+1)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-1)&(feruloyl_CoA' = feruloyl_CoA-1);
 
  //---CURS2---
-// [] demethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & E_CURS2 > 0 -> rate_CURS2_pcoa : (demethoxycurcumin' = demethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
-// [] curcumin < gen_max & feruloyl_CoA > 0 & E_CURS2 > 0 -> rate_CURS2_fcoa : (curcumin' = curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-1);
+ [] demethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & E_CURS2 > 0 -> rate_CURS2_pcoa : (demethoxycurcumin' = demethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+ [] curcumin < gen_max & feruloyl_CoA > 0 & E_CURS2 > 0 -> rate_CURS2_fcoa : (curcumin' = curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-1);
 
  //---CURS3---
 // [] demethoxy_or_bisdemethoxy < gen_max & p_coumaroyl_CoA > 0 & E_CURS3 > 0 -> rate_CURS3_pcoa : (demethoxy_or_bisdemethoxy' = demethoxy_or_bisdemethoxy+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
