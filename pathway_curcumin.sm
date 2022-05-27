@@ -11,7 +11,7 @@ ctmc
 const int gen_max = 10000000; //No real max needed for variables when simulating. This value should be changed if model checking is used.
 const int gen_E = 25; //mg/L, general enzyme concentration
 const int STS_MGL = 50; //mg/L, enzyme concentration for STS, a limiting enzyme for resveratrol production
-const int T;
+
 
 
 

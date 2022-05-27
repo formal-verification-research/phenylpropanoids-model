@@ -45,7 +45,7 @@ for comb in chosenCombinationsCURS1:
     filename = ""
     for i in range(len(comb)):
         enzymeConc = comb[i]*1000/enzymeMW[i]
-        statement += enzymeNames[i] + "=" + str(enzymeConc) + ","
+        statement += "E_" + enzymeNames[i] + "=" + str(enzymeConc) + ","
         if comb[i] != 25:
             filename += enzymeNames[i] + str(comb[i]) + "_"
     filename += ".txt:csv"
@@ -58,7 +58,7 @@ for comb in chosenCombinationsCURS2:
     filename = ""
     for i in range(len(comb)):
         enzymeConc = comb[i]*1000/enzymeMW[i]
-        statement += enzymeNames[i] + "=" + str(enzymeConc) + ","
+        statement += "E_" + enzymeNames[i] + "=" + str(enzymeConc) + ","
         if comb[i] != 25:
             filename += enzymeNames[i] + str(comb[i]) + "_"
     filename += ".txt:csv"
@@ -71,7 +71,7 @@ for comb in chosenCombinationsCURS3:
     filename = ""
     for i in range(len(comb)):
         enzymeConc = comb[i]*1000/enzymeMW[i]
-        statement += enzymeNames[i] + "=" + str(enzymeConc) + ","
+        statement += "E_" + enzymeNames[i] + "=" + str(enzymeConc) + ","
         if comb[i] != 25:
             filename += enzymeNames[i] + str(comb[i]) + "_"
     filename += ".txt:csv"
