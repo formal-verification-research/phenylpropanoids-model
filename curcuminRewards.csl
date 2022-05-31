@@ -8,5 +8,5 @@ R{"feruloyl_CoA_produced"}=? [ I=T ]
 R{"feruloylacetyl_CoA_produced"}=? [ I=T ]
 R{"demethoxy_or_bisdemethoxy_produced"}=? [ I=T ]
 R{"demethoxy_or_curcumin_produced"}=? [ I=T ]
-
+R{"curcumin_produced"}=? [ I=T ]
 
