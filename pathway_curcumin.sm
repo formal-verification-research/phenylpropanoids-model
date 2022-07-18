@@ -49,20 +49,20 @@ formula rate_Synth4 = (Vmax_Synth4*malonyl_CoA)/(Km_Synth4+malonyl_CoA);
 
 module native_pathway
 
-//Acetyl-CoA generation from pyruvate
- [] acetyl_CoA < gen_max -> rate_PDH : (acetyl_CoA' = acetyl_CoA+1);//&(pyruvate' = pyruvate-1); 
+	//Acetyl-CoA generation from pyruvate
+	[] acetyl_CoA < gen_max -> rate_PDH : (acetyl_CoA' = acetyl_CoA+1);//&(pyruvate' = pyruvate-1); 
 
-//Malonyl-COA generation from acetyl-CoA
- [] malonyl_CoA < gen_max & acetyl_CoA > 0 -> rate_ACCOAC : (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
+	//Malonyl-COA generation from acetyl-CoA
+	[] malonyl_CoA < gen_max & acetyl_CoA > 0 -> rate_ACCOAC : (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
 
-//Acetate generation from acetyl-CoA (cell metabolism)
- [] acetyl_CoA > 0 & rate_PTA > 0 -> rate_PTA : (acetyl_CoA' = acetyl_CoA-1);
+	//Acetate generation from acetyl-CoA (cell metabolism)
+	[] acetyl_CoA > 0 & rate_PTA > 0 -> rate_PTA : (acetyl_CoA' = acetyl_CoA-1);
 
-//Citrate generation from acetyl-CoA (cell metabolism, TCA Cycle)
- [] acetyl_CoA > 0 & rate_CS > 0 -> rate_CS : (acetyl_CoA' = acetyl_CoA-1);
+	//Citrate generation from acetyl-CoA (cell metabolism, TCA Cycle)
+	[] acetyl_CoA > 0 & rate_CS > 0 -> rate_CS : (acetyl_CoA' = acetyl_CoA-1);
 
-//Malonyl-CoA degradation for fatty acid synthesis (cell metabolism)
- [] malonyl_CoA > 0 & rate_Synth4 > 0 -> rate_Synth4 : (malonyl_CoA' = malonyl_CoA-1);
+	//Malonyl-CoA degradation for fatty acid synthesis (cell metabolism)
+	[] malonyl_CoA > 0 & rate_Synth4 > 0 -> rate_Synth4 : (malonyl_CoA' = malonyl_CoA-1);
 
 endmodule
 
@@ -216,46 +216,46 @@ formula rate_CURS_pcoa = (Kcat_CURS_pcoa*E_CURS*p_coumaroyl_CoA) / (Km_CURS_pcoa
 
 
 module synthetic_pathway
- //Use if malonyl-CoA alone is not enough
- //---ACC---
- //[] malonyl_CoA < gen_max & acetyl_CoA > 0 & E_ACC > 0 -> rate_ACC: (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
+	//Use if malonyl-CoA alone is not enough
+	//---ACC---
+	//[] malonyl_CoA < gen_max & acetyl_CoA > 0 & E_ACC > 0 -> rate_ACC: (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
 
- //---TAL---
- [] p_coumaric_acid < gen_max & L_tyrosine > 0 & E_TAL > 0 -> rate_TAL_tyr : (p_coumaric_acid' = p_coumaric_acid+1);
+	//---TAL---
+	[] p_coumaric_acid < gen_max & L_tyrosine > 0 & E_TAL > 0 -> rate_TAL_tyr : (p_coumaric_acid' = p_coumaric_acid+1);
 
- //---C3H---
- [] caffeic_acid < gen_max & p_coumaric_acid > 0 & E_C3H > 0 -> rate_C3H_pca : (caffeic_acid' = caffeic_acid+1)&(p_coumaric_acid' = p_coumaric_acid-1);
- [] caffeoyl_CoA < gen_max & p_coumaroyl_CoA > 0 & E_C3H > 0 -> rate_C3H_pcoa : (caffeoyl_CoA' = caffeoyl_CoA+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+	//---C3H---
+	[] caffeic_acid < gen_max & p_coumaric_acid > 0 & E_C3H > 0 -> rate_C3H_pca : (caffeic_acid' = caffeic_acid+1)&(p_coumaric_acid' = p_coumaric_acid-1);
+	[] caffeoyl_CoA < gen_max & p_coumaroyl_CoA > 0 & E_C3H > 0 -> rate_C3H_pcoa : (caffeoyl_CoA' = caffeoyl_CoA+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
 
- //---4CL---
- [] p_coumaroyl_CoA < gen_max & p_coumaric_acid > 0 & E_4CL > 0 -> rate_4CL_pca : (p_coumaroyl_CoA' = p_coumaroyl_CoA+1)&(p_coumaric_acid' = p_coumaric_acid-1);
- [] caffeoyl_CoA < gen_max & caffeic_acid > 0 & E_4CL > 0 -> rate_4CL_ca : (caffeoyl_CoA' = caffeoyl_CoA+1)&(caffeic_acid' = caffeic_acid-1);
- [] feruloyl_CoA < gen_max & ferulic_acid > 0 & E_4CL > 0 -> rate_4CL_fa : (feruloyl_CoA' = feruloyl_CoA+1)&(ferulic_acid' = ferulic_acid-1);
+ 	//---4CL---
+	[] p_coumaroyl_CoA < gen_max & p_coumaric_acid > 0 & E_4CL > 0 -> rate_4CL_pca : (p_coumaroyl_CoA' = p_coumaroyl_CoA+1)&(p_coumaric_acid' = p_coumaric_acid-1);
+	[] caffeoyl_CoA < gen_max & caffeic_acid > 0 & E_4CL > 0 -> rate_4CL_ca : (caffeoyl_CoA' = caffeoyl_CoA+1)&(caffeic_acid' = caffeic_acid-1);
+	[] feruloyl_CoA < gen_max & ferulic_acid > 0 & E_4CL > 0 -> rate_4CL_fa : (feruloyl_CoA' = feruloyl_CoA+1)&(ferulic_acid' = ferulic_acid-1);
 
- //---COMT---
- [] ferulic_acid < gen_max & caffeic_acid > 0 & E_COMT > 0 -> rate_COMT_ca : (ferulic_acid' = ferulic_acid+1)&(caffeic_acid' = caffeic_acid-1);
- [] feruloyl_CoA < gen_max & caffeoyl_CoA > 0 & E_COMT > 0 -> rate_COMT_ccoa : (feruloyl_CoA' = feruloyl_CoA+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
+	//---COMT---
+	[] ferulic_acid < gen_max & caffeic_acid > 0 & E_COMT > 0 -> rate_COMT_ca : (ferulic_acid' = ferulic_acid+1)&(caffeic_acid' = caffeic_acid-1);
+	[] feruloyl_CoA < gen_max & caffeoyl_CoA > 0 & E_COMT > 0 -> rate_COMT_ccoa : (feruloyl_CoA' = feruloyl_CoA+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
 
- //---DCS---
- //////With native metabolism (using malonyl-CoA)//////
- [] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+1)&(feruloyl_CoA' = feruloyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-1);
- //////Ignoring native metabolism (not using malonyl-CoA)//////
- //[] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 & E_DCS > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+1)&(feruloyl_CoA' = feruloyl_CoA-1);
+	//---DCS---
+	//////With native metabolism (using malonyl-CoA)//////
+	[] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+1)&(feruloyl_CoA' = feruloyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-1);
+	//////Ignoring native metabolism (not using malonyl-CoA)//////
+	//[] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 & E_DCS > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+1)&(feruloyl_CoA' = feruloyl_CoA-1);
 
- //---CURS---
- //////With native metabolism (using malonyl-CoA)//////
- [] demethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & malonyl_CoA > 0 & E_CURS > 0 -> rate_CURS_pcoa : (demethoxycurcumin' = demethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-1);
- //////Ignoring native metabolism (not using malonyl-CoA)//////
- [] demethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & E_CURS > 0 -> rate_CURS_pcoa : (demethoxycurcumin' = demethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
- [] curcumin < gen_max & feruloylacetyl_CoA > 0 & feruloyl_CoA > 0 & E_CURS > 0 -> rate_CURS_fcoa : (curcumin' = curcumin+1)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-1)&(feruloyl_CoA' = feruloyl_CoA-1);
+	//---CURS---
+	//////With native metabolism (using malonyl-CoA)//////
+	[] demethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & malonyl_CoA > 0 & E_CURS > 0 -> rate_CURS_pcoa : (demethoxycurcumin' = demethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-1);
+	//////Ignoring native metabolism (not using malonyl-CoA)//////
+	[] demethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & E_CURS > 0 -> rate_CURS_pcoa : (demethoxycurcumin' = demethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+	[] curcumin < gen_max & feruloylacetyl_CoA > 0 & feruloyl_CoA > 0 & E_CURS > 0 -> rate_CURS_fcoa : (curcumin' = curcumin+1)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-1)&(feruloyl_CoA' = feruloyl_CoA-1);
 
- //---CURS2---
- //[] demethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & E_CURS2 > 0 -> rate_CURS2_pcoa : (demethoxycurcumin' = demethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
- //[] curcumin < gen_max & feruloyl_CoA > 0 & E_CURS2 > 0 -> rate_CURS2_fcoa : (curcumin' = curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-1);
+	//---CURS2---
+	//[] demethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & E_CURS2 > 0 -> rate_CURS2_pcoa : (demethoxycurcumin' = demethoxycurcumin+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+	//[] curcumin < gen_max & feruloyl_CoA > 0 & E_CURS2 > 0 -> rate_CURS2_fcoa : (curcumin' = curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-1);
 
- //---CURS3---
- //[] demethoxy_or_bisdemethoxy < gen_max & p_coumaroyl_CoA > 0 & E_CURS3 > 0 -> rate_CURS3_pcoa : (demethoxy_or_bisdemethoxy' = demethoxy_or_bisdemethoxy+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
- //[] demethoxy_or_curcumin < gen_max & feruloyl_CoA > 0 & E_CURS3 > 0 -> rate_CURS3_fcoa : (demethoxy_or_curcumin' = demethoxy_or_curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-1);
+	//---CURS3---
+	//[] demethoxy_or_bisdemethoxy < gen_max & p_coumaroyl_CoA > 0 & E_CURS3 > 0 -> rate_CURS3_pcoa : (demethoxy_or_bisdemethoxy' = demethoxy_or_bisdemethoxy+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
+	//[] demethoxy_or_curcumin < gen_max & feruloyl_CoA > 0 & E_CURS3 > 0 -> rate_CURS3_fcoa : (demethoxy_or_curcumin' = demethoxy_or_curcumin+1)&(feruloyl_CoA' = feruloyl_CoA-1);
 
 endmodule
 
@@ -273,45 +273,45 @@ endmodule
 ///REWARDS STRUCTURES:
 //The following rewards structures allow simulations to return the value of each variable at a time
 rewards "racetyl_CoA"
- true: acetyl_CoA;
+	true: acetyl_CoA;
 endrewards
 rewards "rmalonyl_CoA"
- true: malonyl_CoA;
+	true: malonyl_CoA;
 endrewards
 
 //rewards "tyrosine_produced"
-// true : L_tyrosine;
+	// true : L_tyrosine;
 //endrewards
 rewards "p_coumaric_acid_produced"
- true : p_coumaric_acid;
+	true : p_coumaric_acid;
 endrewards
 rewards "caffeic_acid_produced"
- true : caffeic_acid;
+	true : caffeic_acid;
 endrewards
 rewards "p_coumaroyl_CoA_produced"
- true : p_coumaroyl_CoA;
+	true : p_coumaroyl_CoA;
 endrewards
 rewards "ferulic_acid_produced"
- true : ferulic_acid;
+	true : ferulic_acid;
 endrewards
 rewards "caffeoyl_CoA_produced"
- true : caffeoyl_CoA;
+	true : caffeoyl_CoA;
 endrewards
 rewards "feruloyl_CoA_produced"
- true : feruloyl_CoA;
+	true : feruloyl_CoA;
 endrewards
 rewards "feruloylacetyl_CoA_produced"
- true : feruloylacetyl_CoA;
+	true : feruloylacetyl_CoA;
 endrewards
 rewards "curcumin_produced"
- true : curcumin;
+	true : curcumin;
 endrewards
 rewards "demethoxycurcumin_produced"
- true : demethoxycurcumin;
+	true : demethoxycurcumin;
 endrewards
 //rewards "demethoxy_or_bisdemethoxy_produced"
-// true : demethoxy_or_bisdemethoxy;
+	// true : demethoxy_or_bisdemethoxy;
 //endrewards
 //rewards "demethoxy_or_curcumin_produced"
-// true : demethoxy_or_curcumin;
+	// true : demethoxy_or_curcumin;
 //endrewards
