@@ -9,52 +9,52 @@
 
 ctmc
 
-const int gen_max = 200; //No real max needed for variables when simulating. This value should be changed if model checking is used.
+const int gen_max = 100; //No real max needed for variables when simulating. This value should be changed if model checking is used.
 const int gen_E = 25; //mg/L, general enzyme concentration
 
 ////////// NATIVE PATHWAY //////////
 
-global acetyl_CoA: [0..gen_max] init 600; //uM
+global acetyl_CoA: [0..gen_max] init 60; //uM
 global malonyl_CoA: [0..gen_max] init 90; //uM
 
 //PDH - Pyruvate dehydrogenase
-const double rate_PDH = 1333.3333; //uM/s
+//const double rate_PDH = 1333.3333; //uM/s
 
 //ACCOAC - Acetyl-CoA Carboxylase:
-const double Vmax_ACCOAC = 412.23; //uM/s, represents [E]*Kcat
-const double Km_ACCOAC = 18; //uM
-const double KI_ACCOAC = 100; //uM
-formula rate_ACCOAC = (Vmax_ACCOAC*acetyl_CoA)/(acetyl_CoA+(Km_ACCOAC*(1+(malonyl_CoA/KI_ACCOAC))));
+//const double Vmax_ACCOAC = 412.23; //uM/s, represents [E]*Kcat
+//const double Km_ACCOAC = 18; //uM
+//const double KI_ACCOAC = 100; //uM
+//formula rate_ACCOAC = (Vmax_ACCOAC*acetyl_CoA)/(acetyl_CoA+(Km_ACCOAC*(1+(malonyl_CoA/KI_ACCOAC))));
 
 //PTA - Phosphate Acetyltransferase:
-formula rate_PTA = (501.666666*acetyl_CoA)/(45+acetyl_CoA);
+//formula rate_PTA = (501.666666*acetyl_CoA)/(45+acetyl_CoA);
 
 //CS - Citrate Synthase
-formula rate_CS = (1035.185185*acetyl_CoA)/(700+acetyl_CoA);
+//formula rate_CS = (1035.185185*acetyl_CoA)/(700+acetyl_CoA);
 
 //Synth4 - goes to fatty acid biosynthesis
-const double Vmax_Synth4 = 820.987654321; //uM/s
-const double Km_Synth4 = 100; //uM
-formula rate_Synth4 = (Vmax_Synth4*malonyl_CoA)/(Km_Synth4+malonyl_CoA);
+//const double Vmax_Synth4 = 820.987654321; //uM/s
+//const double Km_Synth4 = 100; //uM
+//formula rate_Synth4 = (Vmax_Synth4*malonyl_CoA)/(Km_Synth4+malonyl_CoA);
 
-module native_pathway
+//module native_pathway
 
 	//Acetyl-CoA generation from pyruvate
-	[] acetyl_CoA < gen_max -> rate_PDH : (acetyl_CoA' = acetyl_CoA+1);//&(pyruvate' = pyruvate-1); 
+	//[] acetyl_CoA < gen_max -> rate_PDH : (acetyl_CoA' = acetyl_CoA+1);//&(pyruvate' = pyruvate-1); 
 
 	//Malonyl-COA generation from acetyl-CoA
-	[] malonyl_CoA < gen_max & acetyl_CoA > 0 -> rate_ACCOAC : (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
+	//[] malonyl_CoA < gen_max & acetyl_CoA > 0 -> rate_ACCOAC : (malonyl_CoA' = malonyl_CoA+1)&(acetyl_CoA' = acetyl_CoA-1);
 
 	//Acetate generation from acetyl-CoA (cell metabolism)
-	[] acetyl_CoA > 0 & rate_PTA > 0 -> rate_PTA : (acetyl_CoA' = acetyl_CoA-1);
+	//[] acetyl_CoA > 0 & rate_PTA > 0 -> rate_PTA : (acetyl_CoA' = acetyl_CoA-1);
 
 	//Citrate generation from acetyl-CoA (cell metabolism, TCA Cycle)
-	[] acetyl_CoA > 0 & rate_CS > 0 -> rate_CS : (acetyl_CoA' = acetyl_CoA-1);
+	//[] acetyl_CoA > 0 & rate_CS > 0 -> rate_CS : (acetyl_CoA' = acetyl_CoA-1);
 
 	//Malonyl-CoA degradation for fatty acid synthesis (cell metabolism)
-	[] malonyl_CoA > 0 & rate_Synth4 > 0 -> rate_Synth4 : (malonyl_CoA' = malonyl_CoA-1);
+	//[] malonyl_CoA > 0 & rate_Synth4 > 0 -> rate_Synth4 : (malonyl_CoA' = malonyl_CoA-1);
 
-endmodule
+//endmodule
 
 ////////////////////////////////////
 
