@@ -9,13 +9,13 @@
 
 ctmc
 
-const int gen_max = 100; //No real max needed for variables when simulating. This value should be changed if model checking is used.
+const int gen_max = 10; //No real max needed for variables when simulating. This value should be changed if model checking is used.
 const int gen_E = 25; //mg/L, general enzyme concentration
 
 ////////// NATIVE PATHWAY //////////
 
-global acetyl_CoA: [0..gen_max] init 60; //uM
-global malonyl_CoA: [0..gen_max] init 90; //uM
+global acetyl_CoA: [0..gen_max] init 6; //uM
+global malonyl_CoA: [0..gen_max] init 9; //uM
 
 //PDH - Pyruvate dehydrogenase
 //const double rate_PDH = 1333.3333; //uM/s
@@ -206,7 +206,7 @@ module synthetic_pathway
 	[] caffeic_acid < gen_max & p_coumaric_acid > 0 & E_C3H > 0 -> rate_C3H_pca : (caffeic_acid' = caffeic_acid+1)&(p_coumaric_acid' = p_coumaric_acid-1);
 	[] caffeoyl_CoA < gen_max & p_coumaroyl_CoA > 0 & E_C3H > 0 -> rate_C3H_pcoa : (caffeoyl_CoA' = caffeoyl_CoA+1)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-1);
 
- 	//---4CL---
+	//---4CL---
 	[] p_coumaroyl_CoA < gen_max & p_coumaric_acid > 0 & E_4CL > 0 -> rate_4CL_pca : (p_coumaroyl_CoA' = p_coumaroyl_CoA+1)&(p_coumaric_acid' = p_coumaric_acid-1);
 	[] caffeoyl_CoA < gen_max & caffeic_acid > 0 & E_4CL > 0 -> rate_4CL_ca : (caffeoyl_CoA' = caffeoyl_CoA+1)&(caffeic_acid' = caffeic_acid-1);
 	[] feruloyl_CoA < gen_max & ferulic_acid > 0 & E_4CL > 0 -> rate_4CL_fa : (feruloyl_CoA' = feruloyl_CoA+1)&(ferulic_acid' = ferulic_acid-1);
