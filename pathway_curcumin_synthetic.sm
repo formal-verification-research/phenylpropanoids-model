@@ -14,6 +14,9 @@ const int gen_E = 25; //mg/L, general enzyme concentration
 
 ////////// SYNTHETIC PATHWAY //////////
 
+global acetyl_CoA: [0..gen_max] init 6; //uM
+global malonyl_CoA: [0..gen_max] init 9; //uM
+
 const int L_tyrosine = 29; //uM
 
 global p_coumaric_acid: [0..gen_max] init 0;
