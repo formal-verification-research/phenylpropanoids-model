@@ -9,13 +9,13 @@
 
 ctmc
 
-const int gen_max = 10; //No real max needed for variables when simulating. This value should be changed if model checking is used.
+const int gen_max = 5; //No real max needed for variables when simulating. This value should be changed if model checking is used.
 const int gen_E = 25; //mg/L, general enzyme concentration
 
 ////////// NATIVE PATHWAY //////////
 
-global acetyl_CoA: [0..gen_max] init 6; //uM
-global malonyl_CoA: [0..gen_max] init 9; //uM
+global acetyl_CoA: [0..gen_max] init 4; //uM
+global malonyl_CoA: [0..gen_max] init 4; //uM
 
 //PDH - Pyruvate dehydrogenase
 //const double rate_PDH = 1333.3333; //uM/s
