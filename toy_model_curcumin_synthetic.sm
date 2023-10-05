@@ -9,13 +9,13 @@
 
 ctmc
 
-const int gen_max = 10; //No real max needed for variables when simulating. This value should be changed if model checking is used.
+const int gen_max = 2; //No real max needed for variables when simulating. This value should be changed if model checking is used.
 const int gen_E = 25; //mg/L, general enzyme concentration
 
 ////////// SYNTHETIC PATHWAY //////////
 
-global acetyl_CoA: [0..gen_max] init 4; //uM
-global malonyl_CoA: [0..gen_max] init 4; //uM
+global acetyl_CoA: [0..gen_max] init 1; //uM
+global malonyl_CoA: [0..gen_max] init 1; //uM
 
 const int L_tyrosine = 29; //uM
 
@@ -125,8 +125,6 @@ formula rate_CURS_pcoa = (Kcat_CURS_pcoa*E_CURS*p_coumaroyl_CoA) / (Km_CURS_pcoa
 // const double Kcat_CURS3_pcoa = 0.006; //1/s
 // formula rate_CURS3_fcoa = (Kcat_CURS3_fcoa*E_CURS3*feruloyl_CoA) / (Km_CURS3_fcoa+feruloyl_CoA);
 // formula rate_CURS3_pcoa = (Kcat_CURS3_pcoa*E_CURS3*p_coumaroyl_CoA) / (Km_CURS3_pcoa+p_coumaroyl_CoA);
-
-
 
 
 module synthetic_pathway
