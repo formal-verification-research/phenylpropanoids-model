@@ -1,0 +1,13 @@
+///// Main pathway /////
+// L-tyrosine 1-> p-courmaric acid 2-> p-courmaroyl-CoA
+// 3-> caffeoyl-CoA 4-> feruloyl-CoA 5-> curcumin
+// 1. TAL
+// 2. 4CL
+// 3. C3H
+// 4. COMT
+// 5. CURS
+
+ctmc
+
+const int gen_max = 1; //No real max needed for variables when simulating. This value should be changed if model checking is used.
+const int gen_E = 25; //mg/L, general enzyme concentration
