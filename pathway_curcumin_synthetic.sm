@@ -26,10 +26,8 @@ global ferulic_acid: [0..gen_max] init 0;
 global caffeoyl_CoA: [0..gen_max] init 0;
 global feruloyl_CoA: [0..gen_max] init 0;
 global feruloylacetyl_CoA: [0..gen_max] init 0;
-global demethoxy_or_bisdemethoxy: [0..gen_max] init 0;
 global demethoxy_or_curcumin: [0..gen_max] init 0;
 global demethoxycurcumin: [0..gen_max] init 0;
-global bisdemethoxycurcumin: [0..gen_max] init 0;
 global curcumin: [0..gen_max] init 0;
 
 //TAL - Tyrosine-ammonia lyase
