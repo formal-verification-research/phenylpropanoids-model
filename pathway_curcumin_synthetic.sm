@@ -163,3 +163,49 @@ module synthetic_pathway
 endmodule
 
 ///////////////////////////////////////
+
+// REWARDS STRUCTURES:
+// The following rewards structures allow simulations to return the value of each variable at a time
+rewards "racetyl_CoA"
+	true: acetyl_CoA;
+endrewards
+rewards "rmalonyl_CoA"
+	true: malonyl_CoA;
+endrewards
+
+// rewards "tyrosine_produced"
+	// true : L_tyrosine;
+// endrewards
+rewards "p_coumaric_acid_produced"
+	true : p_coumaric_acid;
+endrewards
+rewards "caffeic_acid_produced"
+	true : caffeic_acid;
+endrewards
+rewards "p_coumaroyl_CoA_produced"
+	true : p_coumaroyl_CoA;
+endrewards
+rewards "ferulic_acid_produced"
+	true : ferulic_acid;
+endrewards
+rewards "caffeoyl_CoA_produced"
+	true : caffeoyl_CoA;
+endrewards
+rewards "feruloyl_CoA_produced"
+	true : feruloyl_CoA;
+endrewards
+rewards "feruloylacetyl_CoA_produced"
+	true : feruloylacetyl_CoA;
+endrewards
+rewards "curcumin_produced"
+	true : curcumin;
+endrewards
+rewards "demethoxycurcumin_produced"
+	true : demethoxycurcumin;
+endrewards
+// rewards "demethoxy_or_bisdemethoxy_produced"
+	// true : demethoxy_or_bisdemethoxy;
+// endrewards
+// rewards "demethoxy_or_curcumin_produced"
+	// true : demethoxy_or_curcumin;
+// endrewards

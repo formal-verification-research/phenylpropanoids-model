@@ -1,0 +1,4 @@
+A	B	C	D	E	F	G	H	I #variable name
+29	0	0	0	0	0	0	0	0 #initial conc
+-1	-1	-1	-1	-1	-1	-1	-1	10 #desired conc
+#transition rate constant
