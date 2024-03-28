@@ -1,0 +1,158 @@
+///// Main pathway /////
+// L-tyrosine 1-> p-courmaric acid 2-> p-courmaroyl-CoA
+// 3-> caffeoyl-CoA 4-> feruloyl-CoA 5-> curcumin
+// 1. TAL
+// 2. 4CL
+// 3. C3H
+// 4. COMT
+// 5. CURS
+
+ctmc
+
+const int gen_max = 5; //No real max needed for variables when simulating. This value should be changed if model checking is used.
+const int gen_E = 25; //mg/L, general enzyme concentration
+
+////////// SYNTHETIC PATHWAY //////////
+
+global acetyl_CoA: [0..gen_max] init 1; //uM
+global malonyl_CoA: [0..gen_max] init 1; //uM
+
+const int L_tyrosine = 29; //uM
+
+global p_coumaric_acid: [0..gen_max] init 0;
+global p_coumaroyl_CoA: [0..gen_max] init 0;
+global caffeic_acid: [0..gen_max] init 0;
+global ferulic_acid: [0..gen_max] init 0;
+global caffeoyl_CoA: [0..gen_max] init 0;
+global feruloyl_CoA: [0..gen_max] init 0;
+global feruloylacetyl_CoA: [0..gen_max] init 0;
+global demethoxy_or_curcumin: [0..gen_max] init 0;
+global demethoxycurcumin: [0..gen_max] init 0;
+global curcumin: [0..gen_max] init 0;
+
+//TAL - Tyrosine-ammonia lyase
+const int MW_TAL = 53967; //Da
+const double E_TAL=25;// = (gen_E/MW_TAL)*1000;
+const double Km_TAL = 1492.2; //uM
+const double Kcat_TAL = 155; //1/s
+formula rate_TAL_tyr = (Kcat_TAL*E_TAL*L_tyrosine)/(Km_TAL+L_tyrosine);
+
+//4CL - p-Coumaroyl-CoA ligase 6.2.1.12
+const int MW_4CL = 62559; //Da
+const double E_4CL=25;// = (gen_E/MW_4CL)*1000; //uM
+//Pto4CL4 - https://link.springer.com/article/10.1007/s11105-014-0803-4   (Rao_2015)
+const double Km_4CL_pca = 26;//25.1; //uM, substrate p-coumaric acid
+const double Kcat_4CL_pca = 88.68;//16.3279; //1/s, substrate p-coumaric acid
+// Pto4CL4 - https://link.springer.com/article/10.1007/s11105-014-0803-4 (Rao_2015)
+const double Km_4CL_fa = 27;//56.7; //uM, substrate ferulic acid
+const double Kcat_4CL_fa = 126;//7.4758; //1/s, substrate ferulic acid
+// Pto4CL4 - https://link.springer.com/article/10.1007/s11105-014-0803-4 (Rao_2015)
+const double Km_4CL_ca = 44;//11; //uM, substrate caffeic acid
+const double Kcat_4CL_ca = 31.4;//0.27*Kcat_4CL_pca; //1/s, substrate caffeic acid, literature reports 27% of p-coumaric acid
+formula rate_4CL_pca = (Kcat_4CL_pca*E_4CL*p_coumaric_acid)/(Km_4CL_pca+p_coumaric_acid);
+formula rate_4CL_fa = (Kcat_4CL_fa*E_4CL*ferulic_acid)/(Km_4CL_fa+ferulic_acid);
+formula rate_4CL_ca = (Kcat_4CL_ca*E_4CL*caffeic_acid)/(Km_4CL_ca+caffeic_acid);
+
+// C3H - p-Coumarate 3-Hydroxylase
+const int MW_C3H = 57055; //Da
+const double E_C3H=25;// = (50/MW_C3H)*1000; //uM
+// 5-O-(4-coumaroyl) shikimate - https://www.sciencedirect.com/science/article/pii/S0021925820867374?via%3Dihub (Schoch_2001)
+const double Km_C3H_pca = 8;//143.03; //uM, substrate p-coumaric acid
+const double Kcat_C3H_pca = 10.2;//0.0347; //1/s, substrate p-coumaric acid
+const double Km_C3H_pcoa = 8;//143.03; //uM, substrate p-coumaroyl CoA
+const double Kcat_C3H_pcoa = 10.2;//0.0347; //1/s, substrate p-coumaroyl CoA
+formula rate_C3H_pca = (Kcat_C3H_pca*E_C3H*p_coumaric_acid) / (Km_C3H_pca+p_coumaric_acid);
+formula rate_C3H_pcoa = (Kcat_C3H_pcoa*E_C3H*p_coumaroyl_CoA) / (Km_C3H_pcoa+p_coumaroyl_CoA);
+
+// COMT - Caffeic Acid 3-O-methyltransferase
+const int MW_COMT = 24602; //Da
+const double E_COMT=25;// = (gen_E/MW_COMT)*1000; //uM
+// https://www.sciencedirect.com/science/article/abs/pii/S030090840700260X?via%3Dihub (Ma_2008)
+const double Km_COMT_ca = 68.75;//uM, substrate caffeic acid
+const double Kcat_COMT_ca = 0.092;//1/s, substrate caffeic acid
+//https://www.sciencedirect.com/science/article/abs/pii/S030090840700260X?via%3Dihub (Ma_2008)
+const double Km_COMT_ccoa = 83.04;//uM, substrate caffeoyl CoA
+const double Kcat_COMT_ccoa = 51.22; //1/s, substrate caffeoyl CoA, #TODO: MAJOR ASSUMPTION, CHECK
+formula rate_COMT_ca = (Kcat_COMT_ca*E_COMT*caffeic_acid) / (Km_COMT_ca+caffeic_acid);
+formula rate_COMT_ccoa = (Kcat_COMT_ccoa*E_COMT*caffeoyl_CoA) / (Km_COMT_ccoa+caffeoyl_CoA);
+
+// CCOMT - Caffeoyl-CoA 3-O-methyltransferase
+// const int MW_CCOMT = 30600; //Da
+// const double E_CCOMT = (gen_E/MW_CCOMT)*1000; //uM
+// const double Km_CCOMT_ccoa = 20;//72; // uM
+// const double Kcat_CCOMT_ccoa = 1.043;//72*5.03*pow(0.10,4);
+// formula rate_CCOMT_ccoa = (Kcat_CCOMT_ccoa*E_CCOMT*caffeoyl_CoA) / (Km_CCOMT_ccoa+caffeoyl_CoA);
+
+// DCS - Diketide-CoA Synthase
+const int MW_DCS = 42047; //Da
+const double E_DCS=25;// = (50/MW_DCS)*1000; //uM
+// https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2670121/ (Katsuyama_2009)
+const double S50_DCS_fcoa = 46; //
+const double Kcat_DCS_fcoa = 0.02;
+const double n_DCS_fcoa = 1.8;
+formula rate_DCS_fcoa = (Kcat_DCS_fcoa*E_DCS*pow(feruloyl_CoA,n_DCS_fcoa)) / (pow(S50_DCS_fcoa,n_DCS_fcoa) + pow(feruloyl_CoA,n_DCS_fcoa)); //Hill Equation
+
+// CURS - Curcumin Synthase 1
+const int MW_CURS = 43034; //Da
+const double E_CURS=25;// = (50/MW_CURS)*1000; //uM
+// https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2670121/ (Katsuyama_2009)
+const double Km_CURS_fcoa = 18; //uM, substrate feruloyl CoA
+const double Kcat_CURS_fcoa = 0.01833; //1/s, substrate feruloyl CoA
+// https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2670121/ (Katsuyama_2009)
+const double Km_CURS_pcoa = 189; //uM
+const double Kcat_CURS_pcoa = 0.01416667; //1/s
+formula rate_CURS_fcoa = (Kcat_CURS_fcoa*E_CURS*feruloyl_CoA) / (Km_CURS_fcoa+feruloyl_CoA);
+formula rate_CURS_pcoa = (Kcat_CURS_pcoa*E_CURS*p_coumaroyl_CoA) / (Km_CURS_pcoa+p_coumaroyl_CoA);
+
+// CURS2 - Curcumin Synthase 2
+// const int MW_CURS2 = 43146; //Da
+// const double E_CURS2;// = (50/MW_CURS2)*1000;//uM
+// https://febs.onlinelibrary.wiley.com/doi/full/10.1016/j.febslet.2009.07.029
+// const double Km_CURS2_fcoa = 4.3; //uM
+// const double Kcat_CURS2_fcoa = 0.00683333333333333; //1/s
+// const double Km_CURS2_pcoa = 89; //uM
+// const double Kcat_CURS2_pcoa = 0.0156667; //1/s
+// formula rate_CURS2_fcoa = (Kcat_CURS2_fcoa*E_CURS2*feruloyl_CoA) / (Km_CURS2_fcoa+feruloyl_CoA);
+// formula rate_CURS2_pcoa = (Kcat_CURS2_pcoa*E_CURS2*p_coumaroyl_CoA) / (Km_CURS2_pcoa+p_coumaroyl_CoA);
+
+// CURS3 - Curcumin Synthase 3
+// const int MW_CURS3 = 43099; //Da
+// const double E_CURS3;// = (50/MW_CURS3)*1000;//uM
+// https://febs.onlinelibrary.wiley.com/doi/full/10.1016/j.febslet.2009.07.029
+// const double Km_CURS3_fcoa = 2.2; //uM
+// const double Kcat_CURS3_fcoa = 0.00316667; //1/s
+// const double Km_CURS3_pcoa = 3.4; //uM
+// const double Kcat_CURS3_pcoa = 0.006; //1/s
+// formula rate_CURS3_fcoa = (Kcat_CURS3_fcoa*E_CURS3*feruloyl_CoA) / (Km_CURS3_fcoa+feruloyl_CoA);
+// formula rate_CURS3_pcoa = (Kcat_CURS3_pcoa*E_CURS3*p_coumaroyl_CoA) / (Km_CURS3_pcoa+p_coumaroyl_CoA);
+
+
+module synthetic_pathway
+
+	//---TAL---
+	[] p_coumaric_acid < gen_max & L_tyrosine > 0 & E_TAL > 0 -> rate_TAL_tyr : (p_coumaric_acid' = p_coumaric_acid+1);
+
+	//---C3H---
+	[] caffeic_acid < gen_max & p_coumaric_acid > 0 & E_C3H > 0 -> rate_C3H_pca : (caffeic_acid' = caffeic_acid+1)&(p_coumaric_acid' = p_coumaric_acid-1);
+	
+	//---4CL---
+	[] caffeoyl_CoA < gen_max & caffeic_acid > 0 & E_4CL > 0 -> rate_4CL_ca : (caffeoyl_CoA' = caffeoyl_CoA+1)&(caffeic_acid' = caffeic_acid-1);
+	[] feruloyl_CoA < gen_max & ferulic_acid > 0 & E_4CL > 0 -> rate_4CL_fa : (feruloyl_CoA' = feruloyl_CoA+1)&(ferulic_acid' = ferulic_acid-1);
+
+	//---COMT---
+	[] ferulic_acid < gen_max & caffeic_acid > 0 & E_COMT > 0 -> rate_COMT_ca : (ferulic_acid' = ferulic_acid+1)&(caffeic_acid' = caffeic_acid-1);
+	[] feruloyl_CoA < gen_max & caffeoyl_CoA > 0 & E_COMT > 0 -> rate_COMT_ccoa : (feruloyl_CoA' = feruloyl_CoA+1)&(caffeoyl_CoA' = caffeoyl_CoA-1);
+
+	//---DCS---
+	//////With native metabolism (using malonyl-CoA)//////
+	[] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+1)&(feruloyl_CoA' = feruloyl_CoA-1)&(malonyl_CoA' = malonyl_CoA-1);
+	//////Ignoring native metabolism (not using malonyl-CoA)//////
+	//[] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 & E_DCS > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+1)&(feruloyl_CoA' = feruloyl_CoA-1);
+
+	//---CURS---
+	//////With native metabolism (using malonyl-CoA)//////	
+	[] curcumin < gen_max & feruloylacetyl_CoA > 0 & feruloyl_CoA > 0 & E_CURS > 0 -> rate_CURS_fcoa : (curcumin' = curcumin+1)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-1)&(feruloyl_CoA' = feruloyl_CoA-1);
+
+endmodule
+
+///////////////////////////////////////
