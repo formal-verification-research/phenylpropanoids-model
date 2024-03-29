@@ -2,8 +2,8 @@ LTyr	PCou	Caf	FerA	FCoa	FDCoa	Curc
 30	0	0	0	0	0	0
 -1	-1	-1	-1	-1	-1	10
 r1	LTyr	>	PCou	155
-r2	r1	>	Caf	10.2
-r3	r2	>	FerA	0.092
-r4	r3	>	FCoa	126
-r5	r4	>	FDCoa	0.02
-r6	r5	>	Curc	0.01833
+r2	PCou	>	Caf	10.2
+r3	Caf	>	FerA	0.092
+r4	FerA	>	FCoa	126
+r5	FCoa	>	FDCoa	0.02
+r6	FDCoa	>	Curc	0.01833
