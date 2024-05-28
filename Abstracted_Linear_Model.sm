@@ -14,8 +14,10 @@ const int gen_E = 250; //mg/L, general enzyme concentration
 
 ////////// SYNTHETIC PATHWAY //////////
 
-global acetyl_CoA: [0..gen_max] init 4000; //uM
-global malonyl_CoA: [0..gen_max] init 4000; //uM
+// global acetyl_CoA: [0..gen_max] init 4000; //uM
+global acetyl_CoA: int init 4000; //uM
+// global malonyl_CoA: [0..gen_max] init 4000; //uM
+global malonyl_CoA: int init 4000; //uM
 
 const int L_tyrosine = 3000; //uM
 const int STEP = 250; //increments that values increase and decrease by, for abstraction, 1 is default
