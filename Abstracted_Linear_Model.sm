@@ -10,7 +10,7 @@
 ctmc
 
 const int gen_max = 4000; //No real max needed for variables when simulating. This value should be changed if model checking is used.
-const int gen_E = 25; //mg/L, general enzyme concentration
+const int gen_E = 250; //mg/L, general enzyme concentration
 
 ////////// SYNTHETIC PATHWAY //////////
 
