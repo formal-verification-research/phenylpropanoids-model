@@ -9,16 +9,16 @@
 
 ctmc
 
-const int gen_max = 100; //No real max needed for variables when simulating. This value should be changed if model checking is used.
-const int gen_E = 25; //mg/L, general enzyme concentration
+const int gen_max = 4000; //No real max needed for variables when simulating. This value should be changed if model checking is used.
+const int gen_E = 250; //mg/L, general enzyme concentration
 
 ////////// SYNTHETIC PATHWAY //////////
 
-global acetyl_CoA: [0..gen_max] init 30; //uM
-global malonyl_CoA: [0..gen_max] init 30; //uM
+global acetyl_CoA: [0..gen_max] init 4000; //uM
+global malonyl_CoA: [0..gen_max] init 4000; //uM
 
-const int L_tyrosine = 50; //uM
-const int STEP = 10; //increments that values increase and decrease by, for abstraction, 1 is default
+const int L_tyrosine = 4000; //uM
+const int STEP = 250; //increments that values increase and decrease by, for abstraction, 1 is default
 
 global p_coumaric_acid: [0..gen_max] init 0;
 global p_coumaroyl_CoA: [0..gen_max] init 0;
