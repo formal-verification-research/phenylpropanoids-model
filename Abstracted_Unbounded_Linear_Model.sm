@@ -17,7 +17,7 @@ const int gen_E = 250; //mg/L, general enzyme concentration
 global acetyl_CoA: int init 4000; //uM
 global malonyl_CoA: int init 4000; //uM
 
-const int L_tyrosine = 4000; //uM
+const int L_tyrosine = 3000; //uM
 const int STEP = 250; //increments that values increase and decrease by, for abstraction, 1 is default
 
 global p_coumaric_acid: int init 0;
@@ -25,6 +25,7 @@ global p_coumaroyl_CoA: int init 0;
 global caffeic_acid: int init 0;
 global ferulic_acid: int init 0;
 global caffeoyl_CoA: int init 0;
+global caffeoyl_diketide_CoA: int init 0; //ADDED JUNE24
 global feruloyl_CoA: int init 0;
 global feruloylacetyl_CoA: int init 0;
 global demethoxy_or_curcumin: int init 0;
@@ -92,6 +93,7 @@ const double S50_DCS_fcoa = 46; //
 const double Kcat_DCS_fcoa = 0.02;
 const double n_DCS_fcoa = 1.8;
 formula rate_DCS_fcoa = ((Kcat_DCS_fcoa*E_DCS*pow(feruloyl_CoA,n_DCS_fcoa)) / (pow(S50_DCS_fcoa,n_DCS_fcoa) + pow(feruloyl_CoA,n_DCS_fcoa)))/STEP; //Hill Equation
+formula rate_DCS_ccoa = ((Kcat_DCS_fcoa*E_DCS*pow(caffeoyl_CoA,n_DCS_fcoa)) / (pow(S50_DCS_fcoa,n_DCS_fcoa) + pow(caffeoyl_CoA,n_DCS_fcoa)))/STEP;
 
 // CURS - Curcumin Synthase 1
 const int MW_CURS = 43034; //Da
@@ -145,6 +147,7 @@ module synthetic_pathway
 	//---DCS---
 	//////With native metabolism (using malonyl-CoA)//////
 	[] feruloyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+STEP)&(feruloyl_CoA' = feruloyl_CoA-STEP)&(malonyl_CoA' = malonyl_CoA-STEP); 
+	[] caffeoyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+STEP)&(feruloyl_CoA' = feruloyl_CoA-STEP)&(malonyl_CoA' = malonyl_CoA-STEP);
 	//////Ignoring native metabolism (not using malonyl-CoA)//////
 	//[] feruloyl_CoA > 0 & E_DCS > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+10)&(feruloyl_CoA' = feruloyl_CoA-10); 
 
