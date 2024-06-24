@@ -30,6 +30,7 @@ global feruloyl_CoA: int init 0;
 global feruloylacetyl_CoA: int init 0;
 global demethoxy_or_curcumin: int init 0;
 global demethoxycurcumin: int init 0;
+global bisdemethoxycurcumin: int init 0;
 global curcumin: int init 0;
 
 //TAL - Tyrosine-ammonia lyase
@@ -147,13 +148,14 @@ module synthetic_pathway
 	//---DCS---
 	//////With native metabolism (using malonyl-CoA)//////
 	[] feruloyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+STEP)&(feruloyl_CoA' = feruloyl_CoA-STEP)&(malonyl_CoA' = malonyl_CoA-STEP); 
-	[] caffeoyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+STEP)&(feruloyl_CoA' = feruloyl_CoA-STEP)&(malonyl_CoA' = malonyl_CoA-STEP);
+	[] caffeoyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_fcoa : (caffeoyl_diketide_CoA' = caffeoyl_diketide_CoA+STEP)&(caffeoyl_CoA' = caffeoyl_CoA-STEP)&(malonyl_CoA' = malonyl_CoA-STEP);
 	//////Ignoring native metabolism (not using malonyl-CoA)//////
 	//[] feruloyl_CoA > 0 & E_DCS > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+10)&(feruloyl_CoA' = feruloyl_CoA-10); 
 
 	//---CURS---
 	//////With native metabolism (using malonyl-CoA)//////	
-	[] feruloylacetyl_CoA > 0 & feruloyl_CoA > 0 & E_CURS > 0 -> rate_CURS_fcoa : (curcumin' = curcumin+STEP)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-STEP)&(feruloyl_CoA' = feruloyl_CoA-STEP); 
+	[] feruloylacetyl_CoA > 0 & feruloyl_CoA > 0 & E_CURS > 0 -> rate_CURS_fcoa : (curcumin' = curcumin+STEP)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-STEP)&(feruloyl_CoA' = feruloyl_CoA-STEP);
+	[] caffeoyl_diketide_CoA > 0 & caffeoyl_CoA > 0 & E_CURS > 0 -> rate_CURS_fcoa : (bisdemethoxycurcumin' = bisdemethoxycurcumin+STEP)&(caffeoyl_diketide_CoA' = caffeoyl_diketide_CoA-STEP)&(caffeoyl_CoA' = caffeoyl_CoA-STEP);
 
 endmodule
 
