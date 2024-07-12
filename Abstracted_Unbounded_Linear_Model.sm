@@ -134,20 +134,20 @@ formula rate_CURS_pcoa = ((Kcat_CURS_pcoa*E_CURS*p_coumaroyl_CoA) / (Km_CURS_pco
 module synthetic_pathway
 
 	//---TAL---
-	[] L_tyrosine > 0 & E_TAL > 0 -> rate_TAL_tyr : (p_coumaric_acid' = p_coumaric_acid+STEP);  
+	[] p_coumaric_acid < gen_max & L_tyrosine > 0 & E_TAL > 0 -> rate_TAL_tyr : (p_coumaric_acid' = p_coumaric_acid+STEP);  
 
 	//---C3H---
-	[] p_coumaric_acid > 0 & E_C3H > 0 -> rate_C3H_pca : (caffeic_acid' = caffeic_acid+STEP)&(p_coumaric_acid' = p_coumaric_acid-STEP);
+	[] caffeic_acid < gen_max & p_coumaric_acid > 0 & E_C3H > 0 -> rate_C3H_pca : (caffeic_acid' = caffeic_acid+STEP)&(p_coumaric_acid' = p_coumaric_acid-STEP);
 	
 	//---4CL---
-	[] ferulic_acid > 0 & E_4CL > 0 -> rate_4CL_fa : (feruloyl_CoA' = feruloyl_CoA+STEP)&(ferulic_acid' = ferulic_acid-STEP); 
+	[] feruloyl_CoA < gen_max & ferulic_acid > 0 & E_4CL > 0 -> rate_4CL_fa : (feruloyl_CoA' = feruloyl_CoA+STEP)&(ferulic_acid' = ferulic_acid-STEP); 
 
 	//---COMT---
-	[] caffeic_acid > 0 & E_COMT > 0 -> rate_COMT_ca : (ferulic_acid' = ferulic_acid+STEP)&(caffeic_acid' = caffeic_acid-STEP); 
+	[] ferulic_acid < gen_max & caffeic_acid > 0 & E_COMT > 0 -> rate_COMT_ca : (ferulic_acid' = ferulic_acid+STEP)&(caffeic_acid' = caffeic_acid-STEP); 
 
 	//---DCS---
 	//////With native metabolism (using malonyl-CoA)//////
-	[] feruloyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+STEP)&(feruloyl_CoA' = feruloyl_CoA-STEP)&(malonyl_CoA' = malonyl_CoA-STEP); 
+	[] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+STEP)&(feruloyl_CoA' = feruloyl_CoA-STEP)&(malonyl_CoA' = malonyl_CoA-STEP); 
 	//[] caffeoyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_fcoa : (caffeoyl_diketide_CoA' = caffeoyl_diketide_CoA+STEP)&(caffeoyl_CoA' = caffeoyl_CoA-STEP)&(malonyl_CoA' = malonyl_CoA-STEP);
 	//////Ignoring native metabolism (not using malonyl-CoA)//////
 	//[] feruloyl_CoA > 0 & E_DCS > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+10)&(feruloyl_CoA' = feruloyl_CoA-10); 
@@ -155,7 +155,7 @@ module synthetic_pathway
 	//---CURS---
 	//////With native metabolism (using malonyl-CoA)//////	
 	[] feruloylacetyl_CoA > 0 & feruloyl_CoA > 0 & E_CURS > 0 -> rate_CURS_fcoa : (curcumin' = curcumin+STEP)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-STEP)&(feruloyl_CoA' = feruloyl_CoA-STEP);
-	//[] caffeoyl_diketide_CoA > 0 & caffeoyl_CoA > 0 & E_CURS > 0 -> rate_CURS_fcoa : (bisdemethoxycurcumin' = bisdemethoxycurcumin+STEP)&(caffeoyl_diketide_CoA' = caffeoyl_diketide_CoA-STEP)&(caffeoyl_CoA' = caffeoyl_CoA-STEP);
+	//[] curcumin < gen_max & caffeoyl_diketide_CoA > 0 & caffeoyl_CoA > 0 & E_CURS > 0 -> rate_CURS_fcoa : (bisdemethoxycurcumin' = bisdemethoxycurcumin+STEP)&(caffeoyl_diketide_CoA' = caffeoyl_diketide_CoA-STEP)&(caffeoyl_CoA' = caffeoyl_CoA-STEP);
 
 endmodule
 
