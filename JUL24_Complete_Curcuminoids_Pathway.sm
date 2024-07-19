@@ -161,6 +161,7 @@ module synthetic_pathway
 	//////Ignoring native metabolism (not using malonyl-CoA)//////
 	[] demethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & E_CURS > 0 -> rate_CURS_pcoa : (demethoxycurcumin' = demethoxycurcumin+STEP)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-STEP);
 	[] curcumin < gen_max & feruloylacetyl_CoA > 0 & feruloyl_CoA > 0 & E_CURS > 0 -> rate_CURS_fcoa : (curcumin' = curcumin+STEP)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-STEP)&(feruloyl_CoA' = feruloyl_CoA-STEP);
+	[] demethoxycurcumin < gen_max & feruloylacetyl_CoA > 0 & feruloyl_CoA > 0 & E_CURS > 0 -> rate_CURS_pcoa : (demethoxycurcumin' = demethoxycurcumin+STEP)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-STEP)&(feruloyl_CoA' = feruloyl_CoA-STEP);
 endmodule
 
 ///////////////////////////////////////
