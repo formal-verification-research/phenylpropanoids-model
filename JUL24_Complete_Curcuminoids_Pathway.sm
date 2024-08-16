@@ -153,17 +153,17 @@ module synthetic_pathway
 	//---DCS---
 	//////With native metabolism (using malonyl-CoA)//////
 	[] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+STEP)&(feruloyl_CoA' = feruloyl_CoA-STEP)&(malonyl_CoA' = malonyl_CoA-STEP);
-	ADD PATH TO p_coumaroyl_diketide_CoA
+	[] p_coumaroyl_diketide_CoA < gen_max & p_coumaroyl_CoA > 0 & malonyl_CoA > 0 -> rate_DCS_fcoa : (p_coumaroyl_diketide_CoA' = p_coumaroyl_diketide_CoA+STEP)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-STEP)&(malonyl_CoA' = malonyl_CoA-STEP);
 	//////Ignoring native metabolism (not using malonyl-CoA)//////
 	//[] feruloylacetyl_CoA < gen_max & feruloyl_CoA > 0 & E_DCS > 0 -> rate_DCS_fcoa : (feruloylacetyl_CoA' = feruloylacetyl_CoA+STEP)&(feruloyl_CoA' = feruloyl_CoA-STEP);
 
 	//---CURS---
 	//////With native metabolism (using malonyl-CoA)//////
-	[] demethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & malonyl_CoA > 0 & E_CURS > 0 -> rate_CURS_pcoa : (demethoxycurcumin' = demethoxycurcumin+STEP)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-STEP)&(malonyl_CoA' = malonyl_CoA-STEP);
+	[] bisdemethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & malonyl_CoA > 0 & E_CURS > 0 -> rate_CURS_pcoa : (bisdemethoxycurcumin' = bisdemethoxycurcumin+STEP)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-STEP)&(malonyl_CoA' = malonyl_CoA-STEP);
 	//////Ignoring native metabolism (not using malonyl-CoA)//////
-	ADD PATH TO DEMETHOXYCURCUMIN FROM p_coumaroyl_diketide_CoA
-	ADD PATH TO DEMETHOXYCURCUMIN FROM feruloylacetyl_CoA
-	CHANGE TO BISDEMETHOXYCURCUMIN AND MAKE FROM p_coumaroyl_diketide_CoA 		[] demethoxycurcumin < gen_max & p_coumaroyl_CoA > 0 & E_CURS > 0 -> rate_CURS_pcoa : (demethoxycurcumin' = demethoxycurcumin+STEP)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-STEP);
+	[] demethoxycurcumin < gen_max & p_coumaroyl_diketide_CoA > 0 & E_CURS > 0 -> rate_CURS_pcoa : (demethoxycurcumin' = demethoxycurcumin+STEP)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-STEP)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-STEP);
+	[] demethoxycurcumin < gen_max & p_coumaroyl_diketide_CoA > 0 & E_CURS > 0 -> rate_CURS_fcoa : (demethoxycurcumin' = demethoxycurcumin+STEP)&(p_coumaroyl_diketide_CoA' = p_coumaroyl_diketide_CoA-STEP)&(feruloyl_CoA' = feruloyl_CoA-STEP);
+	[] bisdemethoxycurcumin < gen_max & p_coumaroyl_diketide_CoA > 0 & E_CURS > 0 -> rate_CURS_pcoa : (bisdemethoxycurcumin' = bisdemethoxycurcumin+STEP)&(p_coumaroyl_diketide_CoA' = p_coumaroyl_diketide_CoA-STEP)&(p_coumaroyl_CoA' = p_coumaroyl_CoA-STEP);
 	[] curcumin < gen_max & feruloylacetyl_CoA > 0 & feruloyl_CoA > 0 & E_CURS > 0 -> rate_CURS_fcoa : (curcumin' = curcumin+STEP)&(feruloylacetyl_CoA' = feruloylacetyl_CoA-STEP)&(feruloyl_CoA' = feruloyl_CoA-STEP);
 	
 endmodule
