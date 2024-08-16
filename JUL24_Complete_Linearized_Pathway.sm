@@ -91,7 +91,7 @@ const int MW_DCS = 42047; //Da
 const double E_DCS=25;// = (50/MW_DCS)*1000; //uM
 // https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2670121/ (Katsuyama_2009)
 const double S50_DCS_fcoa = 46; //
-const double Kcat_DCS_fcoa = 0.02;
+const double Kcat_DCS_fcoa = 1.2; //change 16AUG24 changes from 0.02 according to review of the paper cited above
 const double n_DCS_fcoa = 1.8;
 formula rate_DCS_fcoa = ((Kcat_DCS_fcoa*E_DCS*pow(feruloyl_CoA,n_DCS_fcoa)) / (pow(S50_DCS_fcoa,n_DCS_fcoa) + pow(feruloyl_CoA,n_DCS_fcoa)))/STEP; //Hill Equation
 formula rate_DCS_ccoa = ((Kcat_DCS_fcoa*E_DCS*pow(caffeoyl_CoA,n_DCS_fcoa)) / (pow(S50_DCS_fcoa,n_DCS_fcoa) + pow(caffeoyl_CoA,n_DCS_fcoa)))/STEP;
